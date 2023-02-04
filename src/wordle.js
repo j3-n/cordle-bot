@@ -1,4 +1,3 @@
-const { GuildDefaultMessageNotifications } = require("discord.js");
 var fs = require("fs")
 var path = require("path")
 
@@ -8,6 +7,7 @@ const prompt = require("prompt-sync")({sigint: true});
 // TODO:
 // KEEP TRACK OF USED CHARACTERS and create getters for them
 // CREATE GETTER FOR PAST ATTEMPTS
+// INPUT FILTERING = DONE
 
 const Result = {
     CORRECT_CHARACTER: "correct_character",
@@ -17,6 +17,8 @@ const Result = {
 
 const wordList = importWords();
 
+var incorrectCharacters = new Set();
+
 class WordleGame{
     constructor(){
         // Choose a random word
@@ -25,6 +27,12 @@ class WordleGame{
     }
 
     submitGuess(guess){
+        guess.toLowerCase();
+        // Input filtering
+        if(!this.checkInput(guess)){
+            return null; // NULL RETURN WHEN INPUT INVALID
+        }
+        
         let toAdd = [];
         // The following stores each character of the guess under the key 'char' with the correctness of the character under "STATE"
         // The state is any value from char_values
@@ -32,13 +40,19 @@ class WordleGame{
         // Structure example: {CHAR: 'KEY', STATE: 'STATE FROM char_values' }
         // NOTE: CHAR: null WHEN STATE IS EQUAL TO correct_guess. THIS IS WHEN THE GUESS WAS CORRECT
         for(let i = 0; i < guess.length; i++){
-            let key = guess.charAt(i);
-            let result = Result.INCORRECT_CHARACTER;
-
+            let key = guess.charAt(i); // unused?
+            let result;
+            
             if(guess.charAt(i) == this.word.charAt(i))
                 result = Result.CORRECT_CHARACTER;
             else if(this.word.includes(guess.charAt(i)))
                 result = Result.INCORRECT_POSITION;
+            else{
+                result = Result.INCORRECT_CHARACTER;
+                // Add incorrect characters to used incorrect set
+                incorrectCharacters.add(guess.charAt(i));
+            }
+            
             
             toAdd.push({char: key, result: result});
         }
@@ -51,6 +65,28 @@ class WordleGame{
         this.guesses.push(result);
 
         return result;
+    }
+
+    // checks for input being 5 characters long and no numbers only alpha characters
+    checkInput(input){
+        if(input.length != 5)
+            return false;
+        for(let i = 0; i < input.length; i++)
+        {
+            if(input.charCodeAt(i) < 97 && input.charCodeAt(i) > 122)
+                return false;
+        }
+        return true;
+    }
+
+    getNumberOfAttempts()
+    {
+        return this.guesses.length;
+    }
+
+    getIncorrectCharactersSet()
+    {
+        return this.incorrectCharacters;
     }
 }
 
@@ -69,10 +105,21 @@ function testPlay()
     let i = 0;
     while(shouldPlay)
     {
+        console.log("Used characters:"+ incorrectCharacters.size)
+        for(const item of incorrectCharacters)
+        {
+            console.log(item);
+        }
         let userGuess = prompt("Enter guess: ");
         let result = game.submitGuess(userGuess);
         console.log(result);
 
+        if(result == null)
+        {
+            console.log("Invalid input!");
+            shouldPlay = false;
+            return;
+        }
         // If null then maximum guesses acheived
         if(game.guesses.length > 5)
         {
@@ -96,4 +143,4 @@ module.exports = {
 };
 
 // TESTING ONLY
-//testPlay();
+testPlay();
