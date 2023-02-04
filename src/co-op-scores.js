@@ -5,12 +5,11 @@ const coopMultiplier = 0.3;
 
 function start() {
   startTime = new Date();
-  return startTime;
 }
 
 function end() { //calculates the total time between a guess/answer
    endTime = new Date();
-   var diffTime = endTime - start();
+   var diffTime = endTime - startTime;
    return diffTime;
 }
 
@@ -23,7 +22,7 @@ function scoresClac() {
 start();
 
 for(let i = 0; i<30430; i++){
-    console.log();
+    console.log(i);
 }
 end();
 scoresClac();
