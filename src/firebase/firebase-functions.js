@@ -35,36 +35,64 @@ class FirebaseFunctions {
             user.data().games_played,
         );
     }
+    
+    async getUser(id, collection) {
+        const userData = await this.fbConnection.getDocument(collection, id);
 
-    async addUser(id, name, games_won, games_lost, games_played, collection) {
+        return {
+            id: userData.id,
+            name: userData.data().name,
+            gamesWon: userData.data().games_won,
+            gamesLost: userData.data().games_lost,
+            gamesPlayed: userData.data().games_played,
+            elo: userData.data().elo,
+            score: userData.data().score
+        };
+    }
+     
+    async getUserStats(id, collection) {
+        const userData = await this.fbConnection.getDocument(collection, id);
+        
+        return {
+            gamesWon: userData.data().games_won,
+            gamesLost: userData.data().games_lost,
+            gamesPlayed: userData.data().games_played,
+            elo: userData.data().elo,
+            score: userData.data().score
+        };
+    }
+
+
+    async addUser(id, name, gamesWon, gamesLost, gamesPlayed, elo, score, collection) {
         let user = {
             name: name,
-            games_won: games_won,
-            games_lost: games_lost,
-            games_played: games_played
+            games_won: gamesWon,
+            games_lost: gamesLost,
+            games_played: gamesPlayed,
+            elo: elo,
+            score: score
         };
 
         await this.fbConnection.addDocument(collection, id, user);
     }
 
-    async updateUser(id, name, games_won, games_lost, games_played, collection) {
+    async updateUser(id, name, gamesWon, gamesLost, gamesPlayed, elo, score, collection) {
         let user = {
             name: name,
-            games_won: games_won,
-            games_lost: games_lost,
-            games_played: games_played
+            games_won: gamesWon,
+            games_lost: gamesLost,
+            games_played: gamesPlayed,
+            elo: elo,
+            score: score
         };
 
         await this.fbConnection.updateDocument(collection, id, user);
     }
 
-    async checkUserExists(id, name, collection) {
-        let user = {
-            name: name,
-        }
-
-        return await this.fbConnection.checkDocument(collection, id, user);
+    async checkUserExists(id, collection) {
+        return await this.fbConnection.checkDocument(collection, id);
     }
+
 }
 
 module.exports.FirebaseFunctions = FirebaseFunctions;

@@ -55,7 +55,7 @@ class FirebaseConnect {
         await docRef.set(object);
     }
 
-    async checkDocument(collection, document, object) {
+    async checkDocument(collection, document) {
         const doc = await this.database.collection(collection).doc(document).get(); 
 
         if (doc.data() == null) {
