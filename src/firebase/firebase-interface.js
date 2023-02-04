@@ -40,19 +40,29 @@ class FirebaseConnect {
     }
 
     async updateCollection(undefined) {
-
+        
     }
 
     async updateDocument(collection, document, object) {
-        const docRef = this.database.collection(collection).doc(document);
+        const docRef = await this.database.collection(collection).doc(document);
 
         await docRef.update(object);
     }
 
     async addDocument(collection, document, object) {
-        const docRef = this.database.collection(collection).doc(document);
+        const docRef = await this.database.collection(collection).doc(document);
 
         await docRef.set(object);
+    }
+
+    async checkDocument(collection, document, object) {
+        const doc = await this.database.collection(collection).doc(document).get(); 
+
+        if (doc.data() == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 

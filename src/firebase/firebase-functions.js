@@ -47,7 +47,7 @@ class FirebaseFunctions {
         await this.fbConnection.addDocument(collection, id, user);
     }
 
-    async updateUser(id, name, games_won, games_lost, games_played, collection) {
+    async updateUserExists(id, name, games_won, games_lost, games_played, collection) {
         let user = {
             name: name,
             games_won: games_won,
@@ -56,6 +56,14 @@ class FirebaseFunctions {
         };
 
         await this.fbConnection.updateDocument(collection, id, user);
+    }
+
+    async checkUser(id, name, collection) {
+        let user = {
+            name: name,
+        }
+
+        return await this.fbConnection.checkDocument(collection, id, user);
     }
 }
 
