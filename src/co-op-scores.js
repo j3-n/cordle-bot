@@ -23,7 +23,7 @@ function scoresClac() {
 start();
 
 for(let i = 0; i<30430; i++){
-    console.log(i);
+    console.log();
 }
 end();
 scoresClac();
