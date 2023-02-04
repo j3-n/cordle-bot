@@ -66,7 +66,6 @@ class FirebaseFunctions {
         };
     }
 
-
     async addUser(id, name, gamesWon, gamesLost, gamesPlayed, elo, score, collection) {
         let user = {
             name: name,
@@ -96,7 +95,6 @@ class FirebaseFunctions {
     async checkUserExists(id, collection) {
         return await this.fbConnection.checkDocument(collection, id);
     }
-
 }
 
 module.exports.FirebaseFunctions = FirebaseFunctions;
