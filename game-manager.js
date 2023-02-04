@@ -12,7 +12,12 @@ function newGame(channelId){
     return false;
 }
 
+function findGame(channelId){
+    return games.find(game => game.channelId == channelId);
+}
+
 module.exports = {
     games,
     newGame,
+    findGame,
 }
