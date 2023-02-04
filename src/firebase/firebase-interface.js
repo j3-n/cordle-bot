@@ -8,7 +8,7 @@ class FirebaseConnect {
     }
     
     initialize() {
-        this.serviceAccount = require('../fb-config/cordle-test-firebase-adminsdk-16gaq-61344483e9.json');
+        this.serviceAccount = require('../../fb-config/cordle-test-firebase-adminsdk-16gaq-61344483e9.json');
 
         initializeApp({
             credential: cert(this.serviceAccount)
