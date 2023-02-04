@@ -27,7 +27,7 @@ class WordleGame{
     }
 
     submitGuess(guess){
-        guess.toLowerCase();
+        guess = guess.toLowerCase();
         // Input filtering
         if(!this.checkInput(guess)){
             return null; // NULL RETURN WHEN INPUT INVALID
@@ -114,21 +114,18 @@ function testPlay()
         let result = game.submitGuess(userGuess);
         console.log(result);
 
-        if(result == null)
-        {
+        if(result == null){
             console.log("Invalid input!");
             shouldPlay = false;
             return;
         }
         // If null then maximum guesses acheived
-        if(game.guesses.length > 5)
-        {
+        if(game.guesses.length > 5){
             shouldPlay = false;
             console.log("Ran out of guesses!")
             
         }// check for correct guess
-        else if(result.correct)
-        {
+        else if(result.correct){
             shouldPlay = false;
             console.log("Correct answer!");
         }
