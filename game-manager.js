@@ -13,7 +13,11 @@ function newGame(channelId){
 }
 
 function findGame(channelId){
-    return games.find(game => game.channelId == channelId);
+    let game = games.find(game => game.channelId == channelId);
+    if(game)
+        return game.game
+    else
+        return null;
 }
 
 module.exports = {

@@ -10,6 +10,6 @@ module.exports = {
         if(newGame(interaction.channelId))
             interaction.reply({content: "The game begins!"});
         else
-            interaction.reply({content: "This channel already has an active game!"});
+            interaction.reply({content: "This channel already has an active game!", ephemeral: true});
     },
 };
