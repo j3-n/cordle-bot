@@ -38,7 +38,7 @@ module.exports = {
 
             // Check if the game has remaining guesses, if not terminate it
             if(!game.hasRemainingAttempts()){
-                interaction.channel.send(`You have run out of guesses! The word was \`${game.word}\``);
+                interaction.channel.send(`You have run out of guesses! The word was \`${game.word}\`.`);
                 completeGame(game.channelId);
             }
         } else

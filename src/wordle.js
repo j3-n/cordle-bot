@@ -22,14 +22,14 @@ var incorrectCharacters = new Set();
 class WordleGame{
     constructor(){
         // Choose a random word
-        this.word = wordList[Math.floor(Math.random() * wordList.length)]
-        this.guesses = []
+        this.word = wordList[Math.floor(Math.random() * wordList.length)];
+        this.guesses = [];
     }
 
     submitGuess(guess){
         guess = guess.toLowerCase();
         // Input filtering
-        if(!this.checkInput(guess)){
+        if(!this.checkInput(guess) && this.validWord(guess)){
             return null; // NULL RETURN WHEN INPUT INVALID
         }
         
@@ -77,6 +77,10 @@ class WordleGame{
                 return false;
         }
         return true;
+    }
+
+    validWord(input){
+        return wordList.includes(input);
     }
 
     hasRemainingAttempts()
