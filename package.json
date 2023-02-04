@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/JPadley18/hackaway-v6/issues"
   },
-  "homepage": "https://github.com/JPadley18/hackaway-v6#readme"
+  "homepage": "https://github.com/JPadley18/hackaway-v6#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1"
+  }
 }
