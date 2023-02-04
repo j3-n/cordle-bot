@@ -1,20 +1,18 @@
 const { start,end} = require('./time.js');
-const coopMultiplier = 0.6; //co-op multi
+const coopMultiplier = 0.9; //co-op multi
 var ogCoop = 5; //co-op multi
-var win = 1; //for test
-
+var compTimeScore =0 ;
 
 function coopScoresCalc() { //calcs score by how long an input takes
-  var timeScore = 0.5;
     if (end() < 20){
       for(let i = 0; i < end(); i++){
         ogCoop = ogCoop*coopMultiplier;
      
       }
+      compTimeScore += ogCoop 
     }
-    timeScore = timeScore + ogCoop 
-    timeScore = Math.round(timeScore);
-    return timeScore;
+    compTimeScore = Math.round(compTimeScore);
+    return compTimeScore;
 } 
 function coopWin(turnWin){ 
   //boiler-plate
@@ -31,13 +29,15 @@ function coopLoss(){ //needs to input stuff about user too!
 }
 
 //tests
-start();
-for(let i = 0; i<300; i++){
+
+/* for(let i = 0; i<6; i++){
+    start();
     console.log("Yes");
+    end();
 }
-end();
+
 coopWin(win);
-coopLoss();  
+coopLoss();  */ 
 
 //exports
 module.exports = {

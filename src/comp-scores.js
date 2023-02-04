@@ -1,19 +1,17 @@
 const { start,end} = require('./time.js');
-const compMultiplier = 0.8;
+const compMultiplier = 0.5;
 var ogComp = 8; //comp multi
-
+var compTimeScore =  0;
 
 function compScoresCalc() { //calcs 
-    var timeScore =  0.5;
     if (end() < 20){
       for(let i = 0; i < end(); i++){
         ogComp = ogComp*compMultiplier;
      
       }
+      compTimeScore += ogComp
     }
-    timeScore = ogComp;
-    timeScore = Math.round(timeScore);
-    return timeScore;
+    return Math.round(compTimeScore);
 } 
 
 function compWin(turnWin){
@@ -21,7 +19,7 @@ function compWin(turnWin){
     
     const turns = [25,22,18,15,12,9];
     let winScore = turns[turnWin-1] 
-    console.log(winScore);
+    console.log(winScore+compScoresCalc());
     //return winScore + total comptime calc
    //calc elo rating 
 
@@ -32,18 +30,23 @@ function compLose(User){
 }
   
 //testers
-start();
+/* for(let i = 0; i<2; i++){
+    start();
+    compScoresCalc();
+    for(let j = 0; j<30000; j++){
+        console.log(j);
+    }
   
-for(let i = 0; i<2000; i++){
-      console.log("yes");
+    end();
 }
-   
-end();
-compWin(6); 
-  
+
+compWin(2);
+   */
+
+
 //exports
 module.exports = {
     compWin,
     compLose,
     compMultiplier
-}
+} 
