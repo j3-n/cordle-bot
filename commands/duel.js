@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, GuildMember } = require("discord.js");
-const { newGame } = require("../game-manager.js");
+const { newChallenge } = require("../game-manager.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,9 +11,16 @@ module.exports = {
                 .setRequired(true),
         ),
     async execute(interaction){
-        if(!isValidOpponent(interaction.options.getMentionable("opponent"))){
+        let opponent = interaction.options.getMentionable("opponent");
+        if(!isValidOpponent(opponent))
             interaction.reply({content: "Please duel a valid user!", ephemeral: true});
-            return;
+        else {
+            // A valid duel has been started
+            if(newChallenge(interaction.user.id, opponent.user.id)){
+                // Send the duel invite to the other player
+                interaction.channel.send(`${opponent.user}, ${interaction.user} has challenged you to a duel! Type \`/accept\` or \`decline\` to respond!`);
+            } else
+                interaction.reply({content: "Each player can only have one active challenge!", ephemeral: true});
         }
     },
 };
