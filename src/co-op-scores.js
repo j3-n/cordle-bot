@@ -1,8 +1,8 @@
 var startTime, endTime;
 const coopMultiplier = 0.6; //co-op multi
 var ogCoop = 5; //co-op multi
-var timeScore;
-var win = 1;
+
+//var win = 1;
 function start() { //starts the timer
   startTime = new Date();
 }
@@ -49,3 +49,10 @@ for(let i = 0; i<6000; i++){
 end();
 coopWin(win);
 coopLoss();  */
+
+module.exports = {
+  ogCoop,
+  coopScoresCalc,
+  coopWin,
+  coopLoss
+};
