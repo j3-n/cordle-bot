@@ -19,7 +19,9 @@ class FirebaseFunctions {
                 user.data().name, " ",
                 user.data().games_won, " ",
                 user.data().games_lost, " ",
-                user.data().games_played,
+                user.data().games_played, " ",
+                user.data().elo, " ",
+                user.data().score, " ",
             );
         });
     }
@@ -32,7 +34,9 @@ class FirebaseFunctions {
             user.data().name, " ",
             user.data().games_won, " ",
             user.data().games_lost, " ",
-            user.data().games_played,
+            user.data().games_played, " ",
+            user.data().elo, " ",
+            user.data().score, " ",
         );
     }
     
@@ -49,7 +53,7 @@ class FirebaseFunctions {
             score: userData.data().score
         };
     }
-     
+
     async getUserStats(id, collection) {
         const userData = await this.fbConnection.getDocument(collection, id);
         
