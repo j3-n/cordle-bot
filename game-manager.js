@@ -4,7 +4,12 @@ const { WordleGame } = require("./src/wordle");
 var games = []
 
 function newGame(channelId){
-    games.push({channelId: channelId, game: new WordleGame()});
+    // If the channel does not have an active game, create it
+    if(!games.find(game => game.channelId == channelId)){
+        games.push({channelId: channelId, game: new WordleGame()});
+        return true;
+    }
+    return false;
 }
 
 module.exports = {
