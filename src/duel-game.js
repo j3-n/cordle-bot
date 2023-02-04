@@ -11,9 +11,9 @@ const Conditions = {
 // supply user ID to decide whos game to choose
 
 class DuelGame extends WordleGame{
-    constructor(playerID){
+    constructor(playerId){
         super();
-        this.playerID = playerID;
+        this.playerId = playerId;
     }
 
 } 
@@ -22,25 +22,25 @@ class DuelGame extends WordleGame{
 // 
 
 class DuelWordle{
-    constructor(PlayerOneID, PlayerTwoID){
+    constructor(player1, player2){
         
-        this.PlayerOne = new DuelGame(PlayerOneID);
-        this.PlayerTwo = new DuelGame(PlayerTwoID);
-        this.PlayerTwo.word = this.PlayerOne.word;
+        this.player1= new DuelGame(player1);
+        this.player2 = new DuelGame(player2);
+        this.player2.word = this.player1.word;
     }
 
-    submitGuess(PlayerID, guess)
+    submitGuess(playerId, guess)
     {
-        if(Object.is(PlayerID, this.PlayerOne.playerID)){
-            let result = this.PlayerOne.submitGuess(guess);
+        if(Object.is(playerId, this.player1.playerID)){
+            let result = this.player1.submitGuess(guess);
 
             if(result.correct)
                 return Conditions.PLAYER_ONE_WIN;
 
             return result;
         }
-        else if(Object.is(PlayerID, this.PlayerTwo.playerID)){
-            let result = this.PlayerTwo.submitGuess(guess);
+        else if(Object.is(playerId, this.player2.playerID)){
+            let result = this.player2.submitGuess(guess);
 
             if(result.correct)
                 return Conditions.PLAYER_TWO_WIN;
@@ -50,12 +50,12 @@ class DuelWordle{
         }
     }
 
-    getNumberOfAttempts(PlayerID)
+    getNumberOfAttempts(playerId)
     {
-        if(Object.is(PlayerID, this.PlayerOne.playerID))
-            return this.PlayerOne.guesses.length;
-        else if(Object.is(PlayerID, this.PlayerOne.playerID))
-            return this.PlayerTwo.guesses.length;
+        if(Object.is(playerId, this.player1.playerId))
+            return this.player1.guesses.length;
+        else if(Object.is(playerId, this.player1.playerId))
+            return this.player2.guesses.length;
         return Conditions.INVALID_ID;
     }
 }
