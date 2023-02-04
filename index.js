@@ -30,6 +30,14 @@ function main(c){
 }
 
 async function interactionCreated(interaction){
-    let command = interaction.client.commands.get(interaction.commandName);
-    await command.execute(interaction);
+    if(interaction.isChatInputCommand()){
+        let command = interaction.client.commands.get(interaction.commandName);
+        // Check that the command was valid
+        if(!command){
+            console.log(`An invalid command was issued (${interaction.commandName})`);
+            await interaction.reply({content: "Invalid command!", ephemeral: true});
+            return;
+        }
+        await command.execute(interaction);
+    }
 }
