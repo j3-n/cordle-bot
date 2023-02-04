@@ -31,7 +31,7 @@ class DuelWordle{
 
     submitGuess(playerId, guess)
     {
-        if(Object.is(playerId, this.player1.playerID)){
+        if(Object.is(playerId, this.player1.playerId)){
             let result = this.player1.submitGuess(guess);
 
             if(result.correct)
@@ -39,7 +39,7 @@ class DuelWordle{
 
             return result;
         }
-        else if(Object.is(playerId, this.player2.playerID)){
+        else if(Object.is(playerId, this.player2.playerId)){
             let result = this.player2.submitGuess(guess);
 
             if(result.correct)
@@ -48,6 +48,8 @@ class DuelWordle{
 
             return result;
         }
+        else
+            return Conditions.INVALID_ID;
     }
 
     getNumberOfAttempts(playerId)
@@ -61,18 +63,18 @@ class DuelWordle{
 }
 
 
-// function testShit()
-// {
+function testShit()
+{
     
-//     const dw = new DuelWordle(1, 2);
-//     console.log(dw.PlayerOne.word);
-//     console.log(dw.PlayerTwo.word);
+    const dw = new DuelWordle(1, 2);
+    console.log(dw.player1.word);
+    console.log(dw.player2.word);
 
-//     console.log(dw.submitGuess(1, "aoiue"));
+    console.log(dw.submitGuess(1, "aoiue"));
 
-// }
+}
 
-// testShit();
+testShit();
 
 module.exports = {
     DuelWordle,
