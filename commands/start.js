@@ -1,17 +1,13 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { WordleGame } = require("../src/wordle.js");
-const gameManager = require("../game-manager.js");
-
-function startGame(interaction){
-    gameManager.game = new WordleGame();
-    interaction.reply({content: gameManager.game.word});
-}
+const { newGame } = require("../game-manager.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("start")
         .setDescription("Begin a new game of wordle"),
     async execute(interaction){
-        startGame(interaction);
+        // Create a new game for this channel
+        newGame(interaction.channelId);
+        interaction.reply({content: "The game begins!"});
     },
 };
