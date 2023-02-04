@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/JPadley18/hackaway-v6#readme",
   "dependencies": {
-    "discord.js": "^14.7.1"
+    "discord.js": "^14.7.1",
+    "prompt": "^1.3.0",
+    "prompt-sync": "^4.2.0"
   }
 }
