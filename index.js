@@ -2,6 +2,7 @@ const { Client, Events, GatewayIntentBits, REST, Routes, Collection } = require(
 const fs = require("fs");
 const path = require("path");
 const config = require("./config.json");
+const { refreshCommands } = require("./register-commands.js");
 
 // Setup the discord client
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -20,6 +21,9 @@ commandFiles.forEach(file => {
     let command = require(path.join(commandPath, file));
     client.commands.set(command.data.name, command);
 });
+
+// Refresh the slash commands available on the discord server
+refreshCommands();
 
 client.login(config.token);
 
