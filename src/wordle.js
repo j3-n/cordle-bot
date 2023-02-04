@@ -79,14 +79,9 @@ class WordleGame{
         return true;
     }
 
-    getNumberOfAttempts()
+    hasRemainingAttempts()
     {
-        return this.guesses.length;
-    }
-
-    getIncorrectCharactersSet()
-    {
-        return this.incorrectCharacters;
+        return this.guesses.length < 6;
     }
 }
 
@@ -105,6 +100,7 @@ function testPlay()
     let i = 0;
     while(shouldPlay)
     {
+        console.log(game.hasRemainingAttempts());
         console.log("Used characters:"+ incorrectCharacters.size)
         for(const item of incorrectCharacters)
         {
