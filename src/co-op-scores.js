@@ -1,19 +1,8 @@
-var startTime, endTime;
+const { start,end} = require('./time.js');
 const coopMultiplier = 0.6; //co-op multi
 var ogCoop = 5; //co-op multi
+var win = 1; //for test
 
-//var win = 1;
-function start() { //starts the timer
-  startTime = new Date();
-}
-
-function end() { //calculates the total time between a guess/answer and end of time
-   endTime = new Date();
-   var diffTime = endTime - startTime;
-   diffTime /= 1000; 
-   var seconds = Math.round(diffTime);
-   return seconds;
-}
 
 function coopScoresCalc() { //calcs score by how long an input takes
   var timeScore = 0.5;
@@ -42,17 +31,18 @@ function coopLoss(){ //needs to input stuff about user too!
 }
 
 //tests
-/* start();
-for(let i = 0; i<6000; i++){
+start();
+for(let i = 0; i<300; i++){
     console.log("Yes");
 }
 end();
 coopWin(win);
-coopLoss();  */
+coopLoss();  
 
+//exports
 module.exports = {
   ogCoop,
   coopScoresCalc,
   coopWin,
   coopLoss
-};
+}

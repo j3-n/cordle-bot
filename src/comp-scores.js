@@ -1,18 +1,8 @@
-var startTime, endTime;
+const { start,end} = require('./time.js');
 const compMultiplier = 0.8;
 var ogComp = 8; //comp multi
 
-function start() { //starts the timer
-    startTime = new Date();
-  }
-  
-function end() { //calculates the total time between a guess/answer and end of time
-     endTime = new Date();
-     var diffTime = endTime - startTime;
-     diffTime /= 1000; 
-     var seconds = Math.round(diffTime);
-     return seconds;
-}
+
 function compScoresCalc() { //calcs 
     var timeScore =  0.5;
     if (end() < 20){
@@ -33,12 +23,12 @@ function compWin(turnWin){
     let winScore = turns[turnWin-1] 
     console.log(winScore);
     //return winScore + total comptime calc
-    //calc elo rating 
+   //calc elo rating 
 
 }
 
 function compLose(User){
-   //I NEED THE SERVER FOR THIS
+   //I NEED THE DATABASE FOR THIS
 }
   
 //testers
@@ -51,8 +41,9 @@ for(let i = 0; i<2000; i++){
 end();
 compWin(6); 
   
+//exports
 module.exports = {
     compWin,
     compLose,
     compMultiplier
-};
+}
