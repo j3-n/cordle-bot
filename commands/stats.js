@@ -26,11 +26,13 @@ module.exports = {
             Total: ${stats.gamesPlayed}
             Score gained: ${stats.score}
             \`\`\``;
-        }
 
-        interaction.reply({
-            content: statsStr,
-            ephemeral: true
-        });
+            interaction.reply({
+                content: statsStr,
+                ephemeral: true
+            });
+        } else
+            interaction.reply({content: "Please query a valid user!", ephemeral: true});
+
     },
 };
