@@ -16,7 +16,7 @@ module.exports = {
         if(player instanceof GuildMember){
             let id = player ? player.id : interaction.user.id;
 
-            if (!FirebaseFunctions.checkUserExists(id)) {
+            if (FirebaseFunctions.checkUserExists(id)) {
                 interaction.reply({
                     content: "This user has never played before!",
                     ephemeral: true
