@@ -2,19 +2,17 @@ const { FirebaseFunctions } = require('./firebase/firebase-functions');
 
 class Leaderboard {
     constructor() {
-        this.fbFunctions = undefined;
         this.users = undefined;
         this.topTen = undefined;
     }
 
     initialize() {
-        this.fbFunctions = FirebaseFunctions;
         this.users = [];
         this.topTen = [];
     }
 
     async makeTopTen() {
-        this.users = await this.fbFunctions.getUsers("users");
+        this.users = await FirebaseFunctions.getUsers("users");
 
         if (this.users.length <= 10) {
             var leadboardLength = this.users.length;

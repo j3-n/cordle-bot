@@ -54,6 +54,25 @@ class FirebaseFunctions {
         };
     }
 
+    async getUsers(collection) {
+        const usersData = await this.fbConnection.getCollection(collection);
+        const users = [];
+        
+        usersData.forEach((user) => {
+            users.push({
+                id: user.id,
+                name: user.data().name,
+                gamesWon: user.data().games_won,
+                gamesLost: user.data().games_lost,
+                gamesPlayed: user.data().games_played,
+                elo: user.data().elo,
+                score: user.data().score
+            })
+        });
+
+        return users;
+    }
+
     async getUserStats(id, collection) {
         const userData = await this.fbConnection.getDocument(collection, id);
         

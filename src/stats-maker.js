@@ -2,17 +2,15 @@ const { FirebaseFunctions } = require('./firebase/firebase-functions');
 
 class Stats {
     constructor(userId) {
-        this.fbFunctions = undefined;
         this.userId = userId;
         this.userObj = undefined;
     }
 
     initialize() {
-        this.fbFunctions = new FirebaseFunctions;
     }
 
     async makeStats() {
-        this.userObj = await this.fbFunctions.getUser(this.userId, "users");
+        this.userObj = await FirebaseFunctions.getUser(this.userId, "users");
 
         return {
             id: this.userId,
