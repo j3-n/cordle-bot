@@ -26,7 +26,7 @@ async function compWin(turnWin, userID){
 
 async function compLose(turnLose, userID){    
     const turns = [9,12,15,18,22,25];
-    var loseScore = turns[turnWin-1] 
+    var loseScore = turns[turnLose-1] 
 
     const user = await FirebaseFunctions.getUser(userID, "users");
     var elo = user.elo;
