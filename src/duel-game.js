@@ -3,9 +3,7 @@ const { WordleGame } = require("./wordle");
 const Conditions = {
     OUT_OF_GUESSES: "OUT_OF_GUESSES",
     INVALID_ID: "INVALID_ID",
-    PLAYER_ONE_WIN: "PLAYER_ONE_WIN",
-    PLAYER_TWO_WIN: "PLAYER_TWO_WIN",
-    INVALID_INPUT: "INVALID_INPUT",
+    WIN: "WIN",
 }
 
 // Two players with individual guesses
