@@ -1,4 +1,5 @@
 const { WordleGame } = require("./wordle");
+const { compWin, compLoose, compMulitplier } = require("./co-op-scores");
 
 const Conditions = {
     OUT_OF_GUESSES: "OUT_OF_GUESSES",
@@ -66,15 +67,22 @@ class DuelWordle{
         return Conditions.INVALID_ID;
     }
 
-    isPlayerOutOftime()
+    playerWon(playerID)
     {
-
+        compWin(6-this.getPlayerFromID(playerID).guesses.length, playerID);
     }
 
-    playerGuessingOutOfTime()
+    getPlayerFromID(playerID)
     {
-        
+        let player = null;
+        if(Object.is(playerID, this.player1.playerId))
+            return this.player1;
+        else if(Object.is(playerID, this.player2.playerId))
+            return this.player2;
+        else
+            return null;
     }
+
 }
 
 
