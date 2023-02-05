@@ -97,7 +97,9 @@ class FirebaseFunctions {
     }
 
     async createUserIfNotExists(id) {
-        if (!this.checkUserExists(id, "users")) {
+        console.log("creating " + id);
+        if (await this.checkUserExists(id, "users")) {
+            console.log("calling database");
             await this.fbConnection.addDocument(
                 "users",
                 id,

@@ -1,8 +1,6 @@
 const { start,end } = require('./time.js');
 const { FirebaseFunctions } = require('./firebase/firebase-functions');
 const compMultiplier = 0.5;
-const fbFunc = new FirebaseFunctions();
-fbFunc.initialize();
 
 async function compWin(turnWin, userID){
     //boiler-plate
@@ -10,7 +8,7 @@ async function compWin(turnWin, userID){
     let winScore = turns[turnWin-1] 
     let eloScore = turns[turnWin-1] 
 
-    const user = await fbFunc.getUser(userID, "users");
+    const user = await FirebaseFunctions.getUser(userID, "users");
     let score = user.score;
     winScore += score;
     let eloScores = user.elo;
@@ -31,7 +29,7 @@ async function compWin(turnWin, userID){
 async function compLose(userID){    
     let eloScore = -18;
 
-    const user = await fbFunc.getUser(userID, "users");
+    const user = await FirebaseFunctions.getUser(userID, "users");
     var elo = user.elo;
 
     if( elo + eloScore < 0){

@@ -7,13 +7,6 @@ class ResultHandler {
         this.uIdTwo = userIdTwo;
         this.winner = winner;
         this.attempts = attempts;
-
-        this.fbFunctions = undefined;
-    }
-
-    initialize() {  
-        this.fbFunctions = new FirebaseFunctions();
-        this.fbFunctions.initialize();
     }
 
     async postResult() {
@@ -27,7 +20,7 @@ class ResultHandler {
             return;
         }
 
-        await this.fbFunctions.updateUser(
+        await FirebaseFunctions.updateUser(
             userOne.id,
             userOne.name,
             userOne.gamesWon,
@@ -38,7 +31,7 @@ class ResultHandler {
             userOne.collection
         );
             
-        await this.fbFunctions.updateUser(
+        await FirebaseFunctions.updateUser(
             userTwo.id,
             userTwo.name,
             userTwo.gamesWon,
@@ -50,3 +43,5 @@ class ResultHandler {
         );
     }
 }
+
+module.exports.ResultHandler = ResultHandler;
