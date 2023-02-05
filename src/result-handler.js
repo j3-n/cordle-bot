@@ -10,10 +10,10 @@ class ResultHandler {
     }
 
     async postResult() {
-        if (this.uIdOne == this.winner) {
+        if (this.uIdOne === this.winner) {
             var userOne = await compWin(this.attempts, this.uIdOne);
             var userTwo = await compLose(this.uIdTwo);
-        } else if (this.uIdTwo == this.winner) {
+        } else if (this.uIdTwo === this.winner) {
             var userTwo = await compWin(this.attempts, this.uIdOne);
             var userOne = await compLose(this.uIdTwo);
         } else {
