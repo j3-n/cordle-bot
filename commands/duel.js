@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, GuildMember } = require("discord.js");
-const { newChallenge, findChallenge, findGame } = require("../game-manager.js");
+const { newChallenge, findGame } = require("../game-manager.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
