@@ -1,5 +1,5 @@
 const { FirebaseFunctions } = require('./firebase/firebase-functions');
-const { compWin, compLose } = require('./comp-scores');
+const { compWin, compLose, compDraw } = require('./comp-scores');
 
 class ResultHandler {
     constructor(userIdOne, userIdTwo, winner, attempts) {
@@ -17,7 +17,8 @@ class ResultHandler {
             var userTwo = await compWin(this.attempts, this.uIdTwo);
             var userOne = await compLose(this.attempts, this.uIdOne);
         } else {
-            return;
+            var userOne = await compDraw(this.uIdOne);
+            var userTwo = await compDraw(this.uIdTwo);
         }
 
         await FirebaseFunctions.updateUser(
