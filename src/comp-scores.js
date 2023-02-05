@@ -26,7 +26,7 @@ async function compWin(turnWin, userID){
 
 async function compLose(turnLose, userID){    
     const turns = [9,12,15,18,22,25];
-    var loseScore = turns[turnLose-1] 
+    var loseScore = turns[turnWin-1] 
 
     const user = await FirebaseFunctions.getUser(userID, "users");
     var elo = user.elo;
@@ -50,7 +50,7 @@ async function compLose(turnLose, userID){
             gamesWon: user.gamesWon,
             gamesLost: user.gamesLost+1,
             gamesPlayed: user.gamesPlayed+1,
-            elo: eloScore,
+            elo: elo,
             score: user.score,
             collection: "users"
         };
@@ -58,9 +58,11 @@ async function compLose(turnLose, userID){
 }
 async function compDraw(userID){
     var drawScore = 8;
-    const user = await FirebaseFunctions.getUser(userID, "users");   
     var drawScores = user.score;
     drawScores += drawScore;
+
+    const user = await FirebaseFunctions.getUser(userID, "users");   
+
     return {
         id: user.id,
         name: user.name,
