@@ -65,52 +65,7 @@ class DuelWordle{
         return {condition: null, result: result};
     }
 
-    getNumberOfAttempts(playerId)
-    {
-        if(Object.is(playerId, this.player1.playerId))
-            return this.player1.guesses.length;
-        else if(Object.is(playerId, this.player1.playerId))
-            return this.player2.guesses.length;
-        return Conditions.INVALID_ID;
-    }
-
-    playerWon(playerID)
-    {
-        let player = this.getPlayerFromID(playerID);
-        if(player == null)
-        {
-            console.log("PISS AND SHIT!");
-            return;
-        }
-        compWin(6-player.guesses.length, playerID);
-    }
-
-    getPlayerFromID(playerID)
-    {
-        let player = null;
-        if(Object.is(playerID, this.player1.playerId))
-            return this.player1;
-        else if(Object.is(playerID, this.player2.playerId))
-            return this.player2;
-        else
-            return null;
-    }
-
 }
-
-
-function testShit()
-{
-    
-    const dw = new DuelWordle(1, 2);
-    console.log(dw.player1.word);
-    console.log(dw.player2.word);
-
-    console.log(dw.submitGuess(1, "aoiue"));
-
-}
-
-//testShit();
 
 module.exports = {
     DuelWordle,
