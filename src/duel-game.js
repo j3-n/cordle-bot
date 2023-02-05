@@ -69,7 +69,13 @@ class DuelWordle{
 
     playerWon(playerID)
     {
-        compWin(6-this.getPlayerFromID(playerID).guesses.length, playerID);
+        let player = this.getPlayerFromID(playerID);
+        if(player == null)
+        {
+            console.log("PISS AND SHIT!");
+            return;
+        }
+        compWin(6-player.guesses.length, playerID);
     }
 
     getPlayerFromID(playerID)
