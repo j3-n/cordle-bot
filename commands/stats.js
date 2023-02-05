@@ -13,10 +13,10 @@ module.exports = {
     async execute(interaction){
         // create leaderboard
         let player = interaction.options.getMentionable("player");
-        if(player instanceof GuildMember){
+        if(player instanceof GuildMember|| !player){
             let id = player ? player.id : interaction.user.id;
 
-            if (FirebaseFunctions.checkUserExists(id)) {
+            if (await FirebaseFunctions.checkUserExists(id)) {
                 interaction.reply({
                     content: "This user has never played before!",
                     ephemeral: true
