@@ -47,30 +47,94 @@ class WordleGame{
             if(guess.charAt(i) == this.word.charAt(i))
                 result = Result.CORRECT_CHARACTER;
             else if(this.word.includes(guess.charAt(i))) // needs to check for cases where the character only occurs once but the guess has two instances of it
-            {
-                charUsed.push(key);
-                let timesInWord = 0;
-                for(let i = 0; i < this.word.length; i++)
+            { // Check in for loop against word and if equal to word[index] then check that gues[index] doesnt equal word[index]
+                result = Result.INCORRECT_POSITION;
+
+                charUsed.push(key); // push key
+
+                let idk = false;
+                for(let i = 0; i < guess.length; i++)
                 {
-                    if(Object.is(this.word.charAt(i), key))
+                    // If key is equal to character in guess
+                    if(Object.is(key, guess.charAt(i)))
                     {
-                        timesInWord++;
+                        if(Object.is(key, this.word.charAt(i)))
+                        {
+                            result = Result.INCORRECT_CHARACTER;
+                            idk = true;
+                        }
                     }
                 }
-                // console.log("In word: "+timesInWord);
-                let timesInUsed = 0;
-                for(let i = 0; i < charUsed.length; i++)
+
+                if(!idk)
                 {
-                    if(Object.is(key, charUsed[i]))
+                    let charInWord = 0;
+                    for(let i = 0; i < this.word.length; i++)
                     {
-                        timesInUsed++;
+                        if(Object.is(key, this.word.charAt(i)))
+                        {
+                            charInWord++;
+                        }
                     }
+    
+                    let charSeen = 0;
+                    for(let i = 0; i < charUsed.length; i++)
+                    {
+                        if(Object.is(key, charUsed[i]))
+                        {
+                            charSeen++;
+                        }
+                    }
+    
+                    if(charSeen > charInWord)
+                        result = Result.INCORRECT_CHARACTER;
                 }
-                // console.log("In guess"+timesInUsed);
-                if(timesInUsed <= timesInWord)
-                    result = Result.INCORRECT_POSITION
-                else
-                    result = Result.INCORRECT_CHARACTER;
+
+                
+
+                // for(let i = 0; i < guess.length; i++)
+                // {
+                //     if(Object.is(guess.charAt(i),this.word.charAt(i)))
+                //     {
+                //         if(Object.is(guess.charAt(i),key))
+                //         {
+                //             result = Result.INCORRECT_CHARACTER;
+                //             console.log("Guess: "+guess.charAt(i)+" at index "+i);
+                //             console.log("Word: "+this.word.charAt(i));
+
+                //         }
+                        
+                //     }
+                // }
+
+                
+                // if(result != Result.INCORRECT_CHARACTER)
+                // {
+                //     console.log("!");
+                //     let numOfCharsInWord = 0;
+                //     for(let i = 0; i < this.word.length; i++)
+                //     {
+                //         if(Object.is(key, this.word.charAt(i)))
+                //         {
+                //             numOfCharsInWord++;
+                //         }
+                //     }
+
+                //     if(charUsed.length > numOfCharsInWord)
+                //         result = Result.INCORRECT_CHARACTER;
+                //     // let numCharsInGuess = 0;
+                //     // for(let i = 0; i < guess.length; i++)
+                //     // {
+                //     //     if(Object.is(key, guess.charAt(i)))
+                //     //     {
+
+                //     //     }
+                //     // }
+                    
+                // }
+
+                
+
             }
             else{
                 result = Result.INCORRECT_CHARACTER;
@@ -125,8 +189,8 @@ module.exports = {
 function testThings()
 {
     let wg = new WordleGame();
-    wg.word = "train"
-    wg.submitGuess("crate");
+    wg.word = "glaas"
+    wg.submitGuess("ssbbg");
 }
 
 testThings();
