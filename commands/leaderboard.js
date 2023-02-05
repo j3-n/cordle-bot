@@ -9,7 +9,7 @@ module.exports = {
         // create leaderboard
         const leaderboard = new Leaderboard();
         leaderboard.initialize();
-        const topTen = leaderboard.makeTopTen();
+        const topTen = await leaderboard.makeTopTen();
 
         var leaderboardStr = "";
 
@@ -19,7 +19,6 @@ module.exports = {
 
         interaction.reply({
             content: leaderboardStr,
-            ephemeral: true
         });
     },
 };
