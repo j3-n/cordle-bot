@@ -15,9 +15,9 @@ async function compWin(turnWin, userID){
     return {
         id: user.id,
         name: user.name,
-        gamesWon: user.gamesWon,
+        gamesWon: user.gamesWon+1,
         gamesLost: user.gamesLost,
-        gamesPlayed: user.gamesPlayed,
+        gamesPlayed: user.gamesPlayed+1,
         elo: eloScores,
         score: winScore,
         collection: "users"
@@ -47,8 +47,8 @@ async function compLose(userID){
             id: user.id,
             name: user.name,
             gamesWon: user.gamesWon,
-            gamesLost: user.gamesLost,
-            gamesPlayed: user.gamesPlayed,
+            gamesLost: user.gamesLost+1,
+            gamesPlayed: user.gamesPlayed+1,
             elo: eloScore,
             score: user.score,
             collection: "users"
