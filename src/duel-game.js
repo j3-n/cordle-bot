@@ -7,6 +7,7 @@ const Conditions = {
     WIN: "WIN",
     INVALID_INPUT: "INVALID_INPUT",
     INVALID_WORD: "INVALID_WORD",
+    BOTH_PLAYERS_OUT: "BOTH_PLAYERS_OUT",
 }
 
 // Two players with individual guesses
@@ -55,8 +56,11 @@ class DuelWordle{
             if(result.correct)
                 return {condition: Conditions.WIN, result: result};
         }
-        if(!player.hasRemainingAttempts())
+        if(!player.hasRemainingAttempts()){
+            if(!this.player1.hasRemainingAttempts() && !this.player2.hasRemainingAttempts())
+                return {condition: Conditions.BOTH_PLAYERS_OUT, result: result};
             return {condition: Conditions.OUT_OF_GUESSES, result: result};
+        }
             
         return {condition: null, result: result};
     }
