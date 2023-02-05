@@ -4,6 +4,7 @@ const Conditions = {
     OUT_OF_GUESSES: "OUT_OF_GUESSES",
     INVALID_ID: "INVALID_ID",
     WIN: "WIN",
+    INVALID_INPUT: "INVALID_INPUT",
 }
 
 // Two players with individual guesses
@@ -39,6 +40,9 @@ class DuelWordle{
             player = this.player2;
         else
             return {condition: Conditions.INVALID_ID, result: null};
+
+        if(!player.checkInput(guess))
+            return {condition: Conditions.INVALID_INPUT, result: null};
         
         let result = null;
         if(player.hasRemainingAttempts()){
