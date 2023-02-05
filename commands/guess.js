@@ -3,6 +3,7 @@ const { findGameByChannelId, completeGame } = require("../game-manager.js");
 const { Conditions } = require("../src/duel-game.js");
 const { Result } = require("../src/wordle.js");
 const { ResultHandler } = require("../src/result-handler.js");
+const { FirebaseFunctions } = require("../src/firebase/firebase-functions");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -42,6 +43,8 @@ module.exports = {
             if(result.condition == Conditions.BOTH_PLAYERS_OUT){
                 interaction.channel.send(`TIE! All players are out of guesses! The word was \`${game.game.player1.word}\`.`);
                 endGame(interaction.channel);
+                new ResultHandler(game.player1Id, game.player2Id, "", 0).postResult();
+                await sendElo(interaction.channel, interaction.user);
             } else if(result.condition == Conditions.OUT_OF_GUESSES){
                 if(result.result)
                     interaction.channel.send(`${interaction.user} has run out of guesses!`);
@@ -53,6 +56,8 @@ module.exports = {
                 // Update the database
                 let handler = new ResultHandler(game.player1Id, game.player2Id, interaction.user.id, result.attempts);
                 handler.postResult();
+
+                await sendElo(interaction.channel, interaction.user);
             }
         } else
             interaction.reply({content: "There is no active game in this channel!", ephemeral: true});
@@ -62,4 +67,9 @@ module.exports = {
 function endGame(channel){
     completeGame(channel.id);
     //channel.threads.cache.find(th => th.id == channel.id).setArchive(true);
+}
+
+async function sendElo(channel, user){
+    let elo = await FirebaseFunctions.getUserElo(user.id);
+    channel.send(`${user}, your elo score is now \`🏆${elo}\``);
 }
