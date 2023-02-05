@@ -115,13 +115,13 @@ class FirebaseFunctions {
         return await this.fbConnection.checkDocument(collection, id);
     }
 
-    async createUserIfNotExists(id) {
+    async createUserIfNotExists(id, name) {
         if (await this.checkUserExists(id, "users")) {
             await this.fbConnection.addDocument(
                 "users",
                 id,
                 {
-                    name: "temp-name",
+                    name: name,
                     games_won: 0,
                     games_lost: 0,
                     games_played: 0,
