@@ -25,9 +25,9 @@ function gameExists(player){
     return findGame(player) ? true : false;
 }
 
-function completeGame(channelId){
+function completeGame(threadId){
     // Remove the game from the list
-    games.splice(games.findIndex(game => game.channelId == channelId), 1);
+    games.splice(games.findIndex(game => game.threadId == threadId), 1);
 }
 
 function newChallenge(player1, player2){

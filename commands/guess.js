@@ -23,6 +23,8 @@ module.exports = {
                 interaction.reply({content: "You are not part of this game!", ephemeral: true});
             else if(result.condition == Conditions.INVALID_INPUT)
                 interaction.reply({content: "Invalid input!", ephemeral: true});
+            else if(result.condition == Conditions.INVALID_WORD)
+                interaction.reply({content: "That is not a word!", ephemeral: true});
             else if(result.result){
                 reply = `${guess} \n`;
                 result.result.guess.forEach(char => {
@@ -34,7 +36,7 @@ module.exports = {
                         emote_name = "🟨";
                     reply += emote_name;
                 });
-                interaction.reply({content: reply});
+                interaction.reply({content: reply, ephemeral: true});
             }
 
             if(result.condition == Conditions.OUT_OF_GUESSES)
@@ -42,9 +44,10 @@ module.exports = {
                     interaction.channel.send("You have run out of guesses!");
                 else 
                     interaction.reply({content: "You have run out of guesses!", ephemeral: true});
-            else if(result.condition == Conditions.WIN)
-                interaction.channel.send("someone won lol");
-                //TODO: end game
+            else if(result.condition == Conditions.WIN){
+                interaction.channel.send(`${interaction.user} has WON! The word was \`${game.player1.word}\`.`);
+                completeGame(interaction.channelId);
+            }
         } else
             interaction.reply({content: "There is no active game in this channel! Use `/start` to start one.", ephemeral: true});
     },
