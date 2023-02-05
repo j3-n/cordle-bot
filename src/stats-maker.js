@@ -11,7 +11,7 @@ class Stats {
 
     async makeStats() {
         this.userObj = await FirebaseFunctions.getUser(this.userId, "users");
-
+        console.log(this.userObj);
         return {
             id: this.userId,
             name: this.userObj.name,
