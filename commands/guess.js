@@ -43,7 +43,7 @@ module.exports = {
             if(result.condition == Conditions.BOTH_PLAYERS_OUT){
                 interaction.channel.send(`TIE! All players are out of guesses! The word was \`${game.game.player1.word}\`.`);
                 endGame(interaction.channel);
-                new ResultHandler(game.player1Id, game.player2Id, "", 0).postResult();
+                await new ResultHandler(game.player1Id, game.player2Id, "", 0).postResult();
                 await sendElo(interaction.channel, interaction.user);
             } else if(result.condition == Conditions.OUT_OF_GUESSES){
                 if(result.result)
@@ -55,7 +55,7 @@ module.exports = {
                 endGame(interaction.channel);
                 // Update the database
                 let handler = new ResultHandler(game.player1Id, game.player2Id, interaction.user.id, result.attempts);
-                handler.postResult();
+                await handler.postResult();
 
                 await sendElo(interaction.channel, interaction.user);
             }

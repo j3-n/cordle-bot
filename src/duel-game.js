@@ -35,6 +35,7 @@ class DuelWordle{
 
     submitGuess(playerId, guess)
     {
+        guess = guess.toLowerCase();
         let player = null;
         if(Object.is(playerId, this.player1.playerId))
             player = this.player1;
