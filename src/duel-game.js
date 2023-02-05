@@ -3,8 +3,7 @@ const { WordleGame } = require("./wordle");
 const Conditions = {
     OUT_OF_GUESSES: "OUT_OF_GUESSES",
     INVALID_ID: "INVALID_ID",
-    PLAYER_ONE_WIN: "PLAYER_ONE_WIN",
-    PLAYER_TWO_WIN: "PLAYER_TWO_WIN",
+    WIN: "WIN",
 }
 
 // Two players with individual guesses
@@ -33,28 +32,20 @@ class DuelWordle{
 
     submitGuess(playerId, guess)
     {
-        if(Object.is(playerId, this.player1.playerId)){
-            let result = this.player1.submitGuess(guess);
-
-            if(result.correct)
-                return Conditions.PLAYER_ONE_WIN;
-            else if(!this.player1.hasRemainingAttempts())
-                return Conditions.OUT_OF_GUESSES;
-
-            return result;
-        }
-        else if(Object.is(playerId, this.player2.playerId)){
-            let result = this.player2.submitGuess(guess);
-
-            if(result.correct)
-                return Conditions.PLAYER_TWO_WIN;
-            else if(!this.player2.hasRemainingAttempts())
-                return Conditions.OUT_OF_GUESSES;
-
-            return result;
-        }
+        let player = null;
+        if(Object.is(playerId, this.player1.playerId))
+            player = this.player1;
+        else if(Object.is(playerId, this.player2.playerId))
+            player = this.player2;
         else
-            return Conditions.INVALID_ID;
+            return {condition: Conditions.INVALID_ID, result: null};
+        
+        let result = player.submitGuess(guess);
+
+        if(result.correct)
+            return {condition: Conditions.WIN, result: result};
+        else if(!player.hasRemainingAttempts())
+            return {condition: Conditions.OUT_OF_GUESSES, result: result};
     }
 
     getNumberOfAttempts(playerId)
