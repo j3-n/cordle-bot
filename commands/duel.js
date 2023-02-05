@@ -6,7 +6,7 @@ module.exports = {
         .setName("duel")
         .setDescription("Begin a new game of wordle")
         .addMentionableOption(option => 
-            option.setName("opponent")
+            option.setName("pussy to duel") // was opponent
                 .setDescription("Your noble opponent")
                 .setRequired(true),
         ),
@@ -17,7 +17,7 @@ module.exports = {
         else {
             // A valid duel has been started
             if(findGame(interaction.user.id) || findGame(opponent.user.id))
-                interaction.reply({content: "One or more players are already in a game!", ephemeral: true});
+                interaction.reply({content: "One or more players are already in a game you dense fuck!", ephemeral: true});
             else if(newChallenge(interaction.user.id, opponent.user.id)){
                 // Send the duel invite to the other player
                 interaction.reply({content: "Challenge sent! Good luck.", ephemeral: true});
