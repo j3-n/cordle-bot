@@ -3,8 +3,8 @@ const { FirebaseFunctions } = require('./firebase/firebase-functions');
 async function compWin(turnWin, userID){
     //boiler-plate
     const turns = [25,22,18,15,12,9];
-    var winScore = turns[turnWin-2] 
-    var eloScore = turns[turnWin-2] 
+    var winScore = turns[turnWin-1] 
+    var eloScore = turns[turnWin-1] 
 
     const user = await FirebaseFunctions.getUser(userID, "users");
     var score = user.score;
@@ -26,7 +26,7 @@ async function compWin(turnWin, userID){
 
 async function compLose(turnLose, userID){    
     const turns = [9,12,15,18,22,25];
-    var loseScore = turns[turnLose-2] 
+    var loseScore = turns[turnLose-1] 
 
     const user = await FirebaseFunctions.getUser(userID, "users");
     var elo = user.elo;
