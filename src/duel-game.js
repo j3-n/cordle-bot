@@ -1,5 +1,4 @@
 const { WordleGame, isValidWord } = require("./wordle");
-const { compWin, compLoose, compMulitplier } = require("./co-op-scores");
 
 const Conditions = {
     OUT_OF_GUESSES: "OUT_OF_GUESSES",
