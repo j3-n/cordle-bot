@@ -46,6 +46,8 @@ class DuelWordle{
             return {condition: Conditions.WIN, result: result};
         else if(!player.hasRemainingAttempts())
             return {condition: Conditions.OUT_OF_GUESSES, result: result};
+
+        return {condition: null, result: result};
     }
 
     getNumberOfAttempts(playerId)
