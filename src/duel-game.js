@@ -1,4 +1,4 @@
-const { WordleGame } = require("./wordle");
+const { WordleGame, isValidWord } = require("./wordle");
 const { compWin, compLoose, compMulitplier } = require("./co-op-scores");
 
 const Conditions = {
@@ -6,6 +6,7 @@ const Conditions = {
     INVALID_ID: "INVALID_ID",
     WIN: "WIN",
     INVALID_INPUT: "INVALID_INPUT",
+    INVALID_WORD: "INVALID_WORD",
 }
 
 // Two players with individual guesses
@@ -44,7 +45,9 @@ class DuelWordle{
 
         if(!player.checkInput(guess))
             return {condition: Conditions.INVALID_INPUT, result: null};
-        
+        if(!isValidWord(guess))
+            return {condition: Conditions.INVALID_WORD, result: null};
+
         let result = null;
         if(player.hasRemainingAttempts()){
             result = player.submitGuess(guess);
@@ -76,11 +79,6 @@ class DuelWordle{
             return;
         }
         compWin(6-player.guesses.length, playerID);
-    }
-
-    playerLoss(playerID)
-    {
-        compLoose(playerID);
     }
 
     getPlayerFromID(playerID)

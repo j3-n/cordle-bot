@@ -29,7 +29,7 @@ class WordleGame{
     submitGuess(guess){
         guess = guess.toLowerCase();
         // Input filtering
-        if(!this.checkInput(guess) && this.validWord(guess)){
+        if(!this.checkInput(guess)){
             return null; // NULL RETURN WHEN INPUT INVALID
         }
         
@@ -74,10 +74,6 @@ class WordleGame{
         return /^[a-zA-Z()]*$/.test(input);
     }
 
-    validWord(input){
-        return wordList.includes(input);
-    }
-
     hasRemainingAttempts()
     {
         return this.guesses.length < 6;
@@ -87,6 +83,10 @@ class WordleGame{
 function importWords(){
     let data = fs.readFileSync("./words.json", {encoding:"utf8", flag:"r"});
     return JSON.parse(data);
+}
+
+function isValidWord(word){
+    return wordList.includes(word);
 }
 
 // TESTING ONLY
@@ -132,6 +132,7 @@ function testPlay()
 module.exports = {
     WordleGame,
     Result,
+    isValidWord,
 };
 
 // TESTING ONLY
