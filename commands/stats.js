@@ -8,8 +8,7 @@ module.exports = {
     async execute(interaction){
         // create leaderboard
         const stats = new Stats("natan#71912");
-        stats.initialize();
-        const statsStr = stats.makeStats();
+        const statsStr = await stats.makeStats();
 
         interaction.reply({
             content: statsStr,
