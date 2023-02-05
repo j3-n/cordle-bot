@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { newGame, findChallenge, completeChallenge, gameExists } = require("../game-manager.js");
+const { FirebaseFunctions } = require("../src/firebase/firebase-functions.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,6 +21,11 @@ module.exports = {
                 newGame(thread.id, challenge.player1, challenge.player2);
                 completeChallenge(challenge.player1, challenge.player2);
                 interaction.reply({content: "Challenge accepted! Good luck.", ephemeral: true});
+
+                // Create users if they don't exist in the database
+                console.log("calling firebase module");
+                FirebaseFunctions.createUserIfNotExists(challenge.player1);
+                FirebaseFunctions.createUserIfNotExists(challenge.player2);
             } else
                 interaction.reply({content: "You are already in a game!", ephemeral: true});
         } else

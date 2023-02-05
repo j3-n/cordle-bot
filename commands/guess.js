@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("discord.js");
 const { findGameByChannelId, completeGame } = require("../game-manager.js");
 const { Conditions } = require("../src/duel-game.js");
 const { Result } = require("../src/wordle.js");
+const { ResultHandler } = require("../src/result-handler.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -17,8 +18,7 @@ module.exports = {
         let game = findGameByChannelId(interaction.channelId);
         if(game){
             let guess = interaction.options.getString("guess");
-            game = game.game;
-            let result = game.submitGuess(interaction.user.id, guess);
+            let result = game.game.submitGuess(interaction.user.id, guess);
             if(result.condition == Conditions.INVALID_ID)
                 interaction.reply({content: "You are not part of this game!", ephemeral: true});
             else if(result.condition == Conditions.INVALID_INPUT)
@@ -40,18 +40,27 @@ module.exports = {
             }
 
             if(result.condition == Conditions.BOTH_PLAYERS_OUT){
-                interaction.channel.send("TIE! All players are out of guesses!");
-                completeGame(interaction.channelId);
+                interaction.channel.send(`TIE! All players are out of guesses! The word was \`${game.game.player1.word}\`.`);
+                endGame(interaction.channel);
             } else if(result.condition == Conditions.OUT_OF_GUESSES){
                 if(result.result)
                     interaction.channel.send(`${interaction.user} has run out of guesses!`);
                 else 
                     interaction.reply({content: "You have run out of guesses!", ephemeral: true});
             } else if(result.condition == Conditions.WIN){
-                interaction.channel.send(`${interaction.user} has WON! The word was \`${game.player1.word}\`.`);
-                completeGame(interaction.channelId);
+                interaction.channel.send(`${interaction.user} has WON! The word was \`${game.game.player1.word}\`.`);
+                endGame(interaction.channel);
+                // Update the database
+                // TODO: number of guesses taken
+                let handler = new ResultHandler(game.player1Id, game.player2Id, interaction.user.id, 1);
+                handler.postResult();
             }
         } else
             interaction.reply({content: "There is no active game in this channel!", ephemeral: true});
     },
 };
+
+function endGame(channel){
+    completeGame(channel.id);
+    //channel.threads.cache.find(th => th.id == channel.id).setArchive(true);
+}

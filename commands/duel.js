@@ -6,7 +6,7 @@ module.exports = {
         .setName("duel")
         .setDescription("Begin a new game of wordle")
         .addMentionableOption(option => 
-            option.setName("pussy to duel") // was opponent
+            option.setName("opponent")
                 .setDescription("Your noble opponent")
                 .setRequired(true),
         ),
@@ -20,7 +20,7 @@ module.exports = {
                 interaction.reply({content: "One or more players are already in a game you dense fuck!", ephemeral: true});
             else if(newChallenge(interaction.user.id, opponent.user.id)){
                 // Send the duel invite to the other player
-                interaction.reply({content: "Dick measuring contest sent! Good luck.", ephemeral: true}); // Challenge sent! Good luck.
+                interaction.reply({content: "Challenge sent! Good luck.", ephemeral: true});
                 interaction.channel.send(`${opponent.user}, ${interaction.user} has challenged you to a duel! Type \`/accept\` or \`/decline\` to respond!`);
             } else
                 interaction.reply({content: "Each player can only have one active challenge!", ephemeral: true});
