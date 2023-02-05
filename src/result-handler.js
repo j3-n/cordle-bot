@@ -14,8 +14,8 @@ class ResultHandler {
             var userOne = await compWin(this.attempts, this.uIdOne);
             var userTwo = await compLose(this.uIdTwo);
         } else if (this.uIdTwo === this.winner) {
-            var userTwo = await compWin(this.attempts, this.uIdOne);
-            var userOne = await compLose(this.uIdTwo);
+            var userTwo = await compWin(this.attempts, this.uIdTwo);
+            var userOne = await compLose(this.uIdOne);
         } else {
             return;
         }
