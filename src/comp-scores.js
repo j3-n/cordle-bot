@@ -1,6 +1,4 @@
-const { start,end } = require('./time.js');
 const { FirebaseFunctions } = require('./firebase/firebase-functions');
-const compMultiplier = 0.5;
 
 async function compWin(turnWin, userID){
     //boiler-plate
@@ -61,6 +59,5 @@ async function compLose(userID){
 //exports
 module.exports = {
     compWin,
-    compLose,
-    compMultiplier
+    compLose
 } 
