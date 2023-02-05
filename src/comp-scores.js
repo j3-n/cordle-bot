@@ -30,8 +30,8 @@ async function compLose(turnLose, userID){
 
     const user = await FirebaseFunctions.getUser(userID, "users");
     var elo = user.elo;
-   
-    if( elo -= loseScore < 0){
+    elo -= loseScore;
+    if(  elo <= 0){
         return {
             id: user.id,
             name: user.name,
@@ -43,7 +43,6 @@ async function compLose(turnLose, userID){
             collection: "users"
         };
     } else {
-        elo -= loseScore;
         return {
             id: user.id,
             name: user.name,
