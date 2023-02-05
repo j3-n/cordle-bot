@@ -41,16 +41,18 @@ class DuelWordle{
 
             if(result.correct)
                 return Conditions.PLAYER_ONE_WIN;
+            else if(!this.player1.hasRemainingAttempts())
+                return Conditions.OUT_OF_GUESSES;
 
             return result;
         }
         else if(Object.is(playerId, this.player2.playerId)){
-            if(!this.player1.hasRemainingAttempts)
-                return Conditions.OUT_OF_GUESSES;
             let result = this.player2.submitGuess(guess);
 
             if(result.correct)
                 return Conditions.PLAYER_TWO_WIN;
+            else if(!this.player2.hasRemainingAttempts())
+                return Conditions.OUT_OF_GUESSES;
 
             return result;
         }
