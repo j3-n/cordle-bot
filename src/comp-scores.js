@@ -1,8 +1,8 @@
 const { start,end} = require('./time.js');
 const { FirebaseFunctions } = require('./firebase/firebase-functions');
 const compMultiplier = 0.5;
-var ogComp = 8; //comp multi
-var compTimeScore =  0;
+// var ogComp = 8; //comp multi
+// var compTimeScore =  0;
 const fbFunc = new FirebaseFunctions();
 fbFunc.initialize();
 
@@ -21,18 +21,20 @@ async function compWin(turnWin, userID){
     //boiler-plate
     const turns = [25,22,18,15,12,9];
     let winScore = turns[turnWin-1] 
-  
+    let eloScore = turns[turnWin-1] 
 
     const user = await fbFunc.getUser(userID, "users");
     let score = user.score;
-    winScore = score + winScore;
+    winScore += score;
+    let eloScores = user.elo;
+    eloScores += eloScore;
     fbFunc.updateUser(
         user.id,
         user.name,
         user.gamesWon,
         user.gamesLost,
         user.gamesPlayed,
-        user.elo,
+        eloScores,
         winScore,
         "users"
     );
@@ -40,33 +42,33 @@ async function compWin(turnWin, userID){
 
 async function compLose(userID){
     
-    let loseScore = -18;
+    let eloScore = -18;
     
 
     const user = await fbFunc.getUser(userID, "users");
-    let score = user.score;
-    if( score + loseScore < 0){
+    let elo= user.elo;
+    if( elo + eloScore < 0){
         fbFunc.updateUser(
             user.id,
             user.name,
             user.gamesWon,
             user.gamesLost,
             user.gamesPlayed,
-            user.elo,
             0,
+            user.score,
             "users"
         );
     }
     else{
-    loseScore = score + loseScore;
+    eloScore = elo + eloScore;
     fbFunc.updateUser(
         user.id,
         user.name,
         user.gamesWon,
         user.gamesLost,
         user.gamesPlayed,
-        user.elo,
-        loseScore,
+        eloScore,
+        user.score,
         "users"
     );
     }
@@ -75,7 +77,7 @@ async function compLose(userID){
 
 
 //compWin(2,"natan#71912");
-//compLose("natan#71912");
+compLose("natan#71912");
 
 
 //exports
