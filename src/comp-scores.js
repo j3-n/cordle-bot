@@ -1,26 +1,10 @@
 const { start,end} = require('./time.js');
 const { FirebaseFunctions } = require('./firebase/firebase-functions');
 const compMultiplier = 0.5;
-// var ogComp = 8; //comp multi
-// var compTimeScore =  0;
 const fbFunc = new FirebaseFunctions();
 fbFunc.initialize();
 
-// function compScoresCalc() { //calcs 
-//     if (end() < 20){
-//       for(let i = 0; i < end(); i++){
-//         ogComp = ogComp*compMultiplier;
-     
-//       }
-//       compTimeScore += ogComp
-//     }
-//     return Math.round(compTimeScore);
-// } 
 
-async function eloWin(userID1,userID2){
-    const user = await fbFunc.getUser(userID, "users");
-    const user2 = await fbFunc.getUser(userID, "users");
-}
 async function compWin(turnWin, userID){
     //boiler-plate
     const turns = [25,22,18,15,12,9];
