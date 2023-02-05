@@ -78,6 +78,11 @@ class DuelWordle{
         compWin(6-player.guesses.length, playerID);
     }
 
+    playerLoss(playerID)
+    {
+        compLoose(playerID);
+    }
+
     getPlayerFromID(playerID)
     {
         let player = null;
