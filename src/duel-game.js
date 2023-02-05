@@ -14,6 +14,8 @@ class DuelGame extends WordleGame{
     constructor(playerId){
         super();
         this.playerId = playerId;
+        this.guessing = true;
+        setTimeout(playerGuessingOutOfTime() ,30000);
     }
 
 } 
@@ -45,7 +47,6 @@ class DuelWordle{
             if(result.correct)
                 return Conditions.PLAYER_TWO_WIN;
 
-
             return result;
         }
         else
@@ -59,6 +60,16 @@ class DuelWordle{
         else if(Object.is(playerId, this.player1.playerId))
             return this.player2.guesses.length;
         return Conditions.INVALID_ID;
+    }
+
+    isPlayerOutOftime()
+    {
+
+    }
+
+    playerGuessingOutOfTime()
+    {
+        
     }
 }
 
