@@ -7,8 +7,16 @@ module.exports = {
         .setDescription("Get a view of your own stats or someone elses"),
     async execute(interaction){
         // create leaderboard
-        const stats = new Stats("natan#71912");
-        const statsStr = await stats.makeStats();
+        const statsHandler = new Stats("natan#71912");
+        const stats = await statsHandler.makeStats();
+
+        const statsStr = (stats.id + "'s stats:\n" + 
+            "Games won: ", stats.gamesWon, "\n" + 
+            "Games lost: ", stats.gamesLost, "\n" +
+            "Games played: ", stats.gamesPlayed, "\n" +
+            "Player elo: ", stats.elo, "\n" +
+            "Player score: ", stats.score, "\n"
+        );
 
         interaction.reply({
             content: statsStr,
