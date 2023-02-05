@@ -55,9 +55,27 @@ async function compLose(userID){
         };
     }
 }
+async function compDraw(userID){
+    var drawScore = 8;
+    var drawScores = user.score;
+    drawScores += drawScore;
 
+    const user = await FirebaseFunctions.getUser(userID, "users");   
+
+    return {
+        id: user.id,
+        name: user.name,
+        gamesWon: user.gamesWon,
+        gamesLost: user.gamesLost,
+        gamesPlayed: user.gamesPlayed+1,
+        elo: user.elo,
+        score: drawScores,
+        collection: "users"
+    };
+}
 //exports
 module.exports = {
     compWin,
-    compLose
+    compLose,
+    compDraw
 } 
