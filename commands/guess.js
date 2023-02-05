@@ -36,7 +36,7 @@ module.exports = {
                         emote_name = "🟨";
                     reply += emote_name;
                 });
-                interaction.reply({content: reply});
+                interaction.reply({content: reply, ephemeral: true});
             }
 
             if(result.condition == Conditions.OUT_OF_GUESSES)
@@ -45,7 +45,7 @@ module.exports = {
                 else 
                     interaction.reply({content: "You have run out of guesses!", ephemeral: true});
             else if(result.condition == Conditions.WIN){
-                interaction.channel.send("someone won lol");
+                interaction.channel.send(`${interaction.user} has WON! The word was \`${game.player1.word}\`.`);
                 completeGame(interaction.channelId);
             }
         } else
