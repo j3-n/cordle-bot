@@ -3,7 +3,9 @@ const { WordleGame } = require("./wordle");
 const Conditions = {
     OUT_OF_GUESSES: "OUT_OF_GUESSES",
     INVALID_ID: "INVALID_ID",
-    WIN: "WIN",
+    PLAYER_ONE_WIN: "PLAYER_ONE_WIN",
+    PLAYER_TWO_WIN: "PLAYER_TWO_WIN",
+    INVALID_INPUT: "INVALID_INPUT",
 }
 
 // Two players with individual guesses
@@ -14,7 +16,7 @@ class DuelGame extends WordleGame{
         super();
         this.playerId = playerId;
         this.guessing = true;
-        //setTimeout(playerGuessingOutOfTime() ,30000);
+        setTimeout(playerGuessingOutOfTime() ,30000);
     }
 
 } 
@@ -32,25 +34,36 @@ class DuelWordle{
 
     submitGuess(playerId, guess)
     {
-        let player = null;
-        if(Object.is(playerId, this.player1.playerId))
-            player = this.player1;
-        else if(Object.is(playerId, this.player2.playerId))
-            player = this.player2;
-        else
-            return {condition: Conditions.INVALID_ID, result: null};
-        
-        let result = null;
-        if(player.hasRemainingAttempts()){
-            result = player.submitGuess(guess);
+        if(!this.player1.checkInput(guess))
+        {
+            return Conditions.INVALID_INPUT;
+        }
+
+        if(Object.is(playerId, this.player1.playerId)){
+            if(!this.player1.hasRemainingAttempts)
+                return Conditions.OUT_OF_GUESSES;
+
+            let result = this.player1.submitGuess(guess);
 
             if(result.correct)
-                return {condition: Conditions.WIN, result: result};
+                return Conditions.PLAYER_ONE_WIN;
+            else if(!this.player1.hasRemainingAttempts())
+                return Conditions.OUT_OF_GUESSES;
 
-            return {condition: null, result: result};
+            return result;
         }
-        if(!player.hasRemainingAttempts())
-            return {condition: Conditions.OUT_OF_GUESSES, result: result};
+        else if(Object.is(playerId, this.player2.playerId)){
+            let result = this.player2.submitGuess(guess);
+
+            if(result.correct)
+                return Conditions.PLAYER_TWO_WIN;
+            else if(!this.player2.hasRemainingAttempts())
+                return Conditions.OUT_OF_GUESSES;
+
+            return result;
+        }
+        else
+            return Conditions.INVALID_ID;
     }
 
     getNumberOfAttempts(playerId)
@@ -85,7 +98,7 @@ function testShit()
 
 }
 
-//testShit();
+testShit();
 
 module.exports = {
     DuelWordle,
