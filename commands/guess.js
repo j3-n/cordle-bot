@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { findGame, completeGame } = require("../game-manager.js");
+const { findGameByChannelId, completeGame } = require("../game-manager.js");
+const { Conditions } = require("../src/duel-game.js");
 const { Result } = require("../src/wordle.js");
 
 module.exports = {
@@ -13,33 +14,28 @@ module.exports = {
         ),
     async execute(interaction){
         // Find the game for this channel
-        let game = findGame(interaction.channelId);
+        let game = findGameByChannelId(interaction.channelId);
         if(game){
             let guess = interaction.options.getString("guess");
-            let result = game.submitGuess(guess);
-            if(!result)
-                interaction.reply({content: "That guess was invalid!", ephemeral: true});
-            else if(result.correct) {
-                interaction.reply({content: `${interaction.user.username} has guessed the word! The word was \`${guess}\`.`});
-                completeGame(game.channelId);
-            } else {
-                reply = `${guess} \n`;
-                result.guess.forEach(char => {
-                    // TODO: replace with switch statement
-                    emote_name = "🟥";
-                    if(char.result == Result.CORRECT_CHARACTER)
-                        emote_name = "🟩";
-                    else if(char.result == Result.INCORRECT_POSITION)
-                        emote_name = "🟨";
-                    reply += emote_name;
-                });
-                interaction.reply({content: reply});
-            }
-
-            // Check if the game has remaining guesses, if not terminate it
-            if(!game.hasRemainingAttempts()){
-                interaction.channel.send(`You have run out of guesses! The word was \`${game.word}\`.`);
-                completeGame(game.channelId);
+            game = game.game;
+            let result = game.submitGuess(interaction.user.id, guess);
+            switch(result){
+                case Conditions.INVALID_ID:
+                    interaction.reply({content: "You are not part of this game!", ephemeral: true});
+                    break;
+                default:
+                    reply = `${guess} \n`;
+                    result.guess.forEach(char => {
+                        // TODO: replace with switch statement
+                        emote_name = "🟥";
+                        if(char.result == Result.CORRECT_CHARACTER)
+                            emote_name = "🟩";
+                        else if(char.result == Result.INCORRECT_POSITION)
+                            emote_name = "🟨";
+                        reply += emote_name;
+                    });
+                    interaction.reply({content: reply});
+                    break;
             }
         } else
             interaction.reply({content: "There is no active game in this channel! Use `/start` to start one.", ephemeral: true});

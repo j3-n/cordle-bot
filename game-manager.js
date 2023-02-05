@@ -1,25 +1,28 @@
 const { DuelWordle } = require("./src/duel-game");
 
 // Array of games
-var games = []
+var games = [];
 // Array of pending challenges
-var challenges = []
+var challenges = [];
 
-function newGame(player1, player2){
-    // If the channel does not have an active game, create it
-    if(!findGame(player1, player2)){
-        games.push({player1: player1, player2: player2, game: new DuelWordle(player1, player2)});
-        return true;
-    }
-    return false;
+function newGame(threadId, player1, player2){
+    games.push({player1Id: player1, player2Id: player2, game: new DuelWordle(player1, player2), threadId: threadId});
 }
 
-function findGame(player1, player2){
-    let game = games.find(game => game.player1 == player1 && game.player2 == player2);
+function findGame(player){
+    let game = games.find(game => game.player1Id == player || game.player2Id == player);
     if(game)
         return game.game;
     else
         return null;
+}
+
+function findGameByChannelId(channelId){
+    return games.find(game => game.threadId == channelId);
+}
+
+function gameExists(player){
+    return findGame(player) ? true : false;
 }
 
 function completeGame(channelId){
@@ -47,6 +50,8 @@ module.exports = {
     games,
     newGame,
     findGame,
+    findGameByChannelId,
+    gameExists,
     completeGame,
     newChallenge,
     findChallenge,
