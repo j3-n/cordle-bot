@@ -19,24 +19,30 @@ module.exports = {
             let guess = interaction.options.getString("guess");
             game = game.game;
             let result = game.submitGuess(interaction.user.id, guess);
-            switch(result){
-                case Conditions.INVALID_ID:
-                    interaction.reply({content: "You are not part of this game!", ephemeral: true});
-                    break;
-                default:
-                    reply = `${guess} \n`;
-                    result.guess.forEach(char => {
-                        // TODO: replace with switch statement
-                        emote_name = "🟥";
-                        if(char.result == Result.CORRECT_CHARACTER)
-                            emote_name = "🟩";
-                        else if(char.result == Result.INCORRECT_POSITION)
-                            emote_name = "🟨";
-                        reply += emote_name;
-                    });
-                    interaction.reply({content: reply});
-                    break;
+            if(result.condition == Conditions.INVALID_ID)
+                interaction.reply({content: "You are not part of this game!", ephemeral: true});
+            else if(result.result){
+                reply = `${guess} \n`;
+                result.result.guess.forEach(char => {
+                // TODO: replace with switch statement
+                emote_name = "🟥";
+                if(char.result == Result.CORRECT_CHARACTER)
+                        emote_name = "🟩";
+                    else if(char.result == Result.INCORRECT_POSITION)
+                        emote_name = "🟨";
+                    reply += emote_name;
+                });
+                interaction.reply({content: reply});
             }
+
+            if(result.condition == Conditions.OUT_OF_GUESSES)
+                if(result.result)
+                    interaction.channel.send("You have run out of guesses!");
+                else 
+                    interaction.reply({content: "You have run out of guesses!", ephemeral: true});
+            else if(result.condition == Conditions.WIN)
+                interaction.channel.send("someone won lol");
+                //TODO: end game
         } else
             interaction.reply({content: "There is no active game in this channel! Use `/start` to start one.", ephemeral: true});
     },
