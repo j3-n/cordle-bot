@@ -6,11 +6,11 @@ module.exports = {
         .setName("stats")
         .setDescription("Get a view of your own stats or someone elses"),
     async execute(interaction){
-        // create leaderboard
+        // create stats
         const statsHandler = new Stats("natan#71912");
         const stats = await statsHandler.makeStats();
 
-        const statsStr = stats.id + "'s stats:\n" + 
+        const statsStr = stats.name + "'s stats:\n" + 
             "Games won: " + stats.gamesWon + "\n" + 
             "Games lost: " + stats.gamesLost + "\n" +
             "Games played: " + stats.gamesPlayed + "\n" +
