@@ -17,6 +17,10 @@ fbFunc.initialize();
 //     return Math.round(compTimeScore);
 // } 
 
+async function eloWin(userID1,userID2){
+    const user = await fbFunc.getUser(userID, "users");
+    const user2 = await fbFunc.getUser(userID, "users");
+}
 async function compWin(turnWin, userID){
     //boiler-plate
     const turns = [25,22,18,15,12,9];
@@ -74,10 +78,8 @@ async function compLose(userID){
     }
 }
 //testers
-
-
 //compWin(2,"natan#71912");
-compLose("natan#71912");
+//compLose("natan#71912");
 
 
 //exports
