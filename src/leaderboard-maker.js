@@ -1,4 +1,4 @@
-const { FirebaseFunctions } = require('./firebase-functions');
+const { FirebaseFunctions } = require('./firebase/firebase-functions');
 
 class Leaderboard {
     constructor() {

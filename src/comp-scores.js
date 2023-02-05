@@ -1,9 +1,8 @@
-const { start,end} = require('./time.js');
+const { start,end } = require('./time.js');
 const { FirebaseFunctions } = require('./firebase/firebase-functions');
 const compMultiplier = 0.5;
 const fbFunc = new FirebaseFunctions();
 fbFunc.initialize();
-
 
 async function compWin(turnWin, userID){
     //boiler-plate
@@ -16,55 +15,50 @@ async function compWin(turnWin, userID){
     winScore += score;
     let eloScores = user.elo;
     eloScores += eloScore;
-    fbFunc.updateUser(
-        user.id,
-        user.name,
-        user.gamesWon,
-        user.gamesLost,
-        user.gamesPlayed,
-        eloScores,
-        winScore,
-        "users"
-    );
+
+    return {
+        id: user.id,
+        name: user.name,
+        gamesPlayed: user.gamesWon,
+        gamesLost: user.gamesLost,
+        gamesPlayed: user.gamesPlayed,
+        elo: eloScores,
+        score: winScore,
+        collection: "users"
+    };
 }
 
-async function compLose(userID){
-    
+async function compLose(userID){    
     let eloScore = -18;
-    
 
     const user = await fbFunc.getUser(userID, "users");
-    let elo= user.elo;
+    var elo = user.elo;
+
     if( elo + eloScore < 0){
-        fbFunc.updateUser(
-            user.id,
-            user.name,
-            user.gamesWon,
-            user.gamesLost,
-            user.gamesPlayed,
-            0,
-            user.score,
-            "users"
-        );
-    }
-    else{
-    eloScore = elo + eloScore;
-    fbFunc.updateUser(
-        user.id,
-        user.name,
-        user.gamesWon,
-        user.gamesLost,
-        user.gamesPlayed,
-        eloScore,
-        user.score,
-        "users"
-    );
+        return {
+            id: user.id,
+            name: user.name,
+            gamesWon: user.gamesWon,
+            gamesLost: user.gamesLost,
+            gamesPlayed: user.gamesPlayed,
+            elo: 0,
+            score: user.score,
+            collection: "users"
+        };
+    } else {
+        eloScore = elo + eloScore;
+        return {
+            id: user.id,
+            name: user.name,
+            gamesWon: user.gamesWon,
+            gamesLost: user.gamesLost,
+            gamesPlayed: user.gamesPlayed,
+            elo: eloScore,
+            score: user.score,
+            collection: "users"
+        };
     }
 }
-//testers
-//compWin(2,"natan#71912");
-//compLose("natan#71912");
-
 
 //exports
 module.exports = {
