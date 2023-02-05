@@ -39,16 +39,19 @@ module.exports = {
                 interaction.reply({content: reply, ephemeral: true});
             }
 
-            if(result.condition == Conditions.OUT_OF_GUESSES)
+            if(result.condition == Conditions.BOTH_PLAYERS_OUT){
+                interaction.channel.send("TIE! All players are out of guesses!");
+                completeGame(interaction.channelId);
+            } else if(result.condition == Conditions.OUT_OF_GUESSES){
                 if(result.result)
-                    interaction.channel.send("You have run out of guesses!");
+                    interaction.channel.send(`${interaction.user} has run out of guesses!`);
                 else 
                     interaction.reply({content: "You have run out of guesses!", ephemeral: true});
-            else if(result.condition == Conditions.WIN){
+            } else if(result.condition == Conditions.WIN){
                 interaction.channel.send(`${interaction.user} has WON! The word was \`${game.player1.word}\`.`);
                 completeGame(interaction.channelId);
             }
         } else
-            interaction.reply({content: "There is no active game in this channel! Use `/start` to start one.", ephemeral: true});
+            interaction.reply({content: "There is no active game in this channel!", ephemeral: true});
     },
 };
