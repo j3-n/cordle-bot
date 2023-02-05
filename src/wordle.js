@@ -39,14 +39,27 @@ class WordleGame{
         // the char is the individual characters from the guess
         // Structure example: {CHAR: 'KEY', STATE: 'STATE FROM char_values' }
         // NOTE: CHAR: null WHEN STATE IS EQUAL TO correct_guess. THIS IS WHEN THE GUESS WAS CORRECT
+        let charGuessed = new Set();
         for(let i = 0; i < guess.length; i++){
-            let key = guess.charAt(i); // unused?
+            let key = guess.charAt(i);
             let result;
+            charGuessed.add(key);
             
             if(guess.charAt(i) == this.word.charAt(i))
                 result = Result.CORRECT_CHARACTER;
-            else if(this.word.includes(guess.charAt(i)))
-                result = Result.INCORRECT_POSITION;
+            else if(this.word.includes(guess.charAt(i))) // needs to check for cases where the character only occurs once but the guess has two instances of it
+            {
+                let occurences = (this.word.match("/"+key+"/g") || []).length;
+                if(charGuessed.has(key) && occurences > 1)
+                {
+                    result = Result.INCORRECT_POSITION;
+                    charGuessed.delete(key);
+                }
+                else
+                    result = Result.INCORRECT_CHARACTER;
+
+                
+            }
             else{
                 result = Result.INCORRECT_CHARACTER;
                 // Add incorrect characters to used incorrect set
