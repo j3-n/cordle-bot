@@ -56,9 +56,7 @@ class WordleGame{
                     charGuessed.delete(key);
                 }
                 else
-                    result = Result.INCORRECT_CHARACTER;
-
-                
+                    result = Result.INCORRECT_CHARACTER;        
             }
             else{
                 result = Result.INCORRECT_CHARACTER;
@@ -102,51 +100,8 @@ function isValidWord(word){
     return wordList.includes(word);
 }
 
-// TESTING ONLY
-function testPlay()
-{
-    let game = new WordleGame();
-    console.log(game.word);
-
-    let shouldPlay = true;
-    let i = 0;
-    while(shouldPlay)
-    {
-        console.log(game.hasRemainingAttempts());
-        console.log("Used characters:"+ incorrectCharacters.size)
-        for(const item of incorrectCharacters)
-        {
-            console.log(item);
-        }
-        let userGuess = prompt("Enter guess: ");
-        let result = game.submitGuess(userGuess);
-        console.log(result);
-
-        if(result == null){
-            console.log("Invalid input!");
-            shouldPlay = false;
-            return;
-        }
-        // If null then maximum guesses acheived
-        if(game.guesses.length > 5){
-            shouldPlay = false;
-            console.log("Ran out of guesses!")
-            
-        }// check for correct guess
-        else if(result.correct){
-            shouldPlay = false;
-            console.log("Correct answer!");
-        }
-        
-    }
-
-}
-
 module.exports = {
     WordleGame,
     Result,
     isValidWord,
 };
-
-// TESTING ONLY
-//testPlay();
