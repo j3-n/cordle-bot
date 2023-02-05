@@ -34,6 +34,9 @@ class DuelWordle{
     submitGuess(playerId, guess)
     {
         if(Object.is(playerId, this.player1.playerId)){
+            if(!this.player1.hasRemainingAttempts)
+                return Conditions.OUT_OF_GUESSES;
+
             let result = this.player1.submitGuess(guess);
 
             if(result.correct)
@@ -42,6 +45,8 @@ class DuelWordle{
             return result;
         }
         else if(Object.is(playerId, this.player2.playerId)){
+            if(!this.player1.hasRemainingAttempts)
+                return Conditions.OUT_OF_GUESSES;
             let result = this.player2.submitGuess(guess);
 
             if(result.correct)
