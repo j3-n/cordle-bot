@@ -21,6 +21,8 @@ module.exports = {
             let result = game.submitGuess(interaction.user.id, guess);
             if(result.condition == Conditions.INVALID_ID)
                 interaction.reply({content: "You are not part of this game!", ephemeral: true});
+            else if(result.condition == Conditions.INVALID_INPUT)
+                interaction.reply({content: "Invalid input!", ephemeral: true});
             else if(result.result){
                 reply = `${guess} \n`;
                 result.result.guess.forEach(char => {
