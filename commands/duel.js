@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, GuildMember } = require("discord.js");
-const { newChallenge } = require("../game-manager.js");
+const { newChallenge, findChallenge, findGame } = require("../game-manager.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +16,9 @@ module.exports = {
             interaction.reply({content: "Please duel a valid user!", ephemeral: true});
         else {
             // A valid duel has been started
-            if(newChallenge(interaction.user.id, opponent.user.id)){
+            if(findGame(interaction.user.id) || findGame(opponent.user.id))
+                interaction.reply({content: "One or more players are already in a game!", ephemeral: true});
+            else if(newChallenge(interaction.user.id, opponent.user.id)){
                 // Send the duel invite to the other player
                 interaction.reply({content: "Challenge sent! Good luck.", ephemeral: true});
                 interaction.channel.send(`${opponent.user}, ${interaction.user} has challenged you to a duel! Type \`/accept\` or \`/decline\` to respond!`);
