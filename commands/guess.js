@@ -51,8 +51,7 @@ module.exports = {
                 interaction.channel.send(`${interaction.user} has WON! The word was \`${game.game.player1.word}\`.`);
                 endGame(interaction.channel);
                 // Update the database
-                // TODO: number of guesses taken
-                let handler = new ResultHandler(game.player1Id, game.player2Id, interaction.user.id, 1);
+                let handler = new ResultHandler(game.player1Id, game.player2Id, interaction.user.id, result.attempts);
                 handler.postResult();
             }
         } else
