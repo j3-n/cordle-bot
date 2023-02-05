@@ -15,7 +15,7 @@ class DuelGame extends WordleGame{
         super();
         this.playerId = playerId;
         this.guessing = true;
-        setTimeout(playerGuessingOutOfTime() ,30000);
+        //setTimeout(playerGuessingOutOfTime() ,30000);
     }
 
 } 
@@ -34,9 +34,6 @@ class DuelWordle{
     submitGuess(playerId, guess)
     {
         if(Object.is(playerId, this.player1.playerId)){
-            if(!this.player1.hasRemainingAttempts)
-                return Conditions.OUT_OF_GUESSES;
-
             let result = this.player1.submitGuess(guess);
 
             if(result.correct)
@@ -92,7 +89,7 @@ function testShit()
 
 }
 
-testShit();
+//testShit();
 
 module.exports = {
     DuelWordle,
