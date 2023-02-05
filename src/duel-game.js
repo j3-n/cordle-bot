@@ -40,14 +40,17 @@ class DuelWordle{
         else
             return {condition: Conditions.INVALID_ID, result: null};
         
-        let result = player.submitGuess(guess);
+        let result = null;
+        if(player.hasRemainingAttempts()){
+            result = player.submitGuess(guess);
 
-        if(result.correct)
-            return {condition: Conditions.WIN, result: result};
-        else if(!player.hasRemainingAttempts())
+            if(result.correct)
+                return {condition: Conditions.WIN, result: result};
+
+            return {condition: null, result: result};
+        }
+        if(!player.hasRemainingAttempts())
             return {condition: Conditions.OUT_OF_GUESSES, result: result};
-
-        return {condition: null, result: result};
     }
 
     getNumberOfAttempts(playerId)
