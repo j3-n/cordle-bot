@@ -14,7 +14,7 @@ module.exports = {
         var leaderboardStr = "";
 
         for (let i = 0; i < topTen.length; i++) {
-            leaderboardStr += (`${i + 1}. ${topTen[i].name}:${topTen[i].elo}\n`);
+            leaderboardStr += (`${i+1}. ${topTen[i].name}:${topTen[i].elo}\n`);
         }
 
         interaction.reply({
