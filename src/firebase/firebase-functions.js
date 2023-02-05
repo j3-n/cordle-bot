@@ -95,6 +95,23 @@ class FirebaseFunctions {
     async checkUserExists(id, collection) {
         return await this.fbConnection.checkDocument(collection, id);
     }
+
+    async createUserIfNotExists(id) {
+        if (!this.checkUserExists(id, "users")) {
+            await this.fbConnection.addDocument(
+                "users",
+                id,
+                {
+                    name: "temp-name",
+                    games_won: 0,
+                    games_lost: 0,
+                    games_played: 0,
+                    elo: 500,
+                    score: 0
+                }
+            );
+        }
+    }
 }
 
 module.exports.FirebaseFunctions = FirebaseFunctions;
