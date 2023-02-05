@@ -8,8 +8,7 @@ class Leaderboard {
     }
 
     initialize() {
-        this.fbFunctions = new FirebaseFunctions();
-        this.fbFunctions.initialize();
+        this.fbFunctions = FirebaseFunctions;
         this.users = [];
         this.topTen = [];
     }

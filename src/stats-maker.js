@@ -8,8 +8,7 @@ class Stats {
     }
 
     initialize() {
-        this.fbFunctions = new FirebaseFunctions();
-        this.fbFunctions.initialize();
+        this.fbFunctions = new FirebaseFunctions;
     }
 
     async makeStats() {
