@@ -15,7 +15,7 @@ async function compWin(turnWin, userID){
     return {
         id: user.id,
         name: user.name,
-        gamesPlayed: user.gamesWon,
+        gamesWon: user.gamesWon,
         gamesLost: user.gamesLost,
         gamesPlayed: user.gamesPlayed,
         elo: eloScores,
