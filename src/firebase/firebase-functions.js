@@ -114,4 +114,6 @@ class FirebaseFunctions {
     }
 }
 
-module.exports.FirebaseFunctions = FirebaseFunctions;
+let functions = new FirebaseFunctions();
+functions.initialize();
+module.exports.FirebaseFunctions = functions;
