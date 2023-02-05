@@ -57,11 +57,11 @@ async function compLose(turnLose, userID){
 }
 async function compDraw(userID){
     var drawScore = 8;
+    const user = await FirebaseFunctions.getUser(userID, "users");  
     var drawScores = user.score;
     drawScores += drawScore;
 
-    const user = await FirebaseFunctions.getUser(userID, "users");   
-
+    
     return {
         id: user.id,
         name: user.name,
