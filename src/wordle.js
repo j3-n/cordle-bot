@@ -71,12 +71,7 @@ class WordleGame{
     checkInput(input){
         if(input.length != 5)
             return false;
-        for(let i = 0; i < input.length; i++)
-        {
-            if(input.charCodeAt(i) < 97 && input.charCodeAt(i) > 122)
-                return false;
-        }
-        return true;
+        return /^[a-zA-Z()]*$/.test(input);
     }
 
     validWord(input){
