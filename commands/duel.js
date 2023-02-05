@@ -19,7 +19,7 @@ module.exports = {
             if(newChallenge(interaction.user.id, opponent.user.id)){
                 // Send the duel invite to the other player
                 interaction.reply({content: "Challenge sent! Good luck.", ephemeral: true});
-                interaction.channel.send(`${opponent.user}, ${interaction.user} has challenged you to a duel! Type \`/accept\` or \`decline\` to respond!`);
+                interaction.channel.send(`${opponent.user}, ${interaction.user} has challenged you to a duel! Type \`/accept\` or \`/decline\` to respond!`);
             } else
                 interaction.reply({content: "Each player can only have one active challenge!", ephemeral: true});
         }
