@@ -24,8 +24,8 @@ module.exports = {
 
                 // Create users if they don't exist in the database
                 console.log("calling firebase module");
-                FirebaseFunctions.createUserIfNotExists(challenge.player1);
-                FirebaseFunctions.createUserIfNotExists(challenge.player2);
+                FirebaseFunctions.createUserIfNotExists(challenge.player1, challenge.player1.user.username);
+                FirebaseFunctions.createUserIfNotExists(challenge.player2, challenge.player2.user.username);
             } else
                 interaction.reply({content: "You are already in a game!", ephemeral: true});
         } else
