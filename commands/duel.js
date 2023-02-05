@@ -17,7 +17,7 @@ module.exports = {
         else {
             // A valid duel has been started
             if(findGame(interaction.user.id) || findGame(opponent.user.id))
-                interaction.reply({content: "One or more players are already in a game you dense fuck!", ephemeral: true});
+                interaction.reply({content: "One or more players are already in a game!", ephemeral: true});
             else if(newChallenge(interaction.user.id, opponent.user.id)){
                 // Send the duel invite to the other player
                 interaction.reply({content: "Challenge sent! Good luck.", ephemeral: true});
