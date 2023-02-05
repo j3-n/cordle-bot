@@ -89,61 +89,12 @@ class WordleGame{
                     if(charSeen > charInWord)
                         result = Result.INCORRECT_CHARACTER;
                 }
-
-                
-
-                // for(let i = 0; i < guess.length; i++)
-                // {
-                //     if(Object.is(guess.charAt(i),this.word.charAt(i)))
-                //     {
-                //         if(Object.is(guess.charAt(i),key))
-                //         {
-                //             result = Result.INCORRECT_CHARACTER;
-                //             console.log("Guess: "+guess.charAt(i)+" at index "+i);
-                //             console.log("Word: "+this.word.charAt(i));
-
-                //         }
-                        
-                //     }
-                // }
-
-                
-                // if(result != Result.INCORRECT_CHARACTER)
-                // {
-                //     console.log("!");
-                //     let numOfCharsInWord = 0;
-                //     for(let i = 0; i < this.word.length; i++)
-                //     {
-                //         if(Object.is(key, this.word.charAt(i)))
-                //         {
-                //             numOfCharsInWord++;
-                //         }
-                //     }
-
-                //     if(charUsed.length > numOfCharsInWord)
-                //         result = Result.INCORRECT_CHARACTER;
-                //     // let numCharsInGuess = 0;
-                //     // for(let i = 0; i < guess.length; i++)
-                //     // {
-                //     //     if(Object.is(key, guess.charAt(i)))
-                //     //     {
-
-                //     //     }
-                //     // }
-                    
-                // }
-
-                
-
             }
             else{
                 result = Result.INCORRECT_CHARACTER;
                 // Add incorrect characters to used incorrect set
                 incorrectCharacters.add(guess.charAt(i));
             }
-
-            console.log(result);
-            
             
             toAdd.push({char: key, result: result});
         }
@@ -185,12 +136,3 @@ module.exports = {
     Result,
     isValidWord,
 };
-
-function testThings()
-{
-    let wg = new WordleGame();
-    wg.word = "glaas"
-    wg.submitGuess("ssbbg");
-}
-
-testThings();
