@@ -1,44 +1,49 @@
 package database
 
 type Interactions interface {
-	addUser()
-	addUsers()
-	deleteUser()
-	deleteUsers()
-	updateUser()
-	updateUsers()
-	getUser()
-	getUsers()
+	AddUser()
+	AddUsers()
+	DeleteUser()
+	DeleteUsers()
+	UpdateUser()
+	UpdateUsers()
+	GetUser()
+	GetUsers()
+	GetUserStats()
 }
 
-func addUser() {
-
-}
-
-func addUsers() {
+func AddUser() {
 
 }
 
-func deleteUser() {
+func AddUsers() {
 
 }
 
-func deleteUsers() {
+func DeleteUser() {
+
+}
+
+func DeleteUsers() {
 	
 }
 
-func updateUser() {
+func UpdateUser() {
 
 }
 
-func updateUsers() {
+func UpdateUsers() {
 
 }
 
-func getUser() {
+func GetUser() {
 
 }
 
-func getUsers() {
+func GetUsers() {
+
+}
+
+func GetUserStats() {
 
 }

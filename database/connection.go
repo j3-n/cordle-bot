@@ -5,7 +5,6 @@ import (
 )
 
 func (i Interface) connect() {
-	connection := i.connection
-
+	connection := i.Connection
 	fmt.Println(connection)
 }

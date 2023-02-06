@@ -13,7 +13,7 @@ type Server interface {
 }
 
 type Interface struct {
-	connection string
+	Connection string
 }
 
 func (i Interface) getRecord() {
