@@ -19,6 +19,10 @@ func loseCalc(attempts int, player database.User) database.User {
 	player.Elo -= 4 * attempts
 	player.Level += 3
 
+	if player.Elo < 0 { 
+		player.Elo = 0
+	}
+	
 	return player
 }
 
