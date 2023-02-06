@@ -9,8 +9,15 @@ import (
 
 // Config structs store configuration information after they are read
 type Config struct {
-	Token string
-	Status string
+	Token 	string
+	Status 	string
+	Game 	GameConfig
+}
+
+// Struct to store game settings
+type GameConfig struct {
+	MaxTurns 	int
+	WordLength 	int
 }
 
 // LoadConfig returns a Config struct after reading configuration variables from a JSON file
