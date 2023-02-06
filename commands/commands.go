@@ -28,4 +28,12 @@ func RegisterCommands(s *discordgo.Session){
 		_, err := s.ApplicationCommandCreate(s.State.User.ID, "", cmd)
 		util.CheckError(err, "Failed to create command: /" + cmd.Name)
 	}
+
+	// Create a handler to map commands to their handlers
+	s.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		h, exists := commandHandlers[i.ApplicationCommandData().Name]
+		if exists{
+			h(s, i)
+		}
+	})
 }
