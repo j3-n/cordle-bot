@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	Token string
+	Status string
 }
 
 func LoadConfig(path string) (Config){

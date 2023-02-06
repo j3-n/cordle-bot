@@ -1,9 +1,10 @@
 package main
 
 import (
-	"log"
 	"github.com/bwmarrin/discordgo"
 	"cordle/config"
+	"cordle/util"
+	"time" // Temporary
 )
 
 // Path to read config from
@@ -14,8 +15,13 @@ func main() {
 	config := config.LoadConfig(ConfigPath)
 
 	// Start discord bot
-	_, err := discordgo.New("Bot " + config.Token)
-	if err != nil{
-		log.Fatal("Failed to start discord")
-	}
+	discord, err := discordgo.New("Bot " + config.Token)
+	util.CheckError(err, "Failed to initialise discord session")
+	discord.Open()
+	defer discord.Close()
+
+	err = discord.UpdateGameStatus(0, config.Status)
+	util.CheckError(err, "Failed to set status")
+
+	time.Sleep(8 * time.Second)
 }
