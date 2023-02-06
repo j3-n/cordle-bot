@@ -21,7 +21,8 @@ func main() {
 	// Start discord bot
 	session, err := discordgo.New("Bot " + config.Token)
 	util.CheckError(err, "Failed to initialise discord session")
-	session.Open()
+	err = session.Open()
+	util.CheckError(err, "Failed to open session")
 	defer session.Close()
 
 	// Set the bot's status
