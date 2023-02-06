@@ -2,7 +2,8 @@ package main
 
 import (
 	"log"
-	"time"
+	"os"
+	"os/signal"
 
 	"cordle/config"
 	"cordle/util"
@@ -41,6 +42,8 @@ func main() {
 	err = session.UpdateGameStatus(0, config.Status)
 	util.CheckError(err, "Failed to set status")
 
-	// Temporary, stops the bot from instantly logging out
-	time.Sleep(8 * time.Second)
+	// Keep the program running until interrupted
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
+	<- stop
 }
