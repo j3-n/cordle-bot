@@ -1,11 +1,9 @@
-# hackaway-v6
-Competitive Wordle Discord Bot for Royal Hackaway V6
+# Cordle
+A competitive Wordle discord bot originally developed during Royal Hackaway V6.
 
 ##
 
-Cordle Bot for Discord.
-
-# How to Use
+## Bot usage guide
 In a server with Cordle Bot present, these following commands can be used:
 - `/duel [@player]`: Challenge another player to a duel
 - `/accept`: Accept an incoming challenge
