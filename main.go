@@ -20,8 +20,10 @@ func main() {
 	discord.Open()
 	defer discord.Close()
 
+	// Set the bot's status
 	err = discord.UpdateGameStatus(0, config.Status)
 	util.CheckError(err, "Failed to set status")
 
+	// Temporary, stops the bot from instantly logging out
 	time.Sleep(8 * time.Second)
 }

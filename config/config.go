@@ -6,11 +6,13 @@ import (
 	"cordle/util"
 )
 
+// Config structs store configuration information after they are read
 type Config struct {
 	Token string
 	Status string
 }
 
+// LoadConfig returns a Config struct after reading configuration variables from a JSON file
 func LoadConfig(path string) (Config){
 	// Open the configuration file
 	file, err := os.ReadFile(path)
