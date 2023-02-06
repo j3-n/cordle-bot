@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/bwmarrin/discordgo"
+	"time" // Temporary
+	
 	"cordle/config"
 	"cordle/util"
-	"time" // Temporary
+
+	"github.com/bwmarrin/discordgo"
 )
 
 // Path to read config from
