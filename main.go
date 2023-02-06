@@ -5,6 +5,7 @@ import (
 
 	"cordle/config"
 	"cordle/util"
+	"cordle/commands"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -24,6 +25,9 @@ func main() {
 	err = session.Open()
 	util.CheckError(err, "Failed to open session")
 	defer session.Close()
+
+	// Register the bot's commands
+	commands.RegisterCommands(session)
 
 	// Set the bot's status
 	err = session.UpdateGameStatus(0, config.Status)
