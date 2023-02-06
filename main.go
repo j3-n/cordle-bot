@@ -1,7 +1,8 @@
 package main
 
 import (
-	"time" // Temporary
+	"log"
+	"time"
 
 	"cordle/config"
 	"cordle/util"
@@ -19,9 +20,16 @@ func main() {
 	// Load config file
 	config := config.LoadConfig(ConfigPath)
 
-	// Start discord bot
+	// Create discord bot
 	session, err := discordgo.New("Bot " + config.Token)
 	util.CheckError(err, "Failed to initialise discord session")
+
+	// Add a handler to print a happy message when the bot logs in successfully
+	session.AddHandler(func(s *discordgo.Session, r *discordgo.Ready){
+		log.Printf("Logged in as %s#%s", r.User.Username, r.User.Discriminator)
+	})
+
+	// Start the bot
 	err = session.Open()
 	util.CheckError(err, "Failed to open session")
 	defer session.Close()
