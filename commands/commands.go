@@ -10,15 +10,15 @@ import (
 var commands = []*discordgo.ApplicationCommand{
 	// Test command to ensure this works
 	{
-		Name: "test",
-		Description: "test command",
+		Name: "wordle",
+		Description: "Start a new game of Wordle",
 	},
 }
 
 // Big map linking command names to their handling functions
 // Handler functions are stored in separate go files
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-	"test": test,
+	"wordle": newWordle,
 }
 
 // RegisterCommands registers all command with Discord, this is necessary to allow users to run them
