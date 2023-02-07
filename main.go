@@ -34,4 +34,10 @@ func main() {
 	}
 
 	fmt.Println(db)
+
+	rows, err := db.Query("SELECT * FROM USERS;")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(rows)
 }
