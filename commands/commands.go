@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"fmt"
+
 	"cordle/util"
 
 	"github.com/bwmarrin/discordgo"
@@ -8,7 +10,6 @@ import (
 
 // Big list of available commands
 var commands = []*discordgo.ApplicationCommand{
-	// Test command to ensure this works
 	{
 		Name: "duel",
 		Description: "Send a duel challenge to another player",
@@ -27,6 +28,8 @@ var commands = []*discordgo.ApplicationCommand{
 	},
 }
 
+var regCommands []*discordgo.ApplicationCommand
+
 // Big map linking command names to their handling functions
 // Handler functions are stored in separate go files
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
@@ -38,10 +41,14 @@ var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.Interac
 
 // RegisterCommands registers all command with Discord, this is necessary to allow users to run them
 func RegisterCommands(s *discordgo.Session){
+	// Initialise the registered command array
+	regCommands = make([]*discordgo.ApplicationCommand, len(commands))
 	// Iterate over each command and register it
-	for _, cmd := range commands{
-		_, err := s.ApplicationCommandCreate(s.State.User.ID, "", cmd)
+	for i, cmd := range commands{
+		c, err := s.ApplicationCommandCreate(s.State.User.ID, "", cmd)
 		util.CheckError(err, "Failed to create command: /" + cmd.Name)
+		// Log the command for later deletion
+		regCommands[i] = c
 	}
 
 	// Create a handler to map commands to their handlers
@@ -53,7 +60,11 @@ func RegisterCommands(s *discordgo.Session){
 	})
 }
 
-// ClearCommands retrieves all commands registered with this bot from discord and deletes them
+// ClearCommands deletes all commands created during this session
 func ClearCommands(s *discordgo.Session){
-	
+	// Iterate over every registered command and delete it
+	for _, cmd := range regCommands{
+		err := s.ApplicationCommandDelete(s.State.User.ID, "", cmd.ID)
+		util.CheckError(err, fmt.Sprintf("Failed to delete command /%s", cmd.Name))
+	}
 }
