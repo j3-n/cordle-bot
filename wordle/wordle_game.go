@@ -4,7 +4,6 @@ import (
 	"errors"
 	"regexp"
 	"unicode/utf8"
-	"fmt" // Temporary
 )
 
 // The maximum number of guesses allowed in a game of Wordle
@@ -76,7 +75,6 @@ func validateGuess(guess string) (error){
 func evaluateGuess(guess string, goal string) ([5]int){
 	// Retrieve the rune counts
 	counts := countRunes(goal)
-	fmt.Println(counts)
 
 	// Default value = 0 (IncorrectCharacter)
 	var result = [5]int{}
