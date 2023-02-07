@@ -10,15 +10,30 @@ import (
 var commands = []*discordgo.ApplicationCommand{
 	// Test command to ensure this works
 	{
-		Name: "wordle",
-		Description: "Start a new game of Wordle",
+		Name: "duel",
+		Description: "Send a duel challenge to another player",
+	},
+	{
+		Name: "accept",
+		Description: "Accept a duel challenge against you",
+	},
+	{
+		Name: "decline",
+		Description: "Decline a duel challenge against you",
+	},
+	{
+		Name: "guess",
+		Description: "Submit a guess to a game of wordle",
 	},
 }
 
 // Big map linking command names to their handling functions
 // Handler functions are stored in separate go files
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-	"wordle": newWordle,
+	"duel": 	duel,
+	"accept": 	duelAccept,
+	"decline": 	duelDecline,
+	"guess": 	guess,
 }
 
 // RegisterCommands registers all command with Discord, this is necessary to allow users to run them
@@ -36,4 +51,9 @@ func RegisterCommands(s *discordgo.Session){
 			h(s, i)
 		}
 	})
+}
+
+// ClearCommands retrieves all commands registered with this bot from discord and deletes them
+func ClearCommands(s *discordgo.Session){
+	
 }
