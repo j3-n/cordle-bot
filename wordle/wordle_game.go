@@ -4,6 +4,7 @@ import (
 	"errors"
 	"regexp"
 	"unicode/utf8"
+	"math/rand"
 )
 
 // The maximum number of guesses allowed in a game of Wordle
@@ -41,6 +42,14 @@ type WordleGame struct {
 func init(){
 	// Load the possible guesses and answers
 	answers, guesses = LoadWords()
+}
+
+// NewRandomGame creates a new wordle game with a random solution and returns it
+func NewRandomGame() (WordleGame){
+	return WordleGame{
+		Guesses: []string{},
+		GoalWord: answers[rand.Intn(len(answers))],
+	}
 }
 
 // Guess allows the submission of a guess to a wordle game, this requires a lowercase guess
