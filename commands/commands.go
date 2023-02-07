@@ -13,6 +13,14 @@ var commands = []*discordgo.ApplicationCommand{
 	{
 		Name: "duel",
 		Description: "Send a duel challenge to another player",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type: discordgo.ApplicationCommandOptionMentionable,
+				Name: "opponent",
+				Description: "The player you wish to challenge",
+				Required: true,
+			},
+		},
 	},
 	{
 		Name: "accept",
@@ -25,6 +33,14 @@ var commands = []*discordgo.ApplicationCommand{
 	{
 		Name: "guess",
 		Description: "Submit a guess to a game of wordle",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type: discordgo.ApplicationCommandOptionString,
+				Name: "guess",
+				Description: "Your five-letter guess",
+				Required: true,
+			},
+		},
 	},
 }
 
