@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	//"os"
 
-	//_ "github.com/lib/pq"
+	_ "github.com/lib/pq"
 
 	//"github.com/gofiber/fiber/v2"
 )
