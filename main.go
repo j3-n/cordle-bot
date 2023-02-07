@@ -3,6 +3,12 @@ package main
 import (
 	"cordle/database"
 	"fmt"
+	"database/sql"
+	//"os"
+
+	//_ "github.com/lib/pq"
+
+	//"github.com/gofiber/fiber/v2"
 )
 
 func main() {
@@ -17,4 +23,15 @@ func main() {
 		Level: 6,
 	}
 	fmt.Println(person.ToString())
+
+	connStr := database.ConnString()
+
+	db, err := sql.Open("postgres", connStr)
+   	if err != nil {
+       fmt.Println(err)
+   	} else {
+		fmt.Println("connected")
+	}
+
+	fmt.Println(db)
 }
