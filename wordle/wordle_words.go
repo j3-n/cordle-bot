@@ -21,7 +21,7 @@ func LoadWords() ([]string, []string){
 
 	guesses := []string{}
 	err = json.Unmarshal(gfile, &guesses)
-	util.CheckError(err, "Failed to load guesses")
+	util.CheckError(err, "Failed to decode guesses")
 
 	return answers, guesses
 }
