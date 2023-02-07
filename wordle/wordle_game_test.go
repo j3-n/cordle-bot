@@ -3,6 +3,7 @@ package wordle
 import (
 	"testing"
 	"reflect"
+	"fmt"
 )
 
 func TestValidateGuess(t *testing.T){
@@ -42,6 +43,31 @@ func TestCountRunes(t *testing.T){
 			outcome := countRunes(test.input)
 			if !reflect.DeepEqual(outcome, test.outcome){
 				t.Errorf("got '%v', want '%v'", outcome, test.outcome)
+			}
+		})
+	}
+}
+
+func TestEvaluateGuess(t *testing.T){
+	var tests = []struct{
+		input 	string
+		goal	string
+		outcome [5]int
+	}{
+		{"aaaaa", "aaaaa", [5]int{CorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter}},
+		{"bbbbb", "aaaaa", [5]int{IncorrectCharacter, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter}},
+		{"ecdba", "abcde", [5]int{IncorrectPosition, IncorrectPosition, IncorrectPosition, IncorrectPosition, IncorrectPosition}},
+		{"aanon", "sunny", [5]int{IncorrectCharacter, IncorrectCharacter, CorrectCharacter, IncorrectCharacter, IncorrectPosition}},
+		{"nnoon", "sunny", [5]int{IncorrectPosition, IncorrectPosition, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter}},
+		{"nonny", "sunny", [5]int{IncorrectCharacter, IncorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter}},
+	}
+
+	for _, test := range tests{
+		name := fmt.Sprintf("%s/%s", test.input, test.goal)
+		t.Run(name, func(t *testing.T){
+			outcome := evaluateGuess(test.input, test.goal)
+			if outcome != test.outcome{
+				t.Errorf("got %v, want %v", outcome, test.outcome)
 			}
 		})
 	}

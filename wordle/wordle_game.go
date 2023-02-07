@@ -3,6 +3,8 @@ package wordle
 import (
 	"errors"
 	"regexp"
+	"unicode/utf8"
+	"fmt" // Temporary
 )
 
 // The maximum number of guesses allowed in a game of Wordle
@@ -72,7 +74,35 @@ func validateGuess(guess string) (error){
 
 // evaluateGuess analyses a wordle guess against a target and returns an array of character statuses
 func evaluateGuess(guess string, goal string) ([5]int){
-	return [5]int{}
+	// Retrieve the rune counts
+	counts := countRunes(goal)
+	fmt.Println(counts)
+
+	// Default value = 0 (IncorrectCharacter)
+	var result = [5]int{}
+
+	// First pass: check all correct runes
+	for i, v := range guess{
+		r, _ := utf8.DecodeRuneInString(goal[i:])
+		if v == r{
+			counts[v]--
+			result[i] = CorrectCharacter
+		}
+	}
+
+	// Second pass: mark incorrect positions
+	for i, v := range guess{
+		// Only check characters that are not already marked as correct
+		if result[i] != CorrectCharacter{
+			c, _ := counts[v]
+			if c > 0{
+				counts[v]--
+				result[i] = IncorrectPosition
+			}
+		}
+	}
+
+	return result
 }
 
 // countRunes returns a map with every rune present in the string along with its number of occurrences
