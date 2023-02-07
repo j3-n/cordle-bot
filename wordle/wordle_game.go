@@ -72,6 +72,20 @@ func validateGuess(guess string) (error){
 
 // evaluateGuess analyses a wordle guess against a target and returns an array of character statuses
 func evaluateGuess(guess string, goal string) ([5]int){
-	// Temporarily return an empty slice
 	return [5]int{}
+}
+
+// countRunes returns a map with every rune present in the string along with its number of occurrences
+func countRunes(s string) (map[rune]int){
+	var counts = make(map[rune]int)
+	// Count the occurrences of each character in the goal string
+	for _, c := range s{
+		_, exists := counts[c]
+		if exists{
+			counts[c]++
+		} else {
+			counts[c] = 1
+		}
+	}
+	return counts
 }
