@@ -25,10 +25,22 @@ var (
 	ErrInvalidFormat 	= errors.New("Invalid characters in guess")
 )
 
+// Variables to store potential answers and guesses
+var (
+	answers []string
+	guesses []string
+)
+
 // Stores information about a game of Wordle (this has no information linking to Discord)
 type WordleGame struct {
 	Guesses 	[]string
 	GoalWord 	string
+}
+
+// Runs when the wordle module is imported
+func init(){
+	// Load the possible guesses and answers
+	answers, guesses = LoadWords()
 }
 
 // Guess allows the submission of a guess to a wordle game, this requires a lowercase guess
