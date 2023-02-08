@@ -12,17 +12,9 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Path to read config from
-const ConfigPath = "config/config.json"
-// Path to read command metadata from
-const CommandsPath string = "commands/commands.json"
-
 func main() {
-	// Load config file
-	config := config.LoadConfig(ConfigPath)
-
 	// Create discord bot
-	session, err := discordgo.New("Bot " + config.Token)
+	session, err := discordgo.New("Bot " + config.Config.Token)
 	util.CheckError(err, "Failed to initialise discord session")
 
 	// Add a handler to print a happy message when the bot logs in successfully
@@ -39,7 +31,7 @@ func main() {
 	commands.RegisterCommands(session)
 
 	// Set the bot's status
-	err = session.UpdateGameStatus(0, config.Status)
+	err = session.UpdateGameStatus(0, config.Config.Status)
 	util.CheckError(err, "Failed to set status")
 
 	// Keep the program running until interrupted

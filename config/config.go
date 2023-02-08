@@ -8,22 +8,24 @@ import (
 )
 
 // Config structs store configuration information after they are read
-type Config struct {
+type ConfigData struct {
 	Token 	string
 	Status 	string
 }
 
-// LoadConfig returns a Config struct after reading configuration variables from a JSON file
-func LoadConfig(path string) (Config){
+// The path to read the config from
+const configPath = "config/config.json"
+
+// Globally available config data
+var Config ConfigData
+
+// When the module is first imported, load the config from a JSON file
+func init(){
 	// Open the configuration file
-	file, err := os.ReadFile(path)
+	file, err := os.ReadFile(configPath)
 	util.CheckError(err, "Failed to read config file")
 
-	// Create a new Config struct to return
-	ret := Config{}
 	// Decode JSON into the struct
-	err = json.Unmarshal(file, &ret)
+	err = json.Unmarshal(file, &Config)
 	util.CheckError(err, "Failed to decode JSON from config file")
-
-	return ret
 }
