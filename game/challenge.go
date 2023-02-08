@@ -1,10 +1,7 @@
 package game
 
 import (
-	"time"
 	"sync"
-
-	"cordle/config"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -23,7 +20,7 @@ var challenges struct{
 }
 
 // NewChallenge creates a new challenge between two players
-func NewChallenge(s *discordgo.User, t *discordgo.User){
+func NewChallenge(s *discordgo.User, t *discordgo.User) (*Challenge){
 	c := &Challenge{
 		Source: s,
 		Target: t,
@@ -31,8 +28,8 @@ func NewChallenge(s *discordgo.User, t *discordgo.User){
 	challenges.mu.Lock()
 	challenges.c = append(challenges.c, c)
 	challenges.mu.Unlock()
-	// Set the timer for the challenge to expire
-	go expireChallenge(c)
+
+	return c
 }
 
 // Locates and returns a challenge between two players given the target user object
@@ -68,12 +65,4 @@ func CloseChallenge(c *Challenge){
 		challenges.c[idx] = challenges.c[len(challenges.c) - 1]
 		challenges.c = challenges.c[:len(challenges.c) - 1]
 	}
-}
-
-// expireChallenge will remove a challenge after the configured delay if it has not been accepted
-func expireChallenge(c *Challenge){
-	// Wait for the configured interval
-	time.Sleep(time.Duration(config.Config.Game.ChallengeDuration) * time.Second)
-	// Close the challenge
-	CloseChallenge(c)
 }
