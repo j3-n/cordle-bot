@@ -84,3 +84,14 @@ func ClearCommands(s *discordgo.Session){
 		util.CheckError(err, fmt.Sprintf("Failed to delete command /%s", cmd.Name))
 	}
 }
+
+// ephermeralResponse sends an ephemeral response to an interaction
+func ephemeralResponse(s *discordgo.Session, i *discordgo.InteractionCreate, message string){
+	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: message,
+			Flags: discordgo.MessageFlagsEphemeral,
+		},
+	})
+}

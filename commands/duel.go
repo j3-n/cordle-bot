@@ -13,21 +13,9 @@ func duel(s *discordgo.Session, i *discordgo.InteractionCreate){
 		// Create a new challenge
 		game.NewChallenge(i.Interaction.Member.User, user)
 		// Respond to the interaction
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "Challenge created, good luck!",
-				Flags: discordgo.MessageFlagsEphemeral,
-			},
-		})
+		ephemeralResponse(s, i, "Challenge created, good luck!")
 	} else {
 		// Challenge already exists
-		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-			Type: discordgo.InteractionResponseChannelMessageWithSource,
-			Data: &discordgo.InteractionResponseData{
-				Content: "That player already has an active challenge against them!",
-				Flags: discordgo.MessageFlagsEphemeral,
-			},
-		})
+		ephemeralResponse(s, i, "That player already has an active challenge against them!")
 	}
 }
