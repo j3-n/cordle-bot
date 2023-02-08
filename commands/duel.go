@@ -10,6 +10,8 @@ import (
 )
 
 func duel(s *discordgo.Session, i *discordgo.InteractionCreate){
+	// TODO: check whether a role is mentioned
+	
 	// Check that the target does not already have a challenge against them
 	user := i.ApplicationCommandData().Options[0].UserValue(s)
 	if game.FindChallenge(user) == nil{
