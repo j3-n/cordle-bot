@@ -7,10 +7,15 @@ import (
 	"cordle/util"
 )
 
-// Config structs store configuration information after they are read
+// ConfigData structs store configuration information after they are read
 type ConfigData struct {
 	Token 	string
 	Status 	string
+	Game 	GameConfig
+}
+// GameConfig stores game specific settings
+type GameConfig struct{
+	ChallengeDuration int
 }
 
 // The path to read the config from
