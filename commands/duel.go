@@ -1,8 +1,6 @@
 package commands
 
 import (
-	"fmt"
-
 	"cordle/game"
 
 	"github.com/bwmarrin/discordgo"
@@ -14,8 +12,22 @@ func duel(s *discordgo.Session, i *discordgo.InteractionCreate){
 	if game.FindChallenge(user) == nil{
 		// Create a new challenge
 		game.NewChallenge(i.Interaction.Member.User, user)
-		fmt.Println("Made new challenge")
+		// Respond to the interaction
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "Challenge created, good luck!",
+				Flags: discordgo.MessageFlagsEphemeral,
+			},
+		})
 	} else {
-		fmt.Println("Challenge already exists")
+		// Challenge already exists
+		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+			Type: discordgo.InteractionResponseChannelMessageWithSource,
+			Data: &discordgo.InteractionResponseData{
+				Content: "That player already has an active challenge against them!",
+				Flags: discordgo.MessageFlagsEphemeral,
+			},
+		})
 	}
 }
