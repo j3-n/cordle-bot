@@ -15,7 +15,7 @@ var commands = []*discordgo.ApplicationCommand{
 		Description: "Send a duel challenge to another player",
 		Options: []*discordgo.ApplicationCommandOption{
 			{
-				Type: discordgo.ApplicationCommandOptionMentionable,
+				Type: discordgo.ApplicationCommandOptionUser,
 				Name: "opponent",
 				Description: "The player you wish to challenge",
 				Required: true,
@@ -85,13 +85,20 @@ func ClearCommands(s *discordgo.Session){
 	}
 }
 
-// ephermeralResponse sends an ephemeral response to an interaction
-func ephemeralResponse(s *discordgo.Session, i *discordgo.InteractionCreate, message string){
+// respond sends a response to an interaction
+func respond(s *discordgo.Session, i *discordgo.InteractionCreate, message string, ephemeral bool){
+	// Configure whether the message is ephemeral or not
+	var f discordgo.MessageFlags
+	if ephemeral{
+		f = discordgo.MessageFlagsEphemeral
+	}
+
+	// Send the response
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
 			Content: message,
-			Flags: discordgo.MessageFlagsEphemeral,
+			Flags: f,
 		},
 	})
 }
