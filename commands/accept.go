@@ -11,15 +11,15 @@ import (
 // duelAccept attempts to accept a duel challenge
 func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate){
 	// Find the challenge
-	c := game.FindChallenge(i.Interaction.User)
+	c := game.FindChallenge(i.Interaction.Member.User)
 	if c != nil{
 		// Accept the challenge
 		game.CloseChallenge(c)
 		// Notify the players that the challenge was accepted
 		m := fmt.Sprintf(
 			"%s, %s has accepted your duel! Please proceed to the breakout thread to play.",
-			i.Interaction.User.Mention(),
-			c.Target.Mention(),
+			c.Source.Mention(),
+			i.Interaction.Member.Mention(),
 		)
 		respond(s, i, m, false)
 		// TODO: start a new duel game

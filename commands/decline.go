@@ -9,15 +9,15 @@ import (
 
 // duelDecline declines a challenge against a given user
 func duelDecline(s *discordgo.Session, i *discordgo.InteractionCreate){
-	c := game.FindChallenge(i.Interaction.User)
+	c := game.FindChallenge(i.Interaction.Member.User)
 	if c != nil{
 		// Decline the challenge
 		game.CloseChallenge(c)
 		// Notify players that the challenge has been declined
 		m := fmt.Sprintf(
 			"%s, %s has declined your duel!",
-			c.Target.Mention(),
-			i.Interaction.User.Mention(),
+			c.Source.Mention(),
+			i.Interaction.Member.Mention(),
 		)
 		respond(s, i, m, false)
 	} else{
