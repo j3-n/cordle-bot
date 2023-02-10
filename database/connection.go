@@ -7,10 +7,10 @@ import (
 )
 
 type Connection struct {
-	Hostname string
-	Port     int
 	Username string
 	Password string
+	Address  string
+	Port     int
 	Database string
 }
 
