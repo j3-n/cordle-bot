@@ -10,7 +10,7 @@ type Connection struct {
 	Username string
 	Password string
 	Address  string
-	Port     int
+	Port     string
 	Database string
 }
 
@@ -26,9 +26,11 @@ func ConnString() string {
 		fmt.Println("Error duing unmarshall() :", err)
 	}
 
-	return fmt.Sprintf("postgresql://%s:%s@%s/todos?sslmode=disable",
+	return fmt.Sprintf("%s:%s@(%s:%s)/%s",
 		connData.Username,
 		connData.Password,
+		connData.Address,
+		connData.Port,
 		connData.Database)
 }
 

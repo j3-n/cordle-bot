@@ -4,9 +4,8 @@ import (
 	"cordle/database"
 	"database/sql"
 	"fmt"
-	//"os"
-	//_ "github.com/lib/pq"
-	//"github.com/gofiber/fiber/v2"
+	
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -24,18 +23,17 @@ func main() {
 
 	connStr := database.ConnString()
 
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("connected")
-	}
+	db, err := sql.Open("mysql", connStr)
+    if err != nil {
+        panic(err.Error())
+    }
+    defer db.Close()
+    fmt.Println("Success!")
 
-	fmt.Println(db)
-
-	rows, err := db.Query("SELECT * FROM USERS;")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(rows)
+	insert, err := db.Query("insert into users(id, name, wins, losses, draws, games, elo, level) values(456123, 'mother teresa', 69, 0, 0, 69, 69420, 456)")
+    if err !=nil {
+        panic(err.Error())
+    }
+    defer insert.Close()
+    fmt.Println("Yay, values added!")
 }
