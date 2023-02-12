@@ -1,49 +1,58 @@
 package database
 
-type Server interface {
-	connect()
-	getRecord()
-	getRecords()
-	updateRecord()
-	updateRecords()
-	deleteRecord()
-	deleteRecords()
-	deleteTable()
-	deleteTables()
-}
+import "fmt"
 
 type Interface struct {
 	Connection string
 }
 
-func (i Interface) getRecord() {
-
+func getRecord(selection string, table string, query string) User {
+	record, err := db.Query(fmt.Sprintf("select %s from %s where %s;", selection, table, query))
+	if err != nil {
+		panic(err.Error())
+	}
+	defer record.Close()
+	return nil
 }
 
-func (i Interface) getRecords() {
+func getRecords(table string, query string) {
+	record, err := db.Query(fmt.Sprintf("select * from %s where %s;", table, query))
+	if err != nil {
+		panic(err.Error())
+	}
+	defer record.Close()
+	return nil
+}
+
+func getTable(table string) {
+	record, err := db.Query(fmt.Sprintf("select * from %s;", table))
+	if err != nil {
+		panic(err.Error())
+	}
+	defer record.Close()
+	return nil
+}
+
+func updateRecord() {
 	
 }
 
-func (i Interface) updateRecord() {
+func updateRecords() {
 	
 }
 
-func (i Interface) updateRecords() {
+func deleteRecord() {
 	
 }
 
-func (i Interface) deleteRecord() {
+func deleteRecords() {
 	
 }
 
-func (i Interface) deleteRecords() {
+func deleteTable() {
 	
 }
 
-func (i Interface) deleteTable() {
-	
-}
-
-func (i Interface) deleteTables() {
+func deleteTables() {
 	
 }

@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type Connection struct {
@@ -14,7 +17,7 @@ type Connection struct {
 	Database string
 }
 
-func ConnString() string {
+func connStr() string {
 	content, err := ioutil.ReadFile("database/config.json")
 	if err != nil {
 		fmt.Println("Error opening file: ", err)
@@ -35,5 +38,10 @@ func ConnString() string {
 }
 
 func (i Interface) connect() {
-
+	db, err := sql.Open("mysql", connStr())
+    if err != nil {
+        panic(err.Error())
+    }
+    defer db.Close()
+    fmt.Println("Success!")
 }

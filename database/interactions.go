@@ -13,7 +13,7 @@ type Interactions interface {
 }
 
 func AddUser() {
-
+	
 }
 
 func AddUsers() {
@@ -36,9 +36,10 @@ func UpdateUsers() {
 
 }
 
-func GetUser() {
-
+func GetUser(username string) {
+	return getRecord("*", "users", username)
 }
+
 
 func GetUsers() {
 

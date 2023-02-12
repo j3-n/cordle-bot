@@ -21,15 +21,6 @@ func main() {
 	}
 	fmt.Println(person.ToString())
 
-	connStr := database.ConnString()
-
-	db, err := sql.Open("mysql", connStr)
-    if err != nil {
-        panic(err.Error())
-    }
-    defer db.Close()
-    fmt.Println("Success!")
-
 	insert, err := db.Query("insert into users(id, name, wins, losses, draws, games, elo, level) values(456123, 'mother teresa', 69, 0, 0, 69, 69420, 456)")
     if err !=nil {
         panic(err.Error())
