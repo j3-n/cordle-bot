@@ -64,8 +64,15 @@ func updateRecords() {
 
 }
 
-func deleteRecord() {
-
+func deleteRecord(table string, query string) {
+	conn := Connect()
+	delete, err := conn.db.Query(fmt.Sprintf("delete from %s where %s;",
+		table,
+		query))
+	if err != nil {
+		panic(err.Error())
+	}
+	defer delete.Close()
 }
 
 func deleteRecords() {

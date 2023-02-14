@@ -5,7 +5,8 @@ import (
 )
 
 func AddUser(user User) {
-	query := fmt.Sprintf("insert into users(id, name, wins, losses, draws, games, elo, level) values(%d, '%s', %d, %d, %d, %d, %d, %d);",
+	query := fmt.Sprintf(`insert into users(id, name, wins, losses, draws, games, elo, level) 
+						values(%d, '%s', %d, %d, %d, %d, %d, %d);`,
 		user.Id,
 		user.Name,
 		user.Wins,
@@ -14,16 +15,18 @@ func AddUser(user User) {
 		user.Games,
 		user.Elo,
 		user.Level)
-		
-	insertRecord(query);
+
+	insertRecord(query)
 }
 
 func AddUsers() {
 
 }
 
-func DeleteUser() {
+func DeleteUser(id int) {
+	query := fmt.Sprintf("id=%d", id)
 
+	deleteRecord("users", query)
 }
 
 func DeleteUsers() {
