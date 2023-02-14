@@ -2,10 +2,7 @@ package main
 
 import (
 	"cordle/database"
-	"database/sql"
 	"fmt"
-	
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -21,10 +18,6 @@ func main() {
 	}
 	fmt.Println(person.ToString())
 
-	insert, err := db.Query("insert into users(id, name, wins, losses, draws, games, elo, level) values(456123, 'mother teresa', 69, 0, 0, 69, 69420, 456)")
-    if err !=nil {
-        panic(err.Error())
-    }
-    defer insert.Close()
-    fmt.Println("Yay, values added!")
+	user := database.GetUser("david")
+	fmt.Println(user)
 }

@@ -4,12 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"database/sql"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
-type Connection struct {
+type ConnData struct {
 	Username string
 	Password string
 	Address  string
@@ -23,7 +20,7 @@ func connStr() string {
 		fmt.Println("Error opening file: ", err)
 	}
 
-	connData := Connection{}
+	connData := ConnData{}
 	err = json.Unmarshal(content, &connData)
 	if err != nil {
 		fmt.Println("Error duing unmarshall() :", err)
@@ -37,11 +34,11 @@ func connStr() string {
 		connData.Database)
 }
 
-func (i Interface) connect() {
-	db, err := sql.Open("mysql", connStr())
-    if err != nil {
-        panic(err.Error())
-    }
-    defer db.Close()
-    fmt.Println("Success!")
-}
+// func (i Interface) connect() {
+// 	db, err := sql.Open("mysql", connStr())
+//     if err != nil {
+//         panic(err.Error())
+//     }
+//     defer db.Close()
+//     fmt.Println("Success!")
+// }

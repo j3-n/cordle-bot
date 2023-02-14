@@ -1,19 +1,11 @@
 package database
 
-type Interactions interface {
-	AddUser()
-	AddUsers()
-	DeleteUser()
-	DeleteUsers()
-	UpdateUser()
-	UpdateUsers()
-	GetUser()
-	GetUsers()
-	GetUserStats()
-}
+import (
+	"fmt"
+)
 
 func AddUser() {
-	
+
 }
 
 func AddUsers() {
@@ -25,7 +17,7 @@ func DeleteUser() {
 }
 
 func DeleteUsers() {
-	
+
 }
 
 func UpdateUser() {
@@ -36,10 +28,11 @@ func UpdateUsers() {
 
 }
 
-func GetUser(username string) {
-	return getRecord("*", "users", username)
+func GetUser(username string) User {
+	data := getRecord("*", "users", "username=")
+	fmt.Println(data)
+	return User{}
 }
-
 
 func GetUsers() {
 
