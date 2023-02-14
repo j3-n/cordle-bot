@@ -46,8 +46,8 @@ func init(){
 }
 
 // NewRandomGame creates a new wordle game with a random solution and returns it
-func NewRandomGame() (WordleGame){
-	return WordleGame{
+func NewRandomGame() (*WordleGame){
+	return &WordleGame{
 		Guesses: []string{},
 		GoalWord: answers[rand.Intn(len(answers))],
 	}
