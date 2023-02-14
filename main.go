@@ -6,18 +6,23 @@ import (
 )
 
 func main() {
-	person := database.User{
-		Id:     1,
-		Name:   "dave",
-		Wins:   1,
-		Losses: 2,
-		Draws:  3,
-		Games:  4,
-		Elo:    5,
-		Level:  6,
-	}
-	fmt.Println(person.ToString())
+	dave := database.User{
+		Id: 678678,
+		Name: "dave",
+		Wins: 135,
+		Losses: 10,
+		Draws: 50,
+		Games: 195,
+		Elo: 1261,
+		Level: 120}
 
-	user := database.GetUser("david")
-	fmt.Println(user)
+	database.AddUser(dave)
+
+	user := database.GetUser(456123)
+	fmt.Println(user.ToString())
+
+	fmt.Println("")
+
+	stats := database.GetStats(456123)
+	fmt.Println(stats.ToString())
 }
