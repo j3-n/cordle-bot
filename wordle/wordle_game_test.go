@@ -1,9 +1,9 @@
 package wordle
 
 import (
-	"testing"
-	"reflect"
 	"fmt"
+	"reflect"
+	"testing"
 )
 
 func TestValidateGuess(t *testing.T){
@@ -52,14 +52,14 @@ func TestEvaluateGuess(t *testing.T){
 	var tests = []struct{
 		input 	string
 		goal	string
-		outcome [5]int
+		outcome [5]GuessState
 	}{
-		{"aaaaa", "aaaaa", [5]int{CorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter}},
-		{"bbbbb", "aaaaa", [5]int{IncorrectCharacter, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter}},
-		{"ecdba", "abcde", [5]int{IncorrectPosition, IncorrectPosition, IncorrectPosition, IncorrectPosition, IncorrectPosition}},
-		{"aanon", "sunny", [5]int{IncorrectCharacter, IncorrectCharacter, CorrectCharacter, IncorrectCharacter, IncorrectPosition}},
-		{"nnoon", "sunny", [5]int{IncorrectPosition, IncorrectPosition, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter}},
-		{"nonny", "sunny", [5]int{IncorrectCharacter, IncorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter}},
+		{"aaaaa", "aaaaa", [5]GuessState{CorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter}},
+		{"bbbbb", "aaaaa", [5]GuessState{IncorrectCharacter, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter}},
+		{"ecdba", "abcde", [5]GuessState{IncorrectPosition, IncorrectPosition, IncorrectPosition, IncorrectPosition, IncorrectPosition}},
+		{"aanon", "sunny", [5]GuessState{IncorrectCharacter, IncorrectCharacter, CorrectCharacter, IncorrectCharacter, IncorrectPosition}},
+		{"nnoon", "sunny", [5]GuessState{IncorrectPosition, IncorrectPosition, IncorrectCharacter, IncorrectCharacter, IncorrectCharacter}},
+		{"nonny", "sunny", [5]GuessState{IncorrectCharacter, IncorrectCharacter, CorrectCharacter, CorrectCharacter, CorrectCharacter}},
 	}
 
 	for _, test := range tests{

@@ -2,9 +2,9 @@ package wordle
 
 import (
 	"errors"
+	"math/rand"
 	"regexp"
 	"unicode/utf8"
-	"math/rand"
 )
 
 // The maximum number of guesses allowed in a game of Wordle
@@ -13,10 +13,11 @@ const MaxGuesses int = 6
 const GuessLength int = 5
 
 // Possible states a character in a guess could be
+type GuessState int
 const (
-	IncorrectCharacter 	= iota
-	IncorrectPosition 	= iota
-	CorrectCharacter	= iota
+	IncorrectCharacter 	GuessState	= iota
+	IncorrectPosition 	GuessState	= iota
+	CorrectCharacter	GuessState	= iota
 )
 
 // Possible errors that could be encountered when guessing
@@ -54,15 +55,15 @@ func NewRandomGame() (WordleGame){
 
 // Guess allows the submission of a guess to a wordle game, this requires a lowercase guess
 // An error is returned if the guess string is invalid or the game has no guesses remaining
-func (g *WordleGame) Guess(guess string) ([5]int, error){
+func (g *WordleGame) Guess(guess string) ([5]GuessState, error){
 	// Validate the guess
 	err := validateGuess(guess)
 	if err != nil{
-		return [5]int{}, err
+		return [5]GuessState{}, err
 	}
 	// Check that the game has remaining guesses
 	if g.GuessesRemaining() == 0{
-		return [5]int{}, ErrOutOfGuesses
+		return [5]GuessState{}, ErrOutOfGuesses
 	}
 
 	// Evaluate the guess
@@ -93,12 +94,12 @@ func validateGuess(guess string) (error){
 }
 
 // evaluateGuess analyses a wordle guess against a target and returns an array of character statuses
-func evaluateGuess(guess string, goal string) ([5]int){
+func evaluateGuess(guess string, goal string) ([5]GuessState){
 	// Retrieve the rune counts
 	counts := countRunes(goal)
 
 	// Default value = 0 (IncorrectCharacter)
-	var result = [5]int{}
+	var result = [5]GuessState{}
 
 	// First pass: check all correct runes
 	for i, v := range guess{
