@@ -33,7 +33,7 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate){
 			s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
 				Content: "Failed to create a thread for your game",
 			})
-			log.Printf("Failed to create breakout thread for duel")
+			log.Printf("Failed to create breakout thread for duel: %s", err)
 		} else{
 			// Create and store the game
 			game.NewGame(game.Duel, th.ID, []*discordgo.User{c.Source, c.Target})
