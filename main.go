@@ -2,7 +2,6 @@ package main
 
 import (
 	"cordle/database"
-	"fmt"
 )
 
 func main() {
@@ -18,13 +17,21 @@ func main() {
 
 	// database.AddUser(dave)
 
-	user := database.GetUser(456123)
-	fmt.Println(user.ToString())
+	// user := database.GetUser(456123)
+	// fmt.Println(user.ToString())
 
-	fmt.Println("")
+	// fmt.Println("")
 
-	stats := database.GetStats(456123)
-	fmt.Println(stats.ToString())
+	// stats := database.GetStats(456123)
+	// fmt.Println(stats.ToString())
 
 	// database.DeleteUser(678618)
+
+	// var ids [3]string
+
+	// ids[0] = "'1251'"
+	// ids[1] = "'4561'"
+	// ids[2] = "'1257'"
+
+	// database.DeleteRecords("users", "id=", ids)
 }

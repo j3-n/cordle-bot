@@ -75,8 +75,20 @@ func deleteRecord(table string, query string) {
 	defer delete.Close()
 }
 
-func deleteRecords() {
+func DeleteRecords(table string, query string, records [3]string) {
+	query += records[0]
+	for i := 1; i < len(records); i++ {
+		query += ", " + records[i]
+	}
 
+	conn := Connect()
+	delete, err := conn.db.Query(fmt.Sprintf("delete from %s where %s", 
+		table, 
+		query))
+	if err != nil {
+		panic(err.Error())
+	}
+	defer delete.Close()
 }
 
 func deleteTable() {
