@@ -8,22 +8,25 @@ import (
 )
 
 // NewDuelGame creates a specialized Game struct representing a Cordle Duel Game
-func NewDuelGame(p []*discordgo.User) (*Game, error) {
+func newDuelGame(p []*discordgo.User) (*Game, error) {
 	if len(p) != 2{
 		// Duels may only consist of two players
 		return nil, errors.New("Invalid player count")
 	}
 
-	// Create the array of games
-	var g []*wordle.WordleGame
-	for range p {
-		g = append(g, wordle.NewRandomGame())
+	// Create the shared game
+	g1 := wordle.NewRandomGame()
+	// Manually create a second game with the same goal word
+	// This is more efficient than doing a deep copy
+	g2 := &wordle.WordleGame{
+		Guesses: 	[]string{},
+		GoalWord: 	g1.GoalWord,
 	}
 	
 	// Create the game struct and return it
 	return &Game{
 		Mode: Duel,
 		Players: p,
-		Games: g,
+		Games: []*wordle.WordleGame{g1, g2},
 	}, nil
 }

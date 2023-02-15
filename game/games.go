@@ -32,7 +32,7 @@ var games struct{
 
 // Map specialized gamemodes to their functions to create them
 var gameModes = map[GameMode]func(p []*discordgo.User) (*Game, error){
-	Duel: NewDuelGame,
+	Duel: newDuelGame,
 }
 
 // NewGame creates a new game and stores it

@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"log"
 
 	"cordle/game"
 
@@ -22,7 +23,21 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate){
 			i.Interaction.Member.Mention(),
 		)
 		respond(s, i, m, false)
-		// TODO: start a new duel game
+		// Create a new thread to duel in
+		th, err := s.MessageThreadStartComplex(i.ChannelID, "", &discordgo.ThreadStart{
+			Name: 					"test thread",
+			AutoArchiveDuration: 	60,
+		})
+		if err != nil{
+			// Report the error
+			s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
+				Content: "Failed to create a thread for your game",
+			})
+			log.Printf("Failed to create breakout thread for duel")
+		} else{
+			// Create and store the game
+			game.NewGame(game.Duel, th.ID, []*discordgo.User{c.Source, c.Target})
+		}
 	} else{
 		// No challenge was found against this user
 		respond(s, i, "You currently have no active challenges against you.", true)
