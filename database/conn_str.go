@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 )
 
-type ConnData struct {
+type connData struct {
 	Username string
 	Password string
 	Address  string
@@ -20,25 +20,16 @@ func connStr() string {
 		fmt.Println("Error opening file: ", err)
 	}
 
-	connData := ConnData{}
-	err = json.Unmarshal(content, &connData)
+	cd := connData{}
+	err = json.Unmarshal(content, &cd)
 	if err != nil {
 		fmt.Println("Error duing unmarshall() :", err)
 	}
 
 	return fmt.Sprintf("%s:%s@(%s:%s)/%s",
-		connData.Username,
-		connData.Password,
-		connData.Address,
-		connData.Port,
-		connData.Database)
+		cd.Username,
+		cd.Password,
+		cd.Address,
+		cd.Port,
+		cd.Database)
 }
-
-// func (i Interface) connect() {
-// 	db, err := sql.Open("mysql", connStr())
-//     if err != nil {
-//         panic(err.Error())
-//     }
-//     defer db.Close()
-//     fmt.Println("Success!")
-// }
