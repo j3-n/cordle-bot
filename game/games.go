@@ -24,9 +24,9 @@ type Game struct {
 	Games	[]*wordle.WordleGame
 }
 
-// List of all current games, thread safe
+// Thread safe map of channel IDs to the games in them
 var games struct{
-	g 	[]*Game
+	g 	map[string]*Game
 	mu 	sync.Mutex
 }
 
@@ -36,7 +36,7 @@ var gameModes = map[GameMode]func(p []*discordgo.User) (*Game, error){
 }
 
 // NewGame creates a new game and stores it
-func NewGame(m GameMode, p []*discordgo.User) (error){
+func NewGame(m GameMode, c string, p []*discordgo.User) (error){
 	// Attempt to find the function to create a new game of this type with
 	createGame, exists := gameModes[m]
 	// If the handler does not exist, return an error
@@ -48,9 +48,9 @@ func NewGame(m GameMode, p []*discordgo.User) (error){
 	if err != nil{
 		return err
 	}
-	// Lock the games array and append to it
+	// Lock the games map and append to it
 	games.mu.Lock()
-	games.g = append(games.g, g)
+	games.g[c] = g
 	games.mu.Unlock()
 
 	return nil
