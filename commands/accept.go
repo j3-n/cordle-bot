@@ -10,10 +10,11 @@ import (
 )
 
 // duelAccept attempts to accept a duel challenge
-func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate){
+func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	// TODO: check that neither player is currently involved in a duel
 	// Find the challenge
 	c := game.FindChallenge(i.Interaction.Member.User)
-	if c != nil{
+	if c != nil {
 		// Accept the challenge
 		game.CloseChallenge(c)
 		// Notify the players that the challenge was accepted
@@ -23,22 +24,24 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate){
 			i.Interaction.Member.Mention(),
 		)
 		respond(s, i, m, false)
+		// Fetch the message to spawn thread from
+		msg, _ := s.InteractionResponse(i.Interaction)
 		// Create a new thread to duel in
-		th, err := s.MessageThreadStartComplex(i.ChannelID, "", &discordgo.ThreadStart{
-			Name: 					"test thread",
-			AutoArchiveDuration: 	60,
+		th, err := s.MessageThreadStartComplex(i.ChannelID, msg.ID, &discordgo.ThreadStart{
+			Name:                fmt.Sprintf("%s vs. %s | Duel Game", c.Source.Username, c.Target.Username),
+			AutoArchiveDuration: 60,
 		})
-		if err != nil{
+		if err != nil {
 			// Report the error
 			s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
 				Content: "Failed to create a thread for your game",
 			})
 			log.Printf("Failed to create breakout thread for duel: %s", err)
-		} else{
+		} else {
 			// Create and store the game
 			game.NewGame(game.Duel, th.ID, []*discordgo.User{c.Source, c.Target})
 		}
-	} else{
+	} else {
 		// No challenge was found against this user
 		respond(s, i, "You currently have no active challenges against you.", true)
 	}
