@@ -39,7 +39,7 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			log.Printf("Failed to create breakout thread for duel: %s", err)
 		} else {
 			// Create and store the game
-			game.NewGame(game.Duel, th.ID, []*discordgo.User{c.Source, c.Target})
+			game.NewDuelGame(th.ID, []*discordgo.User{c.Source, c.Target})
 		}
 	} else {
 		// No challenge was found against this user

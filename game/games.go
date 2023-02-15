@@ -2,7 +2,6 @@ package game
 
 import (
 	"cordle/wordle"
-	"errors"
 	"sync"
 
 	"github.com/bwmarrin/discordgo"
@@ -31,33 +30,7 @@ var games struct {
 	mu sync.Mutex
 }
 
-// Map specialized gamemodes to their functions to create them
-var gameModes = map[GameMode]func(p []*discordgo.User) (*Game, error){
-	Duel: newDuelGame,
-}
-
 // Initialise the games map
 func init() {
 	games.g = make(map[string]*Game)
-}
-
-// NewGame creates a new game and stores it
-func NewGame(m GameMode, c string, p []*discordgo.User) error {
-	// Attempt to find the function to create a new game of this type with
-	createGame, exists := gameModes[m]
-	// If the handler does not exist, return an error
-	if !exists {
-		return errors.New("Unknown GameMode")
-	}
-	// If the handler was found, create the new game
-	g, err := createGame(p)
-	if err != nil {
-		return err
-	}
-	// Lock the games map and append to it
-	games.mu.Lock()
-	games.g[c] = g
-	games.mu.Unlock()
-
-	return nil
 }
