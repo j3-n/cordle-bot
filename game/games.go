@@ -34,3 +34,17 @@ var games struct {
 func init() {
 	games.g = make(map[string]*Game)
 }
+
+// PlayerFree checks whether a player is already in a game, returns true if not
+func PlayerFree(p *discordgo.User) (bool) {
+	games.mu.Lock()
+	defer games.mu.Unlock()
+	for _, g := range games.g{
+		for _, player := range g.Players{
+			if player.ID == p.ID{
+				return false
+			}
+		}
+	}
+	return true
+}
