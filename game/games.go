@@ -48,3 +48,13 @@ func PlayerFree(p *discordgo.User) (bool) {
 	}
 	return true
 }
+
+// FindGame returns a game given a channel ID that the game is taking place in
+// Returns a reference to the game struct and a boolean confirming if the game exists or not
+func FindGame(channelID string) (*Game, bool){
+	games.mu.Lock()
+	defer games.mu.Unlock()
+	// For some reason this has to be two lines
+	ret, exists := games.g[channelID]
+	return ret, exists
+}
