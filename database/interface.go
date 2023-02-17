@@ -45,7 +45,7 @@ func getTable(table string) [][]string {
 
 func insertRecord(query string) {
 	conn := Connect()
-	insert, err := conn.db.Query(query);
+	insert, err := conn.db.Query(query)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -75,15 +75,15 @@ func deleteRecord(table string, query string) {
 	defer delete.Close()
 }
 
-func DeleteRecords(table string, query string, records [3]string) {
+func deleteRecords(table string, query string, records [3]string) { // TODO fix that
 	query += records[0]
 	for i := 1; i < len(records); i++ {
 		query += ", " + records[i]
 	}
 
 	conn := Connect()
-	delete, err := conn.db.Query(fmt.Sprintf("delete from %s where %s", 
-		table, 
+	delete, err := conn.db.Query(fmt.Sprintf("delete from %s where %s",
+		table,
 		query))
 	if err != nil {
 		panic(err.Error())
@@ -91,8 +91,13 @@ func DeleteRecords(table string, query string, records [3]string) {
 	defer delete.Close()
 }
 
-func deleteTable() {
-
+func deleteTable(table string) {
+	conn := Connect()
+	delete, err := conn.db.Query(fmt.Sprintf("drop table %s", table))
+	if err != nil {
+		panic(err.Error())
+	}
+	defer delete.Close()
 }
 
 func deleteTables() {
