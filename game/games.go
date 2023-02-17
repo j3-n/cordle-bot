@@ -40,13 +40,21 @@ func PlayerFree(p *discordgo.User) (bool) {
 	games.mu.Lock()
 	defer games.mu.Unlock()
 	for _, g := range games.g{
-		for _, player := range g.Players{
-			if player.ID == p.ID{
-				return false
-			}
+		if PlayerInGame(g, p){
+			return false
 		}
 	}
 	return true
+}
+
+// PlayerInGame checks whether a player is a part of a given game
+func PlayerInGame(g *Game, p *discordgo.User) (bool) {
+	for _, player := range g.Players{
+		if player.ID == p.ID{
+			return true
+		}
+	}
+	return false
 }
 
 // FindGame returns a game given a channel ID that the game is taking place in
