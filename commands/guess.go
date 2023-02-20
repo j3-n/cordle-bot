@@ -15,7 +15,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 		p := i.Interaction.Member.User
 		if g.PlayerInGame(p) {
 			// Retrive the guess
-			guess := i.ApplicationCommandData().Options[0].StringValue()
+			guess := strings.ToLower(i.ApplicationCommandData().Options[0].StringValue())
 			r, err := g.SubmitGuess(guess, p)
 			if err == nil{
 				// Guess was valid, return result

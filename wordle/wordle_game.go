@@ -4,6 +4,8 @@ import (
 	"errors"
 	"math/rand"
 	"regexp"
+	"sort"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -25,6 +27,7 @@ var (
 	ErrOutOfGuesses 	= errors.New("You have run out of guesses!")
 	ErrInvalidLength 	= errors.New("Invalid guess length!")
 	ErrInvalidFormat 	= errors.New("Invalid characters in guess!")
+	ErrInvalidWord		= errors.New("That is not a valid word!")
 )
 
 // Variables to store potential answers and guesses
@@ -89,8 +92,21 @@ func validateGuess(guess string) (error){
 	if !regexp.MustCompile(`^[a-z]+$`).MatchString(guess){
 		return ErrInvalidFormat
 	}
+	// Check that the guess is one of the valid words
+	if(!isValidWord(guess)){
+		return ErrInvalidWord
+	}
 
 	return nil
+}
+
+// isValidWord determines if the given word is a valid guess
+func isValidWord(w string) (bool) {
+	// Use a binary search to check if this word is present
+	_, found := sort.Find(len(guesses), func(i int) int {
+		return strings.Compare(w, guesses[i])
+	})
+	return found
 }
 
 // evaluateGuess analyses a wordle guess against a target and returns an array of character statuses
