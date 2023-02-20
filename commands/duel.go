@@ -13,7 +13,7 @@ import (
 func duel(s *discordgo.Session, i *discordgo.InteractionCreate){
 	// Check whether the target is valid (not a role and not a bot)
 	user := i.ApplicationCommandData().Options[0].UserValue(s)
-	if(!user.Bot && user.ID != i.Interaction.Member.User.ID){
+	if !user.Bot && user.ID != i.Interaction.Member.User.ID {
 		// Check that the target does not already have a challenge against them
 		if game.FindChallenge(user) == nil{
 			// Create a new challenge

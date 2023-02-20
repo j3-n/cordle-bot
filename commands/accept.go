@@ -15,7 +15,7 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	c := game.FindChallenge(i.Interaction.Member.User)
 	if c != nil {
 		// Check that neither player is in a game already
-		if(game.PlayerFree(c.Source) && game.PlayerFree(c.Target)){
+		if game.PlayerFree(c.Source) && game.PlayerFree(c.Target) {
 			// Accept the challenge
 			game.CloseChallenge(c)
 			// Notify the players that the challenge was accepted

@@ -2,23 +2,27 @@ package commands
 
 import (
 	"cordle/game"
+	"cordle/wordle"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 // guess submits a guess to an ongoing game of Cordle
 func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
-	// TODO: Checks
-	// - Check that user has guesses remaining
 	g, exists := game.FindGame(i.Interaction.ChannelID)
 	if exists {
-		if(!g.PlayerInGame(i.Interaction.Member.User)){
-			c := g.PlayerCanGuess(i.Interaction.Member.User)
-			if(c == game.CanGuess){
-
-			} else if c == game.NoGuesses {
-				// The player has run out of guesses
-				respond(s, i, "You have run out of guesses!", true)
+		p := i.Interaction.Member.User
+		if g.PlayerInGame(p) {
+			// Retrive the guess
+			guess := i.ApplicationCommandData().Options[0].StringValue()
+			r, err := g.SubmitGuess(guess, p)
+			if err == nil{
+				// Guess was valid, return result
+				respond(s, i, guess + "\n" + displayGuess(r), true)
+			} else {
+				// Send the error message back to the user
+				respond(s, i, err.Error(), true)
 			}
 		} else {
 			// The player does not belong to this game
@@ -28,4 +32,19 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 		// No game in this channel
 		respond(s, i, "There are no active games in this channel", true)
 	}
+}
+
+// displayGuess returns a nicely formatted response from a guess result to send back to the user
+func displayGuess(r [5]wordle.GuessState) (string){
+	var s strings.Builder
+	for _, gs := range r{
+		if gs == wordle.CorrectCharacter {
+			s.WriteRune('🟩')
+		} else if gs == wordle.IncorrectPosition {
+			s.WriteRune('🟨')
+		} else {
+			s.WriteRune('🟥')
+		}
+	}
+	return s.String()
 }

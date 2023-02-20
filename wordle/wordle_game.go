@@ -22,9 +22,9 @@ const (
 
 // Possible errors that could be encountered when guessing
 var (
-	ErrOutOfGuesses 	= errors.New("Out of guesses")
-	ErrInvalidLength 	= errors.New("Invalid guess length")
-	ErrInvalidFormat 	= errors.New("Invalid characters in guess")
+	ErrOutOfGuesses 	= errors.New("You have run out of guesses!")
+	ErrInvalidLength 	= errors.New("Invalid guess length!")
+	ErrInvalidFormat 	= errors.New("Invalid characters in guess!")
 )
 
 // Variables to store potential answers and guesses

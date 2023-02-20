@@ -40,14 +40,9 @@ func (g *DuelGame) PlayerInGame(p *discordgo.User) (bool) {
 	return exists
 }
 
-// PlayerCanGuess returns true if the given player is currently allowed to submit a guess
-// Returns false if the given player is not part of this game
-func (g *DuelGame) PlayerCanGuess(p *discordgo.User) (Reason) {
-	return CanGuess
-}
-
 // SubmitGuess allows a guess to be submitted to the game of a given player
 // Returns the result as an array of wordle.GuessState
-func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) ([5]wordle.GuessState) {
-	return [5]wordle.GuessState{}
+func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) ([5]wordle.GuessState, error) {
+	pg := g.games[p.ID]
+	return pg.Guess(guess)
 }
