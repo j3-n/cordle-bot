@@ -42,8 +42,8 @@ func (g *DuelGame) PlayerInGame(p *discordgo.User) (bool) {
 
 // PlayerCanGuess returns true if the given player is currently allowed to submit a guess
 // Returns false if the given player is not part of this game
-func (g *DuelGame) PlayerCanGuess(p *discordgo.User) (bool) {
-	return false
+func (g *DuelGame) PlayerCanGuess(p *discordgo.User) (Reason) {
+	return CanGuess
 }
 
 // SubmitGuess allows a guess to be submitted to the game of a given player

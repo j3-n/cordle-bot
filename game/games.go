@@ -7,10 +7,17 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// These are reasons that a user cannot guess
+type Reason int
+const (
+	CanGuess 	Reason  = iota
+	NoGuesses 	Reason 	= iota
+)
+
 // GameInterface is implemented by all GameModes, allows games to be interacted with
 type GameManager interface{
 	PlayerInGame(p *discordgo.User)				bool
-	PlayerCanGuess(p *discordgo.User) 			bool
+	PlayerCanGuess(p *discordgo.User) 			Reason
 	SubmitGuess(guess string, p*discordgo.User)	[5]wordle.GuessState
 }
 

@@ -13,7 +13,13 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 	g, exists := game.FindGame(i.Interaction.ChannelID)
 	if exists {
 		if(!g.PlayerInGame(i.Interaction.Member.User)){
+			c := g.PlayerCanGuess(i.Interaction.Member.User)
+			if(c == game.CanGuess){
 
+			} else if c == game.NoGuesses {
+				// The player has run out of guesses
+				respond(s, i, "You have run out of guesses!", true)
+			}
 		} else {
 			// The player does not belong to this game
 			respond(s, i, "You are not part of this game!", true)
