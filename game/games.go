@@ -48,3 +48,11 @@ func FindGame(channelID string) (GameManager, bool){
 	ret, exists := games.g[channelID]
 	return ret, exists
 }
+
+// CloseGame removes a completed game from the list
+func CloseGame(channelID string) {
+	games.mu.Lock()
+	// Delete the game
+	delete(games.g, channelID)
+	games.mu.Unlock()
+}

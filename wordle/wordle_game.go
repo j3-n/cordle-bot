@@ -110,6 +110,12 @@ func isValidWord(w string) (bool) {
 	_, found := sort.Find(len(guesses), func(i int) int {
 		return strings.Compare(w, guesses[i])
 	})
+	if !found {
+		// Try the answers list instead
+		_, found = sort.Find(len(answers), func(i int) int {
+			return strings.Compare(w, answers[i])
+		})
+	}
 	return found
 }
 

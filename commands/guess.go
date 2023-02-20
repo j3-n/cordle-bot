@@ -4,6 +4,7 @@ import (
 	"cordle/game"
 	"cordle/wordle"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -26,6 +27,8 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 				if won{
 					// Notify the players that the game has been won
 					s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("<@%s> has won the game! The word was `%s`.", id, g.GoalWord(p)))
+					// Close the game
+					closeGame(s, i.ChannelID)
 				} else if !g.PlayerHasGuesses(p){
 					// Notify the players that one has run out of guesses
 					s.ChannelMessageSend(i.ChannelID, p.Mention() + " has run out of guesses!")
@@ -57,4 +60,20 @@ func displayGuess(r [5]wordle.GuessState) (string){
 		}
 	}
 	return s.String()
+}
+
+// Close game closes the current game
+func closeGame(s *discordgo.Session, th string){
+	// Remove the game internally
+	game.CloseGame(th)
+	// Archive and lock the thread from discord
+	archived := true
+	locked := true
+	_, err := s.ChannelEditComplex(th, &discordgo.ChannelEdit{
+		Archived: &archived,
+		Locked: &locked,
+	})
+	if err != nil {
+		log.Println(err.Error())
+	}
 }
