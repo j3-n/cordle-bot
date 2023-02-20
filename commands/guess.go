@@ -12,7 +12,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 	// - Check that user has guesses remaining
 	g, exists := game.FindGame(i.Interaction.ChannelID)
 	if exists {
-		if(!g.PlayerInGame(i.Interaction.User)){
+		if(!g.PlayerInGame(i.Interaction.Member.User)){
 
 		} else {
 			// The player does not belong to this game
