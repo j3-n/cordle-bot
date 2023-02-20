@@ -38,6 +38,7 @@ var (
 
 // Stores information about a game of Wordle (this has no information linking to Discord)
 type WordleGame struct {
+	Won			bool
 	Guesses 	[]string
 	GoalWord 	string
 }
@@ -51,6 +52,7 @@ func init(){
 // NewRandomGame creates a new wordle game with a random solution and returns it
 func NewRandomGame() (*WordleGame){
 	return &WordleGame{
+		Won: false,
 		Guesses: []string{},
 		GoalWord: answers[rand.Intn(len(answers))],
 	}
@@ -70,9 +72,11 @@ func (g *WordleGame) Guess(guess string) ([5]GuessState, error){
 	}
 
 	// Evaluate the guess
-	result := evaluateGuess(guess, g.GoalWord)
+	result, correct := evaluateGuess(guess, g.GoalWord)
 	// Add it to the guess history
 	g.Guesses = append(g.Guesses, guess)
+
+	g.Won = correct
 
 	return result, nil
 }
@@ -110,12 +114,13 @@ func isValidWord(w string) (bool) {
 }
 
 // evaluateGuess analyses a wordle guess against a target and returns an array of character statuses
-func evaluateGuess(guess string, goal string) ([5]GuessState){
+func evaluateGuess(guess string, goal string) ([5]GuessState, bool){
 	// Retrieve the rune counts
 	counts := countRunes(goal)
 
 	// Default value = 0 (IncorrectCharacter)
 	var result = [5]GuessState{}
+	correct := true
 
 	// First pass: check all correct runes
 	for i, v := range guess{
@@ -130,6 +135,7 @@ func evaluateGuess(guess string, goal string) ([5]GuessState){
 	for i, v := range guess{
 		// Only check characters that are not already marked as correct
 		if result[i] != CorrectCharacter{
+			correct = false
 			c, _ := counts[v]
 			if c > 0{
 				counts[v]--
@@ -138,7 +144,7 @@ func evaluateGuess(guess string, goal string) ([5]GuessState){
 		}
 	}
 
-	return result
+	return result, correct
 }
 
 // countRunes returns a map with every rune present in the string along with its number of occurrences

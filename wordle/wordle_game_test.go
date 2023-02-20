@@ -65,7 +65,7 @@ func TestEvaluateGuess(t *testing.T){
 	for _, test := range tests{
 		name := fmt.Sprintf("%s/%s", test.input, test.goal)
 		t.Run(name, func(t *testing.T){
-			outcome := evaluateGuess(test.input, test.goal)
+			outcome, _ := evaluateGuess(test.input, test.goal)
 			if outcome != test.outcome{
 				t.Errorf("got %v, want %v", outcome, test.outcome)
 			}
