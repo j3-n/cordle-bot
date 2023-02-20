@@ -4,16 +4,14 @@ import(
 	"cordle/database"
 )
 
-func winCalc(attempts int, player database.User) database.User {
+func winCalc(attempts int, player *database.User) {
 	player.Wins += 1
 	player.Games += 1
 	player.Elo += 4 * (7 - attempts)
 	player.Level += 5 * (7 - attempts)
-
-	return player
 }
 
-func loseCalc(attempts int, player database.User) database.User {
+func loseCalc(attempts int, player *database.User) {
 	player.Losses += 1
 	player.Games += 1
 	player.Elo -= 4 * attempts
@@ -22,15 +20,11 @@ func loseCalc(attempts int, player database.User) database.User {
 	if player.Elo < 0 { 
 		player.Elo = 0
 	}
-	
-	return player
 }
 
-func drawCalc(player database.User) database.User {
+func drawCalc(player *database.User) {
 	player.Draws += 1
 	player.Games += 1
 	player.Elo += 7
 	player.Level += 10
-
-	return player
 }

@@ -68,7 +68,24 @@ func GetUser(id int) User {
 }
 
 func GetUsers() {
+	conn := Connect()
+	result, err := conn.db.Query(fmt.Sprintf("select * from users;"))
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	
+}
 
+func GetName(id int) string {
+	conn := Connect()
+	result, err := conn.db.Query(fmt.Sprintf("select name from users where id=%d", id))
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+
+	return "jeff";
 }
 
 func GetStats(id int) Stats {
