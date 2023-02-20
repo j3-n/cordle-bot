@@ -3,6 +3,7 @@ package commands
 import (
 	"cordle/game"
 	"cordle/wordle"
+	"fmt"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -20,8 +21,12 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 			if err == nil{
 				// Guess was valid, return result
 				respond(s, i, guess + "\n" + displayGuess(r), true)
-				// Check if the user has run out of guesses
-				if !g.PlayerHasGuesses(p){
+				// Check if a player has won the game
+				won, id := g.GameWon()
+				if won{
+					// Notify the players that the game has been won
+					s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("<@%s> has won the game! The word was `%s`.", id, g.GoalWord(p)))
+				} else if !g.PlayerHasGuesses(p){
 					// Notify the players that one has run out of guesses
 					s.ChannelMessageSend(i.ChannelID, p.Mention() + " has run out of guesses!")
 				}

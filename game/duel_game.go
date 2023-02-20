@@ -52,7 +52,17 @@ func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) ([5]wordle.Guess
 	return pg.Guess(guess)
 }
 
-// GameWon returns true if the game has been won
-func (*DuelGame) GameWon() (bool) {
-	return false
+// GoalWord returns the goal word for this game
+func (g *DuelGame) GoalWord(p *discordgo.User) (string) {
+	return g.games[p.ID].GoalWord
+}
+
+// GameWon returns true if the game has been won, as well as the ID of the winner
+func (g *DuelGame) GameWon() (bool, string) {
+	for id, g := range g.games{
+		if g.Won{
+			return true, id
+		}
+	}
+	return false, ""
 }
