@@ -20,6 +20,11 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 			if err == nil{
 				// Guess was valid, return result
 				respond(s, i, guess + "\n" + displayGuess(r), true)
+				// Check if the user has run out of guesses
+				if !g.PlayerHasGuesses(p){
+					// Notify the players that one has run out of guesses
+					s.ChannelMessageSend(i.ChannelID, p.Mention() + " has run out of guesses!")
+				}
 			} else {
 				// Send the error message back to the user
 				respond(s, i, err.Error(), true)

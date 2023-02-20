@@ -11,6 +11,7 @@ import (
 type GameManager interface{
 	PlayerInGame(p *discordgo.User)				bool
 	SubmitGuess(guess string, p*discordgo.User)	([5]wordle.GuessState, error)
+	PlayerHasGuesses(p *discordgo.User)			bool
 }
 
 // Thread safe map of channel IDs to the games in them

@@ -40,6 +40,11 @@ func (g *DuelGame) PlayerInGame(p *discordgo.User) (bool) {
 	return exists
 }
 
+// PlayerHasGuesses returns true if the player has guesses remaining in the game
+func (g *DuelGame) PlayerHasGuesses(p *discordgo.User) (bool) {
+	return g.games[p.ID].GuessesRemaining() > 0
+}
+
 // SubmitGuess allows a guess to be submitted to the game of a given player
 // Returns the result as an array of wordle.GuessState
 func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) ([5]wordle.GuessState, error) {
