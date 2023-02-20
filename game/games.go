@@ -7,32 +7,22 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// These are the available modes that Cordle can be played in
-type GameMode int
-
-const (
-	Duel           GameMode = iota
-	FreeForAll     GameMode = iota
-	TimeAttack     GameMode = iota
-	TeamDeathmatch GameMode = iota
-)
-
-// Game encapsulates the information about an individual game of Cordle, regardless of mode
-type Game struct {
-	Mode    GameMode
-	Players []*discordgo.User
-	Games   []*wordle.WordleGame
+// GameInterface is implemented by all GameModes, allows games to be interacted with
+type GameManager interface{
+	PlayerInGame(p *discordgo.User)				bool
+	PlayerCanGuess(p *discordgo.User) 			bool
+	SubmitGuess(guess string, p*discordgo.User)	[5]wordle.GuessState
 }
 
 // Thread safe map of channel IDs to the games in them
 var games struct {
-	g  map[string]*Game
+	g  map[string]GameManager
 	mu sync.Mutex
 }
 
 // Initialise the games map
 func init() {
-	games.g = make(map[string]*Game)
+	games.g = make(map[string]GameManager)
 }
 
 // PlayerFree checks whether a player is already in a game, returns true if not
@@ -40,26 +30,16 @@ func PlayerFree(p *discordgo.User) (bool) {
 	games.mu.Lock()
 	defer games.mu.Unlock()
 	for _, g := range games.g{
-		if PlayerInGame(g, p){
+		if g.PlayerInGame(p){
 			return false
 		}
 	}
 	return true
 }
 
-// PlayerInGame checks whether a player is a part of a given game
-func PlayerInGame(g *Game, p *discordgo.User) (bool) {
-	for _, player := range g.Players{
-		if player.ID == p.ID{
-			return true
-		}
-	}
-	return false
-}
-
 // FindGame returns a game given a channel ID that the game is taking place in
 // Returns a reference to the game struct and a boolean confirming if the game exists or not
-func FindGame(channelID string) (*Game, bool){
+func FindGame(channelID string) (GameManager, bool){
 	games.mu.Lock()
 	defer games.mu.Unlock()
 	// For some reason this has to be two lines
