@@ -5,8 +5,9 @@ import (
 )
 
 func AddUser(user User) {
-	query := fmt.Sprintf(`insert into users(id, name, wins, losses, draws, games, elo, level) 
-						values(%d, '%s', %d, %d, %d, %d, %d, %d);`,
+	query := fmt.Sprintf(
+		`insert into users(id, name, wins, losses, draws, games, elo, level) 
+		values(%d, '%s', %d, %d, %d, %d, %d, %d);`,
 		user.Id,
 		user.Name,
 		user.Wins,
@@ -24,7 +25,9 @@ func AddUsers() {
 }
 
 func DeleteUser(id int) {
-	query := fmt.Sprintf("id=%d", id)
+	query := fmt.Sprintf(
+		"id=%d",
+		id)
 
 	deleteRecord("users", query)
 }
@@ -43,7 +46,10 @@ func UpdateUsers() {
 
 func GetUser(id int) User {
 	conn := Connect()
-	result, err := conn.db.Query(fmt.Sprintf("select * from users where id=%d;", id))
+	result, err := conn.db.Query(fmt.Sprintf(
+		"select * from users where id=%d;",
+		id))
+
 	if err != nil {
 		panic(err.Error())
 	}
@@ -69,28 +75,36 @@ func GetUser(id int) User {
 
 func GetUsers() {
 	conn := Connect()
-	result, err := conn.db.Query(fmt.Sprintf("select * from users;"))
+	result, err := conn.db.Query(fmt.Sprintf(
+		"select * from users;"))
+
 	if err != nil {
 		panic(err.Error())
 	}
 	defer result.Close()
-	
+
 }
 
 func GetName(id int) string {
 	conn := Connect()
-	result, err := conn.db.Query(fmt.Sprintf("select name from users where id=%d", id))
+	result, err := conn.db.Query(fmt.Sprintf(
+		"select name from users where id=%d",
+		id))
+
 	if err != nil {
 		panic(err.Error())
 	}
 	defer result.Close()
 
-	return "jeff";
+	return "jeff"
 }
 
 func GetStats(id int) Stats {
 	conn := Connect()
-	result, err := conn.db.Query(fmt.Sprintf("select wins, losses, draws, games, elo, level from users where id=%d;", id))
+	result, err := conn.db.Query(fmt.Sprintf(
+		"select wins, losses, draws, games, elo, level from users where id=%d;",
+		id))
+
 	if err != nil {
 		panic(err.Error())
 	}

@@ -26,7 +26,8 @@ func connStr() string {
 		fmt.Println("Error duing unmarshall() :", err)
 	}
 
-	return fmt.Sprintf("%s:%s@(%s:%s)/%s",
+	return fmt.Sprintf(
+		"%s:%s@(%s:%s)/%s",
 		cd.Username,
 		cd.Password,
 		cd.Address,

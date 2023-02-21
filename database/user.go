@@ -16,7 +16,8 @@ type User struct {
 }
 
 func (u User) ToString() string {
-	return fmt.Sprintf("ID: %d\nName: %s\nWins: %d\nLosses: %d\nDraws: %d\nGames Played: %d\nElo: %d\nLevel: %d", 
+	return fmt.Sprintf(
+		"ID: %d\nName: %s\nWins: %d\nLosses: %d\nDraws: %d\nGames Played: %d\nElo: %d\nLevel: %d", 
 			u.Id, 
 			u.Name, 
 			u.Wins, 
@@ -25,6 +26,25 @@ func (u User) ToString() string {
 			u.Games, 
 			u.Elo, 
 			u.Level)
+}
+
+func (u User) ToStat() string {
+	return fmt.Sprintf(
+		"%s's stats:\nWins: %d\nLosses: %d\nDraws: %d\nGames: %d\nElo: %d\nLevel: %d",
+		u.Name,
+		u.Wins,
+		u.Losses,
+		u.Draws,
+		u.Games,
+		u.Elo,
+		u.Level)
+}
+
+func (u User) ToLeaderboard() string {
+	return fmt.Sprintf(
+		"%s : %d",
+		u.Name,
+		u.Elo)
 }
 
 func (u User) WinPercentage() float64 {

@@ -2,8 +2,15 @@ package statistics
 
 import (
 	"cordle/database"
+	"fmt"
 )
 
-func GetLeaderboard(users database.User) {
-	
+func GetLeaderboard(topTen [10]database.User) {
+	var output string
+	for i := 0; i < len(topTen); i++ {
+		output += fmt.Sprintf(
+			"``%d : %s``",
+			i+1,
+			topTen[i].ToLeaderboard())
+	}
 }
