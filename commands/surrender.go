@@ -22,9 +22,9 @@ func surrender(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			// Check if the game should now end
 			won, id := g.GameWon()
 			if won {
-				closeGame(s, i.ChannelID)
 				m = fmt.Sprintf("<@%s> wins! The word was `%s`", id, g.GoalWord(p))
 				s.ChannelMessageSend(i.ChannelID, m)
+				closeGame(s, i.ChannelID)
 			}
 		} else {
 			// The user is not part of this game
