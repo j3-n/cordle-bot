@@ -5,23 +5,26 @@ import (
 	"fmt"
 )
 
-func LogWin(attempts int, player *database.User) {
-	winCalc(attempts, player)
-	fmt.Println(player.ToString())
+func LogWin(attempts int, id int) {
+	user := database.GetUser(id)
+	winCalc(attempts, &user)
+	fmt.Println(user.ToString())
 
-	database.UpdateUser(player)
+	database.UpdateUser(&user)
 }
 
-func LogLoss(attempts int, player *database.User) {
-	loseCalc(attempts, player)
-	fmt.Println(player.ToString())
+func LogLoss(attempts int, id int) {
+	user := database.GetUser(id)
+	loseCalc(attempts, &user)
+	fmt.Println(user.ToString())
 
-	database.UpdateUser(player)
+	database.UpdateUser(&user)
 }
 
-func LogDraw(player *database.User) {
-	drawCalc(player)
-	fmt.Println(player.ToString())
+func LogDraw(id int) {
+	user := database.GetUser(id)
+	drawCalc(&user)
+	fmt.Println(user.ToString())
 
-	database.UpdateUser(player)
+	database.UpdateUser(&user)
 }
