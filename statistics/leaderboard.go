@@ -7,11 +7,11 @@ import (
 
 func GetLeaderboard(topTen [10]database.User) string {
 	var output string
-	for i := 0; i < len(topTen); i++ {
+	for index, user := range topTen {
 		output += fmt.Sprintf(
 			"``%d : %s``",
-			i+1,
-			topTen[i].ToLeaderboard())
+			index+1,
+			user.ToLeaderboard())
 	}
 	return output
 }
