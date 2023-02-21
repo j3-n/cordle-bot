@@ -1,9 +1,5 @@
 package database
 
-import (
-
-)
-
 var schema = `
 	create table users (
 		id primary key int not null,
