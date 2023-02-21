@@ -10,6 +10,8 @@ import (
 type DuelGame struct {
 	// games stores a map of user IDs to their game
 	games map[string]*wordle.WordleGame
+	// menus stores the interaction to edit to display games to each user
+	menus map[string]*discordgo.Interaction
 }
 
 // NewDuelGame creates a specialized Game struct representing a Cordle Duel Game
@@ -30,6 +32,7 @@ func NewDuelGame(th string, p []*discordgo.User) {
 			p[0].ID: g0,
 			p[1].ID: g1,
 		},
+		menus: make(map[string]*discordgo.Interaction),
 	}
 	games.mu.Unlock()
 }
@@ -43,6 +46,18 @@ func (g *DuelGame) PlayerInGame(p *discordgo.User) bool {
 // PlayerHasGuesses returns true if the player has guesses remaining in the game
 func (g *DuelGame) PlayerHasGuesses(p *discordgo.User) bool {
 	return g.games[p.ID].GuessesRemaining() > 0
+}
+
+// GetPlayerInteractionMenu searches for and returns the interaction menu for the given player
+// Returns a boolean to indicate whether or not the menu was found
+func (g *DuelGame) GetPlayerInteractionMenu(p *discordgo.User) (*discordgo.Interaction, bool) {
+	r, exists := g.menus[p.ID]
+	return r, exists
+}
+
+// SetPlayerInteractionMenu stores an interaction to be used as the user's menu
+func (g *DuelGame) SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.Interaction) {
+	g.menus[p.ID] = m
 }
 
 // SubmitGuess allows a guess to be submitted to the game of a given player
