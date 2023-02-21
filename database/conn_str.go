@@ -3,7 +3,7 @@ package database
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 )
 
 type connData struct {
@@ -15,7 +15,7 @@ type connData struct {
 }
 
 func connStr() string {
-	content, err := ioutil.ReadFile("database/config.json")
+	content, err := os.ReadFile("database/config.json")
 	if err != nil {
 		fmt.Println("Error opening file: ", err)
 	}
