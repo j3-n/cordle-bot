@@ -1,8 +1,9 @@
 package database
 
 import (
-	"database/sql"
 	"sync"
+
+	"github.com/jmoiron/sqlx"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -10,7 +11,7 @@ import (
 var lock = &sync.Mutex{}
 
 type Conn struct {
-	db sql.DB
+	db sqlx.DB
 }
 
 var instance *Conn
@@ -26,8 +27,8 @@ func Connect() *Conn {
 	return instance
 }
 
-func connDb() sql.DB {
-	db, err := sql.Open("mysql", connStr())
+func connDb() sqlx.DB {
+	db, err := sqlx.Open("mysql", connStr())
 	if err != nil {
 		panic(err.Error())
 	}

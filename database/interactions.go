@@ -2,23 +2,21 @@ package database
 
 import (
 	"fmt"
-	"strconv"
 )
 
 func AddUser(user User) {
+	conn := Connect()
 	query := fmt.Sprintf(
 		`insert into users(id, name, wins, losses, draws, games, elo, level) 
-		values(%d, '%s', %d, %d, %d, %d, %d, %d);`,
-		user.Id,
-		user.Name,
-		user.Wins,
-		user.Losses,
-		user.Draws,
-		user.Games,
-		user.Elo,
-		user.Level)
+		values(%s);`,
+		user.ToSqlAdd())
 
-	insertRecord(query)
+	insert, err := conn.db.Query(query)
+
+	if err != nil {
+		panic(err.Error())
+	}
+	defer insert.Close()
 }
 
 func AddUsers(users []User) {
@@ -28,36 +26,46 @@ func AddUsers(users []User) {
 }
 
 func DeleteUser(id int) {
+	conn := Connect()
 	query := fmt.Sprintf(
-		"id=%d",
+		"id='%d'",
 		id)
 
-	deleteRecord("users", query)
+	delete, err := conn.db.Query(fmt.Sprintf(
+		"delete from users where %s;",
+		query))
+
+	if err != nil {
+		panic(err.Error())
+	}
+	defer delete.Close()
 }
 
 func DeleteUsers(ids []int) {
-	var idsStr []string
-	for index, id := range ids {
-		idsStr[index] = strconv.Itoa(id)
+	for _, id := range ids {
+		DeleteUser(id)
 	}
-	deleteRecords("users", "id=", idsStr)
 }
 
 func UpdateUser(user *User) {
-	updates := fmt.Sprintf(
-		"wins=%d, losses=%d, draws=%d, games=%d, elo=%d, level=%d",
-		user.Wins,
-		user.Losses,
-		user.Draws,
-		user.Games,
-		user.Elo,
-		user.Level)
+	conn := Connect()
+	updates := user.ToSqlUpdate()
 
 	query := fmt.Sprintf(
-		"id=%d",
+		"id='%d'",
 		user.Id)
 
-	updateRecord("users", updates, query)
+	update, err := conn.db.Query(fmt.Sprintf(
+		`update users
+		set %s
+		where %s;`,
+		updates,
+		query))
+
+	if err != nil {
+		panic(err.Error())
+	}
+	defer update.Close()
 }
 
 func UpdateUsers(users []User) {
@@ -68,7 +76,7 @@ func UpdateUsers(users []User) {
 
 func GetUser(id int) User {
 	conn := Connect()
-	result, err := conn.db.Query(fmt.Sprintf(
+	result, err := conn.db.Queryx(fmt.Sprintf(
 		"select * from users where id=%d;",
 		id))
 
@@ -79,15 +87,7 @@ func GetUser(id int) User {
 
 	var user User
 	result.Next()
-	err = result.Scan(
-		&user.Id,
-		&user.Name,
-		&user.Wins,
-		&user.Losses,
-		&user.Draws,
-		&user.Games,
-		&user.Elo,
-		&user.Level)
+	err = result.StructScan(&user)
 
 	if err != nil {
 		panic(err.Error())
@@ -95,16 +95,24 @@ func GetUser(id int) User {
 	return user
 }
 
-func GetUsers() {
+func GetUsers() []User {
 	conn := Connect()
-	result, err := conn.db.Query(fmt.Sprintf(
-		"select * from users;"))
+	result, err := conn.db.Queryx(("select * from users;"))
 
 	if err != nil {
 		panic(err.Error())
 	}
 	defer result.Close()
+	var users []User
 
+	for i := 0; result.Next(); i++ {
+		err := result.StructScan(&users[i])
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+
+	return users
 }
 
 func GetName(id int) string {
@@ -122,12 +130,16 @@ func GetName(id int) string {
 	result.Next()
 	err = result.Scan(&name)
 
+	if err != nil {
+		panic(err.Error())
+	}
+
 	return name
 }
 
 func GetStats(id int) Stats {
 	conn := Connect()
-	result, err := conn.db.Query(fmt.Sprintf(
+	result, err := conn.db.Queryx(fmt.Sprintf(
 		"select wins, losses, draws, games, elo, level from users where id=%d;",
 		id))
 
@@ -138,13 +150,7 @@ func GetStats(id int) Stats {
 
 	var stats Stats
 	result.Next()
-	err = result.Scan(
-		&stats.Wins,
-		&stats.Losses,
-		&stats.Draws,
-		&stats.Games,
-		&stats.Elo,
-		&stats.Level)
+	err = result.StructScan(&stats)
 
 	if err != nil {
 		panic(err.Error())
