@@ -13,6 +13,7 @@ type GameManager interface {
 	SubmitGuess(guess string, p *discordgo.User) ([5]wordle.GuessState, error)
 	PlayerHasGuesses(p *discordgo.User) bool
 	GoalWord(p *discordgo.User) string
+	PlayerSurrender(p *discordgo.User)
 	GameWon() (bool, string)
 	ShouldEndInDraw() bool
 }

@@ -57,6 +57,17 @@ func (g *DuelGame) GoalWord(p *discordgo.User) string {
 	return g.games[p.ID].GoalWord
 }
 
+// PlayerSurrender allows a player to quit an ongoing game
+// In a duel game, this should immediately end the game
+func (g *DuelGame) PlayerSurrender(p *discordgo.User) {
+	for id, g := range g.games {
+		if p.ID != id {
+			g.Won = true
+			return
+		}
+	}
+}
+
 // GameWon returns true if the game has been won, as well as the ID of the winner
 func (g *DuelGame) GameWon() (bool, string) {
 	for id, g := range g.games {
