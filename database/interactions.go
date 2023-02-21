@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"strconv"
 )
 
 func AddUser(user User) {
@@ -20,8 +21,10 @@ func AddUser(user User) {
 	insertRecord(query)
 }
 
-func AddUsers() {
-
+func AddUsers(users []User) {
+	for _, user := range users {
+		AddUser(user)
+	}
 }
 
 func DeleteUser(id int) {
@@ -32,16 +35,35 @@ func DeleteUser(id int) {
 	deleteRecord("users", query)
 }
 
-func DeleteUsers() {
-
+func DeleteUsers(ids []int) {
+	var idsStr []string
+	for index, id := range ids {
+		idsStr[index] = strconv.Itoa(id)
+	}
+	deleteRecords("users", "id=", idsStr)
 }
 
-func UpdateUser() {
+func UpdateUser(user *User) {
+	updates := fmt.Sprintf(
+		"wins=%d, losses=%d, draws=%d, games=%d, elo=%d, level=%d",
+		user.Wins,
+		user.Losses,
+		user.Draws,
+		user.Games,
+		user.Elo,
+		user.Level)
 
+	query := fmt.Sprintf(
+		"id=%d",
+		user.Id)
+
+	updateRecord("users", updates, query)
 }
 
-func UpdateUsers() {
-
+func UpdateUsers(users []User) {
+	for _, user := range users {
+		UpdateUser(&user)
+	}
 }
 
 func GetUser(id int) User {
@@ -96,7 +118,11 @@ func GetName(id int) string {
 	}
 	defer result.Close()
 
-	return "jeff"
+	var name string
+	result.Next()
+	err = result.Scan(&name)
+
+	return name
 }
 
 func GetStats(id int) Stats {

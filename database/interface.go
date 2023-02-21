@@ -65,16 +65,51 @@ func insertRecord(query string) {
 	defer insert.Close()
 }
 
-func insertRecords() {
+func insertRecords(queries []string) {
+	conn := Connect()
 
+	for _, query := range queries {
+		insert, err := conn.db.Query(query)
+
+		if err != nil {
+			panic(err.Error())
+		}
+		defer insert.Close()
+	}
 }
 
-func updateRecord() {
+func updateRecord(table string, updates string, query string) {
+	conn := Connect()
+	update, err := conn.db.Query(fmt.Sprintf(
+		`update %s
+		set %s
+		where %s;`,
+		table,
+		updates,
+		query))
 
+	if err != nil {
+		panic(err.Error())
+	}
+	defer update.Close()
 }
 
-func updateRecords() {
+func updateRecords(table string, updates []string, queries []string) {
+	conn := Connect()
+	for index, element := range updates {
+		update, err := conn.db.Query(fmt.Sprintf(
+			`update %s
+			set %s
+			where %s;`,
+			table,
+			element,
+			queries[index]))
 
+		if err != nil {
+			panic(err.Error())
+		}
+		defer update.Close()
+	}
 }
 
 func deleteRecord(table string, query string) {
@@ -90,7 +125,7 @@ func deleteRecord(table string, query string) {
 	defer delete.Close()
 }
 
-func deleteRecords(table string, query string, records [3]string) { // TODO fix that
+func deleteRecords(table string, query string, records []string) { // TODO fix that
 	query += records[0]
 	for i := 1; i < len(records); i++ {
 		query += ", " + records[i]
@@ -98,7 +133,7 @@ func deleteRecords(table string, query string, records [3]string) { // TODO fix 
 
 	conn := Connect()
 	delete, err := conn.db.Query(fmt.Sprintf(
-		"delete from %s where %s",
+		"delete from %s where %s;",
 		table,
 		query))
 
@@ -111,7 +146,7 @@ func deleteRecords(table string, query string, records [3]string) { // TODO fix 
 func deleteTable(table string) {
 	conn := Connect()
 	delete, err := conn.db.Query(fmt.Sprintf(
-		"drop table %s",
+		"drop table %s;",
 		table))
 
 	if err != nil {
@@ -120,6 +155,17 @@ func deleteTable(table string) {
 	defer delete.Close()
 }
 
-func deleteTables() {
+func deleteTables(tables []string) {
+	conn := Connect()
 
+	for _, element := range tables {
+		delete, err := conn.db.Query(fmt.Sprintf(
+			"drop table %s;",
+			element))
+
+		if err != nil {
+			panic(err.Error())
+		}
+		defer delete.Close()
+	}
 }
