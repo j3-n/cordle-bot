@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"log"
 
 	"cordle/util"
 
@@ -70,6 +71,7 @@ func RegisterCommands(s *discordgo.Session) {
 		util.CheckError(err, "Failed to create command: /"+cmd.Name)
 		// Log the command for later deletion
 		regCommands[i] = c
+		log.Printf("	- /%s", cmd.Name)
 	}
 
 	// Create a handler to map commands to their handlers
@@ -87,6 +89,7 @@ func ClearCommands(s *discordgo.Session) {
 	for _, cmd := range regCommands {
 		err := s.ApplicationCommandDelete(s.State.User.ID, "", cmd.ID)
 		util.CheckError(err, fmt.Sprintf("Failed to delete command /%s", cmd.Name))
+		log.Printf("	- /%s", cmd.Name)
 	}
 }
 
