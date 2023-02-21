@@ -35,7 +35,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					// Check if both players have run out of guesses
 					if g.ShouldEndInDraw() {
 						// End the game in a draw
-						s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("All players are out of guesses! The word was `%s`", g.GoalWord(p)))
+						s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("All players are out of guesses! The word was `%s`.", g.GoalWord(p)))
 						closeGame(s, i.ChannelID)
 					}
 				}
