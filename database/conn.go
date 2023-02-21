@@ -33,6 +33,7 @@ func connDb() sqlx.DB {
 		panic(err.Error())
 	}
 	defer db.Close()
+	db.MustExec(schema)
 
 	return *db
 }
