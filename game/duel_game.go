@@ -7,7 +7,7 @@ import (
 )
 
 // DuelGame holds the information about a DuelGame
-type DuelGame struct{
+type DuelGame struct {
 	// games stores a map of user IDs to their game
 	games map[string]*wordle.WordleGame
 }
@@ -35,13 +35,13 @@ func NewDuelGame(th string, p []*discordgo.User) {
 }
 
 // PlayerInGame returns true if the given player is a part of the game
-func (g *DuelGame) PlayerInGame(p *discordgo.User) (bool) {
+func (g *DuelGame) PlayerInGame(p *discordgo.User) bool {
 	_, exists := g.games[p.ID]
 	return exists
 }
 
 // PlayerHasGuesses returns true if the player has guesses remaining in the game
-func (g *DuelGame) PlayerHasGuesses(p *discordgo.User) (bool) {
+func (g *DuelGame) PlayerHasGuesses(p *discordgo.User) bool {
 	return g.games[p.ID].GuessesRemaining() > 0
 }
 
@@ -53,16 +53,26 @@ func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) ([5]wordle.Guess
 }
 
 // GoalWord returns the goal word for this game
-func (g *DuelGame) GoalWord(p *discordgo.User) (string) {
+func (g *DuelGame) GoalWord(p *discordgo.User) string {
 	return g.games[p.ID].GoalWord
 }
 
 // GameWon returns true if the game has been won, as well as the ID of the winner
 func (g *DuelGame) GameWon() (bool, string) {
-	for id, g := range g.games{
-		if g.Won{
+	for id, g := range g.games {
+		if g.Won {
 			return true, id
 		}
 	}
 	return false, ""
+}
+
+// ShouldEndInDraw returns true if the current game has reached a stalemate and should end in a draw
+func (g *DuelGame) ShouldEndInDraw() bool {
+	for _, g := range g.games {
+		if g.GuessesRemaining() > 0 {
+			return false
+		}
+	}
+	return true
 }

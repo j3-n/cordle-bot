@@ -8,12 +8,13 @@ import (
 )
 
 // GameInterface is implemented by all GameModes, allows games to be interacted with
-type GameManager interface{
-	PlayerInGame(p *discordgo.User)				bool
-	SubmitGuess(guess string, p*discordgo.User)	([5]wordle.GuessState, error)
-	PlayerHasGuesses(p *discordgo.User)			bool
-	GoalWord(p *discordgo.User)					string
-	GameWon()									(bool, string)
+type GameManager interface {
+	PlayerInGame(p *discordgo.User) bool
+	SubmitGuess(guess string, p *discordgo.User) ([5]wordle.GuessState, error)
+	PlayerHasGuesses(p *discordgo.User) bool
+	GoalWord(p *discordgo.User) string
+	GameWon() (bool, string)
+	ShouldEndInDraw() bool
 }
 
 // Thread safe map of channel IDs to the games in them
@@ -28,11 +29,11 @@ func init() {
 }
 
 // PlayerFree checks whether a player is already in a game, returns true if not
-func PlayerFree(p *discordgo.User) (bool) {
+func PlayerFree(p *discordgo.User) bool {
 	games.mu.Lock()
 	defer games.mu.Unlock()
-	for _, g := range games.g{
-		if g.PlayerInGame(p){
+	for _, g := range games.g {
+		if g.PlayerInGame(p) {
 			return false
 		}
 	}
@@ -41,7 +42,7 @@ func PlayerFree(p *discordgo.User) (bool) {
 
 // FindGame returns a game given a channel ID that the game is taking place in
 // Returns a reference to the game struct and a boolean confirming if the game exists or not
-func FindGame(channelID string) (GameManager, bool){
+func FindGame(channelID string) (GameManager, bool) {
 	games.mu.Lock()
 	defer games.mu.Unlock()
 	// For some reason this has to be two lines

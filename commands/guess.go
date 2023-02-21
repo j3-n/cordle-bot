@@ -11,7 +11,7 @@ import (
 )
 
 // guess submits a guess to an ongoing game of Cordle
-func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
+func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	g, exists := game.FindGame(i.Interaction.ChannelID)
 	if exists {
 		p := i.Interaction.Member.User
@@ -19,19 +19,25 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 			// Retrive the guess
 			guess := strings.ToLower(i.ApplicationCommandData().Options[0].StringValue())
 			r, err := g.SubmitGuess(guess, p)
-			if err == nil{
+			if err == nil {
 				// Guess was valid, return result
-				respond(s, i, guess + "\n" + displayGuess(r), true)
+				respond(s, i, guess+"\n"+displayGuess(r), true)
 				// Check if a player has won the game
 				won, id := g.GameWon()
-				if won{
+				if won {
 					// Notify the players that the game has been won
 					s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("<@%s> has won the game! The word was `%s`.", id, g.GoalWord(p)))
 					// Close the game
 					closeGame(s, i.ChannelID)
-				} else if !g.PlayerHasGuesses(p){
+				} else if !g.PlayerHasGuesses(p) {
 					// Notify the players that one has run out of guesses
-					s.ChannelMessageSend(i.ChannelID, p.Mention() + " has run out of guesses!")
+					s.ChannelMessageSend(i.ChannelID, p.Mention()+" has run out of guesses!")
+					// Check if both players have run out of guesses
+					if g.ShouldEndInDraw() {
+						// End the game in a draw
+						s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("All players are out of guesses! the word was `%s`", g.GoalWord(p)))
+						closeGame(s, i.ChannelID)
+					}
 				}
 			} else {
 				// Send the error message back to the user
@@ -48,9 +54,9 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate){
 }
 
 // displayGuess returns a nicely formatted response from a guess result to send back to the user
-func displayGuess(r [5]wordle.GuessState) (string){
+func displayGuess(r [5]wordle.GuessState) string {
 	var s strings.Builder
-	for _, gs := range r{
+	for _, gs := range r {
 		if gs == wordle.CorrectCharacter {
 			s.WriteRune('🟩')
 		} else if gs == wordle.IncorrectPosition {
@@ -63,7 +69,7 @@ func displayGuess(r [5]wordle.GuessState) (string){
 }
 
 // Close game closes the current game
-func closeGame(s *discordgo.Session, th string){
+func closeGame(s *discordgo.Session, th string) {
 	// Remove the game internally
 	game.CloseGame(th)
 	// Archive and lock the thread from discord
@@ -71,7 +77,7 @@ func closeGame(s *discordgo.Session, th string){
 	locked := true
 	_, err := s.ChannelEditComplex(th, &discordgo.ChannelEdit{
 		Archived: &archived,
-		Locked: &locked,
+		Locked:   &locked,
 	})
 	if err != nil {
 		log.Println(err.Error())
