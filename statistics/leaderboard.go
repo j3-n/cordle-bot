@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func GetLeaderboard(topTen [10]database.User) {
+func GetLeaderboard(topTen [10]database.User) string {
 	var output string
 	for i := 0; i < len(topTen); i++ {
 		output += fmt.Sprintf(
@@ -13,4 +13,5 @@ func GetLeaderboard(topTen [10]database.User) {
 			i+1,
 			topTen[i].ToLeaderboard())
 	}
+	return output
 }
