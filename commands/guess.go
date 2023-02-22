@@ -70,8 +70,14 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 func displayGame(gs []*wordle.Guess) *discordgo.MessageEmbed {
 	// Iterate over the slice to build the guess board
 	var gb strings.Builder
-	for _, g := range gs {
-		gb.WriteString(fmt.Sprintf("%s | `%s`\n", displayGuess(g),g.GuessWord))
+	for i := 0; i < wordle.MaxGuesses; i++ {
+		if i < len(gs) {
+			gb.WriteString(displayGuess(gs[i]))
+		} else {
+			// If not all guesses have been filled, add a blank line
+			gb.WriteString(blankLine())
+		}
+		gb.WriteRune('\n')
 	}
 	// Return the board inside an embed
 	return &discordgo.MessageEmbed{
@@ -85,14 +91,28 @@ func displayGame(gs []*wordle.Guess) *discordgo.MessageEmbed {
 // displayGuess returns a nicely formatted response from a guess result to send back to the user
 func displayGuess(r *wordle.Guess) string {
 	var s strings.Builder
-	for _, gs := range r.GuessResult {
+	runes := []rune(r.GuessWord)
+	for i, gs := range r.GuessResult {
+		prefix := ""
 		if gs == wordle.CorrectCharacter {
-			s.WriteRune('🟩')
+			prefix = "green"
 		} else if gs == wordle.IncorrectPosition {
-			s.WriteRune('🟨')
+			prefix = "yellow"
 		} else {
-			s.WriteRune('🟥')
+			prefix = "grey"
 		}
+		// Calculate the name of the required emoji and write it
+		e := fmt.Sprintf("%s_%c", prefix, runes[i])
+		s.WriteString(game.Emojis[e])
+	}
+	return s.String()
+}
+
+// blankLine generates a line of five blank emojis
+func blankLine() string{
+	var s strings.Builder
+	for i := 0; i < 5; i++ {
+		s.WriteString(game.Emojis["blank"])
 	}
 	return s.String()
 }
