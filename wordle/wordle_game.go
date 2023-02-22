@@ -39,8 +39,14 @@ var (
 // Stores information about a game of Wordle (this has no information linking to Discord)
 type WordleGame struct {
 	Won			bool
-	Guesses 	[]string
+	Guesses 	[]*Guess
 	GoalWord 	string
+}
+
+// Guess stores the information about a guess of wordle
+type Guess struct {
+	GuessWord 		string
+	GuessResult [5] GuessState
 }
 
 // Runs when the wordle module is imported
@@ -53,32 +59,37 @@ func init(){
 func NewRandomGame() (*WordleGame){
 	return &WordleGame{
 		Won: false,
-		Guesses: []string{},
+		Guesses: []*Guess{},
 		GoalWord: answers[rand.Intn(len(answers))],
 	}
 }
 
 // Guess allows the submission of a guess to a wordle game, this requires a lowercase guess
 // An error is returned if the guess string is invalid or the game has no guesses remaining
-func (g *WordleGame) Guess(guess string) ([5]GuessState, error){
+func (g *WordleGame) Guess(guess string) (*Guess, error){
 	// Validate the guess
 	err := validateGuess(guess)
 	if err != nil{
-		return [5]GuessState{}, err
+		return nil, err
 	}
 	// Check that the game has remaining guesses
 	if g.GuessesRemaining() == 0{
-		return [5]GuessState{}, ErrOutOfGuesses
+		return nil, ErrOutOfGuesses
 	}
 
 	// Evaluate the guess
 	result, correct := evaluateGuess(guess, g.GoalWord)
+	gs := &Guess{
+		GuessWord: guess,
+		GuessResult: result,
+	}
+	
 	// Add it to the guess history
-	g.Guesses = append(g.Guesses, guess)
+	g.Guesses = append(g.Guesses, gs)
 
 	g.Won = correct
 
-	return result, nil
+	return gs, nil
 }
 
 // GuessesRemaining checks how many guesses remain in a given game

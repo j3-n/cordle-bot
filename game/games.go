@@ -10,7 +10,8 @@ import (
 // GameInterface is implemented by all GameModes, allows games to be interacted with
 type GameManager interface {
 	PlayerInGame(p *discordgo.User) bool
-	SubmitGuess(guess string, p *discordgo.User) ([5]wordle.GuessState, error)
+	SubmitGuess(guess string, p *discordgo.User) (*wordle.Guess, error)
+	PlayerGuessHistory(p *discordgo.User) []*wordle.Guess
 	PlayerHasGuesses(p *discordgo.User) bool
 	GetPlayerInteractionMenu(p *discordgo.User) (*discordgo.Interaction, bool)
 	SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.Interaction)

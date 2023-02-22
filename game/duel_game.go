@@ -21,7 +21,7 @@ func NewDuelGame(th string, p []*discordgo.User) {
 	// Manually create a second game with the same goal word
 	// This is more efficient than doing a deep copy
 	g1 := &wordle.WordleGame{
-		Guesses:  []string{},
+		Guesses:  []*wordle.Guess{},
 		GoalWord: g0.GoalWord,
 	}
 
@@ -62,9 +62,14 @@ func (g *DuelGame) SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.Inte
 
 // SubmitGuess allows a guess to be submitted to the game of a given player
 // Returns the result as an array of wordle.GuessState
-func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) ([5]wordle.GuessState, error) {
+func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) (*wordle.Guess, error) {
 	pg := g.games[p.ID]
 	return pg.Guess(guess)
+}
+
+// PlayerGuessHistory returns the guess history of the given player
+func (g *DuelGame) PlayerGuessHistory(p *discordgo.User) []*wordle.Guess {
+	return g.games[p.ID].Guesses
 }
 
 // GoalWord returns the goal word for this game
