@@ -42,7 +42,7 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				// Create and store the game
 				game.NewDuelGame(th.ID, []*discordgo.User{c.Source, c.Target})
 			}
-		} else{
+		} else {
 			// One or both players is in another game
 			respond(s, i, "The duel cannot begin as one or more players are already in a game.", true)
 		}

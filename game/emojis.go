@@ -9,7 +9,7 @@ import (
 // Stores a map of emoji names to their raw data
 var Emojis map[string]string
 
-func init(){
+func init() {
 	// Load the list of emojis into a map
 	f, err := os.ReadFile("game/emojis.json")
 	util.CheckError(err, "Failed to load emojis.json")

@@ -53,14 +53,14 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 }
 
 // Helper function to send a game board as an embed response to an interaction
-func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, p *discordgo.User, gb string){
+func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, p *discordgo.User, gb string) {
 	// Create a message embed with the game board inside
 	emb := &discordgo.MessageEmbed{
-		Type: discordgo.EmbedTypeRich,
+		Type:  discordgo.EmbedTypeRich,
 		Title: "Cordle Game",
 		Color: 0x00b503,
 		Author: &discordgo.MessageEmbedAuthor{
-			Name: p.Username,
+			Name:    p.Username,
 			IconURL: p.AvatarURL("64"),
 		},
 		Description: gb,
@@ -72,7 +72,7 @@ func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, p *d
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Flags: discordgo.MessageFlagsEphemeral,
+			Flags:  discordgo.MessageFlagsEphemeral,
 			Embeds: []*discordgo.MessageEmbed{emb},
 		},
 	})

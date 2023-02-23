@@ -1,14 +1,14 @@
 package wordle
 
 import (
-	"os"
 	"encoding/json"
+	"os"
 
 	"cordle/util"
 )
 
 // LoadWords reads the json files containing allowed words and answers and returns them (answers, guesses)
-func LoadWords() ([]string, []string){
+func LoadWords() ([]string, []string) {
 	afile, err := os.ReadFile("wordle/answers.json")
 	util.CheckError(err, "Failed to load answers")
 	gfile, err := os.ReadFile("wordle/guesses.json")

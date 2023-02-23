@@ -3,18 +3,19 @@ package config
 import (
 	"encoding/json"
 	"os"
-	
+
 	"cordle/util"
 )
 
 // ConfigData structs store configuration information after they are read
 type ConfigData struct {
-	Token 	string
-	Status 	string
-	Game 	GameConfig
+	Token  string
+	Status string
+	Game   GameConfig
 }
+
 // GameConfig stores game specific settings
-type GameConfig struct{
+type GameConfig struct {
 	ChallengeDuration int
 }
 
@@ -25,7 +26,7 @@ const configPath = "config/config.json"
 var Config ConfigData
 
 // When the module is first imported, load the config from a JSON file
-func init(){
+func init() {
 	// Open the configuration file
 	file, err := os.ReadFile(configPath)
 	util.CheckError(err, "Failed to read config file")

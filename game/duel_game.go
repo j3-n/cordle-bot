@@ -71,7 +71,7 @@ func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) (*wordle.Guess, 
 
 // PlayerGuessHistory returns the formatted game history of the player
 func (g *DuelGame) PlayerGameBoard(p *discordgo.User) string {
-	gh :=  g.games[p.ID].Guesses
+	gh := g.games[p.ID].Guesses
 	return displayGame(gh)
 }
 
@@ -149,7 +149,7 @@ func displayGuess(r *wordle.Guess) string {
 }
 
 // blankLine generates a line of five blank emojis
-func blankLine() string{
+func blankLine() string {
 	var s strings.Builder
 	for i := 0; i < 5; i++ {
 		s.WriteString(Emojis["blank"])
