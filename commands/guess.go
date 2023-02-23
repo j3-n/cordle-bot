@@ -65,7 +65,7 @@ func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, p *d
 		},
 		Description: gb,
 		Footer: &discordgo.MessageEmbedFooter{
-			Text: "Your opponent is guessing at the same time as you, try to solve the puzzle before they do! Use `/guess` to guess again.",
+			Text: "Your opponent is guessing at the same time as you, try to solve the puzzle before they do! Use /guess to guess again.",
 		},
 	}
 	// Send the response
