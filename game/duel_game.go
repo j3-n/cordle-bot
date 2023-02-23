@@ -2,6 +2,8 @@ package game
 
 import (
 	"cordle/wordle"
+	"fmt"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -67,9 +69,10 @@ func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) (*wordle.Guess, 
 	return pg.Guess(guess)
 }
 
-// PlayerGuessHistory returns the guess history of the given player
-func (g *DuelGame) PlayerGuessHistory(p *discordgo.User) []*wordle.Guess {
-	return g.games[p.ID].Guesses
+// PlayerGuessHistory returns the formatted game history of the player
+func (g *DuelGame) PlayerGameBoard(p *discordgo.User) string {
+	gh :=  g.games[p.ID].Guesses
+	return displayGame(gh)
 }
 
 // GoalWord returns the goal word for this game
@@ -106,4 +109,50 @@ func (g *DuelGame) ShouldEndInDraw() bool {
 		}
 	}
 	return true
+}
+
+// displayGame returns a string displaying the given guess history
+func displayGame(gs []*wordle.Guess) string {
+	// Iterate over the slice to build the guess board
+	var gb strings.Builder
+	for i := 0; i < wordle.MaxGuesses; i++ {
+		if i < len(gs) {
+			gb.WriteString(displayGuess(gs[i]))
+		} else {
+			// If not all guesses have been filled, add a blank line
+			gb.WriteString(blankLine())
+		}
+		gb.WriteRune('\n')
+	}
+	// Return the board inside an embed
+	return gb.String()
+}
+
+// displayGuess returns a nicely formatted response from a guess result to send back to the user
+func displayGuess(r *wordle.Guess) string {
+	var s strings.Builder
+	runes := []rune(r.GuessWord)
+	for i, gs := range r.GuessResult {
+		prefix := ""
+		if gs == wordle.CorrectCharacter {
+			prefix = "green"
+		} else if gs == wordle.IncorrectPosition {
+			prefix = "yellow"
+		} else {
+			prefix = "grey"
+		}
+		// Calculate the name of the required emoji and write it
+		e := fmt.Sprintf("%s_%c", prefix, runes[i])
+		s.WriteString(Emojis[e])
+	}
+	return s.String()
+}
+
+// blankLine generates a line of five blank emojis
+func blankLine() string{
+	var s strings.Builder
+	for i := 0; i < 5; i++ {
+		s.WriteString(Emojis["blank"])
+	}
+	return s.String()
 }

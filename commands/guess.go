@@ -2,7 +2,6 @@ package commands
 
 import (
 	"cordle/game"
-	"cordle/wordle"
 	"fmt"
 	"log"
 	"strings"
@@ -21,20 +20,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			_, err := g.SubmitGuess(guess, p)
 			if err == nil {
 				// Guess was valid, display result
-				emb := displayGame(g.PlayerGuessHistory(p))
-				// Add some extra info to the embed
-				emb.Author = &discordgo.MessageEmbedAuthor{
-					Name: p.Username,
-					IconURL: p.AvatarURL("128"),
-				}
-				// Send the response
-				s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
-					Type: discordgo.InteractionResponseChannelMessageWithSource,
-					Data: &discordgo.InteractionResponseData{
-						Flags: discordgo.MessageFlagsEphemeral,
-						Embeds: []*discordgo.MessageEmbed{emb},
-					},
-				})
+				gameBoardRespond(s, i, p, g.PlayerGameBoard(p))
 				// Check if a player has won the game
 				won, id := g.GameWon()
 				if won {
@@ -66,55 +52,30 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 }
 
-// displayGame returns a MessageEmbed displaying the given guess history
-func displayGame(gs []*wordle.Guess) *discordgo.MessageEmbed {
-	// Iterate over the slice to build the guess board
-	var gb strings.Builder
-	for i := 0; i < wordle.MaxGuesses; i++ {
-		if i < len(gs) {
-			gb.WriteString(displayGuess(gs[i]))
-		} else {
-			// If not all guesses have been filled, add a blank line
-			gb.WriteString(blankLine())
-		}
-		gb.WriteRune('\n')
-	}
-	// Return the board inside an embed
-	return &discordgo.MessageEmbed{
+// Helper function to send a game board as an embed response to an interaction
+func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, p *discordgo.User, gb string){
+	// Create a message embed with the game board inside
+	emb := &discordgo.MessageEmbed{
 		Type: discordgo.EmbedTypeRich,
-		Color: 0x00b503,
 		Title: "Cordle Game",
-		Description: gb.String(),
+		Color: 0x00b503,
+		Author: &discordgo.MessageEmbedAuthor{
+			Name: p.Username,
+			IconURL: p.AvatarURL("64"),
+		},
+		Description: gb,
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: "Your opponent is guessing at the same time as you, try to solve the puzzle before they do! Use `/guess` to guess again.",
+		},
 	}
-}
-
-// displayGuess returns a nicely formatted response from a guess result to send back to the user
-func displayGuess(r *wordle.Guess) string {
-	var s strings.Builder
-	runes := []rune(r.GuessWord)
-	for i, gs := range r.GuessResult {
-		prefix := ""
-		if gs == wordle.CorrectCharacter {
-			prefix = "green"
-		} else if gs == wordle.IncorrectPosition {
-			prefix = "yellow"
-		} else {
-			prefix = "grey"
-		}
-		// Calculate the name of the required emoji and write it
-		e := fmt.Sprintf("%s_%c", prefix, runes[i])
-		s.WriteString(game.Emojis[e])
-	}
-	return s.String()
-}
-
-// blankLine generates a line of five blank emojis
-func blankLine() string{
-	var s strings.Builder
-	for i := 0; i < 5; i++ {
-		s.WriteString(game.Emojis["blank"])
-	}
-	return s.String()
+	// Send the response
+	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Flags: discordgo.MessageFlagsEphemeral,
+			Embeds: []*discordgo.MessageEmbed{emb},
+		},
+	})
 }
 
 // Close game closes the current game
