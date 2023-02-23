@@ -1,6 +1,6 @@
 package results
 
-import(
+import (
 	"cordle/database"
 )
 
@@ -17,7 +17,7 @@ func loseCalc(attempts int, player *database.User) {
 	player.Elo -= 4 * attempts
 	player.Level += 3
 
-	if player.Elo < 0 { 
+	if player.Elo < 0 {
 		player.Elo = 0
 	}
 }
