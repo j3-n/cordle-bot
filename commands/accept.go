@@ -25,13 +25,7 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				i.Interaction.Member.Mention(),
 			)
 			respond(s, i, m, false)
-			// Fetch the message to spawn thread from
-			msg, _ := s.InteractionResponse(i.Interaction)
-			// Create a new thread to duel in
-			th, err := s.MessageThreadStartComplex(i.ChannelID, msg.ID, &discordgo.ThreadStart{
-				Name:                fmt.Sprintf("%s vs. %s | Duel Game", c.Source.Username, c.Target.Username),
-				AutoArchiveDuration: 60,
-			})
+			th, err := startNewDuelThread(s, i, c)
 			if err != nil {
 				// Report the error
 				s.FollowupMessageCreate(i.Interaction, false, &discordgo.WebhookParams{
@@ -50,4 +44,34 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		// No challenge was found against this user
 		respond(s, i, "You currently have no active challenges against you.", true)
 	}
+}
+
+// startNewDuelThread separates the functionality of initializing a new thread for a duel game
+func startNewDuelThread(s *discordgo.Session, i *discordgo.InteractionCreate, c *game.Challenge) (*discordgo.Channel, error) {
+	// Fetch the message to spawn thread from
+	msg, _ := s.InteractionResponse(i.Interaction)
+	// Create a new thread to duel in
+	th, err := s.MessageThreadStartComplex(i.ChannelID, msg.ID, &discordgo.ThreadStart{
+		Name:                fmt.Sprintf("%s vs. %s | Duel Game", c.Source.Username, c.Target.Username),
+		AutoArchiveDuration: 60,
+	})
+	if err != nil {
+		return nil, err
+	}
+	// Send a message to begin the game with a reset button for the menu
+	s.ChannelMessageSendComplex(th.ID, &discordgo.MessageSend{
+		Content: "Use `/guess` to begin guessing. To bring back the menu if you accidentally delete it, use the button below.",
+		Components: []discordgo.MessageComponent{
+			discordgo.ActionsRow{
+				Components: []discordgo.MessageComponent{
+					discordgo.Button{
+						Label:    "Reset Menu",
+						Style:    discordgo.PrimaryButton,
+						CustomID: "reset",
+					},
+				},
+			},
+		},
+	})
+	return th, nil
 }
