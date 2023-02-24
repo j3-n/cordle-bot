@@ -21,6 +21,13 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			if err == nil {
 				// Guess was valid, display result
 				updateGameBoard(s, i, p, g)
+				// Update all game boards
+				for id, in := range g.Menus() {
+					if id != p.ID {
+						// Update the other user's existing game board
+						gameBoardEdit(s, in, g.PlayerGameBoard(in.Interaction.Member.User))
+					}
+				}
 				// Check if a player has won the game
 				won, id := g.GameWon()
 				if won {
@@ -74,6 +81,14 @@ func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, emb 
 			Flags:  discordgo.MessageFlagsEphemeral,
 			Embeds: []*discordgo.MessageEmbed{emb},
 		},
+	})
+}
+
+// Helper function to edit an existing game board response
+func gameBoardEdit(s *discordgo.Session, i *discordgo.InteractionCreate, emb *discordgo.MessageEmbed) {
+	// Edit the given game board
+	s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
+		Embeds: &[]*discordgo.MessageEmbed{emb},
 	})
 }
 

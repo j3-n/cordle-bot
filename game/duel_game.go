@@ -45,6 +45,11 @@ func (g *DuelGame) PlayerInGame(p *discordgo.User) bool {
 	return exists
 }
 
+// Menus returns the map of menus for this game
+func (g *DuelGame) Menus() map[string]*discordgo.InteractionCreate {
+	return g.menus
+}
+
 // PlayerHasGuesses returns true if the player has guesses remaining in the game
 func (g *DuelGame) PlayerHasGuesses(p *discordgo.User) bool {
 	return g.games[p.ID].GuessesRemaining() > 0
@@ -69,10 +74,18 @@ func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) (*wordle.Guess, 
 	return pg.Guess(guess)
 }
 
-// PlayerGuessHistory returns the formatted game history of the player
+// PlayerGuessHistory returns the formatted game history of the player and their opponent
 func (g *DuelGame) PlayerGameBoard(p *discordgo.User) *discordgo.MessageEmbed {
-	gh := g.games[p.ID].Guesses
-	gb := displayGame(gh)
+	var ghp, gho []*wordle.Guess
+	for id, game := range g.games {
+		// If it is the local player, store in ghp
+		if id == p.ID {
+			ghp = game.Guesses
+		} else {
+			gho = game.Guesses
+		}
+	}
+	gb := displayGame(ghp, gho)
 	return renderGameBoard(gb, p)
 }
 
@@ -112,15 +125,24 @@ func (g *DuelGame) ShouldEndInDraw() bool {
 	return true
 }
 
-// displayGame returns a string displaying the given guess history
-func displayGame(gs []*wordle.Guess) string {
+// displayGame returns a string displaying the given guess history.
+// If hide is true, returns the game board without the letters
+func displayGame(gsp []*wordle.Guess, gso []*wordle.Guess) string {
 	// Iterate over the slice to build the guess board
 	var gb strings.Builder
 	for i := 0; i < wordle.MaxGuesses; i++ {
-		if i < len(gs) {
-			gb.WriteString(displayGuess(gs[i]))
+		// Write the player's board
+		if i < len(gsp) {
+			gb.WriteString(displayGuess(gsp[i], false))
 		} else {
 			// If not all guesses have been filled, add a blank line
+			gb.WriteString(blankLine())
+		}
+		// Write the opponents board
+		gb.WriteString(" ")
+		if i < len(gso) {
+			gb.WriteString(displayGuess(gso[i], true))
+		} else {
 			gb.WriteString(blankLine())
 		}
 		gb.WriteRune('\n')
@@ -147,8 +169,9 @@ func renderGameBoard(gb string, p *discordgo.User) *discordgo.MessageEmbed {
 	}
 }
 
-// displayGuess returns a nicely formatted response from a guess result to send back to the user
-func displayGuess(r *wordle.Guess) string {
+// displayGuess returns a nicely formatted response from a guess result to send back to the user.
+// If hide is true, returns blank boxes instead of boxes with letters
+func displayGuess(r *wordle.Guess, hide bool) string {
 	var s strings.Builder
 	runes := []rune(r.GuessWord)
 	for i, gs := range r.GuessResult {
@@ -161,7 +184,12 @@ func displayGuess(r *wordle.Guess) string {
 			prefix = "grey"
 		}
 		// Calculate the name of the required emoji and write it
-		e := fmt.Sprintf("%s_%c", prefix, runes[i])
+		var e string
+		if hide {
+			e = fmt.Sprintf("%s_blank", prefix)
+		} else {
+			e = fmt.Sprintf("%s_%c", prefix, runes[i])
+		}
 		s.WriteString(Emojis[e])
 	}
 	return s.String()
