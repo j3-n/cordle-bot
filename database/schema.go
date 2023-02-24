@@ -2,7 +2,7 @@ package database
 
 var schema = `
 	create table users (
-		id primary key int not null,
+		id int primary key not null,
 		name text not null,
 		wins int not null,
 		losses int not null,

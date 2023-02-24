@@ -29,11 +29,9 @@ func Connect() *Conn {
 
 func connDb() sqlx.DB {
 	db, err := sqlx.Open("mysql", connStr())
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 	defer db.Close()
-	db.MustExec(schema)
+	//db.MustExec(schema)
 
 	return *db
 }

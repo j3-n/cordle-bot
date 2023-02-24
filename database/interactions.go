@@ -6,16 +6,12 @@ import (
 
 func AddUser(user User) {
 	conn := Connect()
-	query := fmt.Sprintf(
+	insert, err := conn.db.Query(fmt.Sprintf(
 		`insert into users(id, name, wins, losses, draws, games, elo, level) 
 		values(%s);`,
-		user.ToSqlAdd())
+		user.ToSqlAdd()))
 
-	insert, err := conn.db.Query(query)
-
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 	defer insert.Close()
 }
 
@@ -35,9 +31,7 @@ func DeleteUser(id int) {
 		"delete from users where %s;",
 		query))
 
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 	defer delete.Close()
 }
 
@@ -62,9 +56,7 @@ func UpdateUser(user *User) {
 		updates,
 		query))
 
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 	defer update.Close()
 }
 
@@ -80,31 +72,24 @@ func GetUser(id int) User {
 		"select * from users where id=%d;",
 		id))
 
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 	defer result.Close()
 
 	var user User
 	result.Next()
 	err = result.StructScan(&user)
 
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 	return user
 }
 
 func GetUsers() []User {
 	conn := Connect()
-	result, err := conn.db.Queryx(("select * from users;"))
-
-	if err != nil {
-		panic(err.Error())
-	}
+	result, err := conn.db.Queryx("select * from users;")
+	checkErr(err)
 	defer result.Close()
-	var users []User
 
+	var users []User
 	for i := 0; result.Next(); i++ {
 		err := result.StructScan(&users[i])
 		if err != nil {
@@ -115,24 +100,36 @@ func GetUsers() []User {
 	return users
 }
 
+func GetTop() []User {
+	conn := Connect()
+	results, err := conn.db.Queryx("select top 10 * from users order by elo, name asc;")
+	checkErr(err)
+	defer results.Close()
+
+	topTen := make([]User, 1)
+	for i := 0; results.Next(); i++ {
+		var user User
+		err := results.StructScan(&user)
+		topTen = append(topTen, user)
+		checkErr(err)
+	}
+
+	return topTen
+}
+
 func GetName(id int) string {
 	conn := Connect()
 	result, err := conn.db.Query(fmt.Sprintf(
 		"select name from users where id=%d",
 		id))
 
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 	defer result.Close()
 
 	var name string
 	result.Next()
 	err = result.Scan(&name)
-
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 
 	return name
 }
@@ -143,17 +140,25 @@ func GetStats(id int) Stats {
 		"select wins, losses, draws, games, elo, level from users where id=%d;",
 		id))
 
-	if err != nil {
-		panic(err.Error())
-	}
+	checkErr(err)
 	defer result.Close()
 
 	var stats Stats
 	result.Next()
 	err = result.StructScan(&stats)
+	checkErr(err)
 
-	if err != nil {
-		panic(err.Error())
-	}
 	return stats
+}
+
+func CheckUser(id int) bool {
+	conn := Connect()
+	err := conn.db.QueryRow(fmt.Sprintf(
+		"select id from users where id=%d",
+		id)).Scan(&id)
+
+	exists, err := checkRow(err)
+	checkErr(err)
+
+	return exists
 }
