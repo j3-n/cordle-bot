@@ -5,7 +5,8 @@ import (
 	"fmt"
 )
 
-func GetLeaderboard(topTen []database.User) string {
+func GetLeaderboard() string {
+	topTen := database.GetTop()
 	output := "``\n"
 	for index, user := range topTen {
 		output += fmt.Sprintf(

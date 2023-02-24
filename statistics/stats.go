@@ -9,6 +9,6 @@ func GetStats(id int) string {
 	user := database.GetUser(id)
 
 	return fmt.Sprintf(
-		"``%s``",
+		"``\n%s\n``",
 		user.ToStat())
 }

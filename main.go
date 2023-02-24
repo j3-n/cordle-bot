@@ -7,10 +7,10 @@ import (
 )
 
 func main() {
-	user := database.GetUser(4561123)
-	fmt.Println(user.ToString())
+	user := database.GetStats(4561123)
+	fmt.Println(user.ToString(), "\n\n")
+	fmt.Println(statistics.GetStats(4561123))
 
-	topTen := database.GetTop()
-	fmt.Println(statistics.GetLeaderboard(topTen))
+	fmt.Println(statistics.GetLeaderboard())
 	defer database.Disconnect()
 }
