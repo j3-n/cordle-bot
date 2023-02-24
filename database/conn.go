@@ -36,7 +36,6 @@ func Disconnect() {
 func connDb() sqlx.DB {
 	db, err := sqlx.Open("mysql", connStr())
 	checkErr(err)
-	//defer db.Close()
 
 	return *db
 }
