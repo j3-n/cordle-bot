@@ -20,7 +20,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			_, err := g.SubmitGuess(guess, p)
 			if err == nil {
 				// Guess was valid, display result
-				gameBoardRespond(s, i, p, g.PlayerGameBoard(p))
+				updateGameBoard(s, i, p, g)
 				// Check if a player has won the game
 				won, id := g.GameWon()
 				if won {
@@ -52,22 +52,21 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 }
 
-// Helper function to send a game board as an embed response to an interaction
-func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, p *discordgo.User, gb string) {
-	// Create a message embed with the game board inside
-	emb := &discordgo.MessageEmbed{
-		Type:  discordgo.EmbedTypeRich,
-		Title: "Cordle Game",
-		Color: 0x00b503,
-		Author: &discordgo.MessageEmbedAuthor{
-			Name:    p.Username,
-			IconURL: p.AvatarURL("64"),
-		},
-		Description: gb,
-		Footer: &discordgo.MessageEmbedFooter{
-			Text: "Your opponent is guessing at the same time as you, try to solve the puzzle before they do! Use /guess to guess again.",
-		},
+// updateGameBoard updates the player's game board
+func updateGameBoard(s *discordgo.Session, i *discordgo.InteractionCreate, p *discordgo.User, g game.GameManager) {
+	// Start by retrieving the correct interaction to respond to
+	prev, exists := g.GetPlayerInteractionMenu(p)
+	if exists {
+		// Delete the existing interaction
+		s.InteractionResponseDelete(prev.Interaction)
 	}
+	// Send the new board and store it
+	gameBoardRespond(s, i, g.PlayerGameBoard(p))
+	g.SetPlayerInteractionMenu(p, i)
+}
+
+// Helper function to send a game board as an embed response to an interaction
+func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, emb *discordgo.MessageEmbed) {
 	// Send the response
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,

@@ -11,10 +11,10 @@ import (
 type GameManager interface {
 	PlayerInGame(p *discordgo.User) bool
 	SubmitGuess(guess string, p *discordgo.User) (*wordle.Guess, error)
-	PlayerGameBoard(p *discordgo.User) string
+	PlayerGameBoard(p *discordgo.User) *discordgo.MessageEmbed
 	PlayerHasGuesses(p *discordgo.User) bool
-	GetPlayerInteractionMenu(p *discordgo.User) (*discordgo.Interaction, bool)
-	SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.Interaction)
+	GetPlayerInteractionMenu(p *discordgo.User) (*discordgo.InteractionCreate, bool)
+	SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.InteractionCreate)
 	GoalWord(p *discordgo.User) string
 	PlayerSurrender(p *discordgo.User)
 	GameWon() (bool, string)

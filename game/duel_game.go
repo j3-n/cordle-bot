@@ -13,7 +13,7 @@ type DuelGame struct {
 	// games stores a map of user IDs to their game
 	games map[string]*wordle.WordleGame
 	// menus stores the interaction to edit to display games to each user
-	menus map[string]*discordgo.Interaction
+	menus map[string]*discordgo.InteractionCreate
 }
 
 // NewDuelGame creates a specialized Game struct representing a Cordle Duel Game
@@ -34,7 +34,7 @@ func NewDuelGame(th string, p []*discordgo.User) {
 			p[0].ID: g0,
 			p[1].ID: g1,
 		},
-		menus: make(map[string]*discordgo.Interaction),
+		menus: make(map[string]*discordgo.InteractionCreate),
 	}
 	games.mu.Unlock()
 }
@@ -52,13 +52,13 @@ func (g *DuelGame) PlayerHasGuesses(p *discordgo.User) bool {
 
 // GetPlayerInteractionMenu searches for and returns the interaction menu for the given player
 // Returns a boolean to indicate whether or not the menu was found
-func (g *DuelGame) GetPlayerInteractionMenu(p *discordgo.User) (*discordgo.Interaction, bool) {
+func (g *DuelGame) GetPlayerInteractionMenu(p *discordgo.User) (*discordgo.InteractionCreate, bool) {
 	r, exists := g.menus[p.ID]
 	return r, exists
 }
 
 // SetPlayerInteractionMenu stores an interaction to be used as the user's menu
-func (g *DuelGame) SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.Interaction) {
+func (g *DuelGame) SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.InteractionCreate) {
 	g.menus[p.ID] = m
 }
 
@@ -70,9 +70,10 @@ func (g *DuelGame) SubmitGuess(guess string, p *discordgo.User) (*wordle.Guess, 
 }
 
 // PlayerGuessHistory returns the formatted game history of the player
-func (g *DuelGame) PlayerGameBoard(p *discordgo.User) string {
+func (g *DuelGame) PlayerGameBoard(p *discordgo.User) *discordgo.MessageEmbed {
 	gh := g.games[p.ID].Guesses
-	return displayGame(gh)
+	gb := displayGame(gh)
+	return renderGameBoard(gb, p)
 }
 
 // GoalWord returns the goal word for this game
@@ -126,6 +127,24 @@ func displayGame(gs []*wordle.Guess) string {
 	}
 	// Return the board inside an embed
 	return gb.String()
+}
+
+// Given a game board as a string, creates a MessageEmbed containing the board
+func renderGameBoard(gb string, p *discordgo.User) *discordgo.MessageEmbed {
+	// Create a message embed with the game board inside
+	return &discordgo.MessageEmbed{
+		Type:  discordgo.EmbedTypeRich,
+		Title: "Cordle Game",
+		Color: 0x00b503,
+		Author: &discordgo.MessageEmbedAuthor{
+			Name:    p.Username,
+			IconURL: p.AvatarURL("64"),
+		},
+		Description: gb,
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: "Your opponent is guessing at the same time as you, try to solve the puzzle before they do! Use /guess to guess again.",
+		},
+	}
 }
 
 // displayGuess returns a nicely formatted response from a guess result to send back to the user
