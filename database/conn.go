@@ -2,7 +2,6 @@ package database
 
 import (
 	"sync"
-
 	"github.com/jmoiron/sqlx"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -30,8 +29,7 @@ func Connect() *Conn {
 func connDb() sqlx.DB {
 	db, err := sqlx.Open("mysql", connStr())
 	checkErr(err)
-	defer db.Close()
-	//db.MustExec(schema)
+	//defer db.Close()
 
 	return *db
 }

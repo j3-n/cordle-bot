@@ -2,22 +2,26 @@ package main
 
 import (
 	"cordle/database"
+	"cordle/statistics"
 	"fmt"
 )
 
 func main() {
 	// newUser := database.User{
-	// 	Id:     567223,
-	// 	Name:   "felix",
-	// 	Wins:   56,
-	// 	Losses: 18,
-	// 	Draws:  50,
-	// 	Games:  124,
-	// 	Elo:    701,
-	// 	Level:  51}
+	// 	Id:     4561123,
+	// 	Name:   "derek",
+	// 	Wins:   5,
+	// 	Losses: 3,
+	// 	Draws:  2,
+	// 	Games:  10,
+	// 	Elo:    510,
+	// 	Level:  2}
 
 	// database.AddUser(newUser)
 
-	user := database.GetUser(456123)
+	user := database.GetUser(4561123)
 	fmt.Println(user.ToString())
+
+	topTen := database.GetTop()
+	fmt.Println(statistics.GetLeaderboard(topTen))
 }

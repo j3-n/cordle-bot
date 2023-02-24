@@ -5,13 +5,13 @@ import (
 	"fmt"
 )
 
-func GetLeaderboard(topTen [10]database.User) string {
-	var output string
+func GetLeaderboard(topTen []database.User) string {
+	output := "``\n"
 	for index, user := range topTen {
 		output += fmt.Sprintf(
-			"``%d : %s``",
+			"%d : %s\n",
 			index+1,
 			user.ToLeaderboard())
 	}
-	return output
+	return output + "``"
 }

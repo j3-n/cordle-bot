@@ -102,11 +102,11 @@ func GetUsers() []User {
 
 func GetTop() []User {
 	conn := Connect()
-	results, err := conn.db.Queryx("select top 10 * from users order by elo, name asc;")
+	results, err := conn.db.Queryx("select * from users order by elo, name asc limit 0,10;")
 	checkErr(err)
 	defer results.Close()
 
-	topTen := make([]User, 1)
+	topTen := make([]User, 0)
 	for i := 0; results.Next(); i++ {
 		var user User
 		err := results.StructScan(&user)

@@ -30,7 +30,7 @@ func (u User) ToString() string {
 
 func (u User) ToSqlAdd() string {
 	return fmt.Sprintf(
-		"%d, %s, %d, %d, %d, %d, %d, %d",
+		"%d, '%s', %d, %d, %d, %d, %d, %d",
 		u.Id,
 		u.Name,
 		u.Wins,
