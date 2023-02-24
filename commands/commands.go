@@ -61,6 +61,11 @@ var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.Interac
 	"guess":     guess,
 }
 
+// Map linking button CustomIDs to their handler functions
+var buttonHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+	"reset": resetMenu,
+}
+
 // RegisterCommands registers all command with Discord, this is necessary to allow users to run them
 func RegisterCommands(s *discordgo.Session) {
 	// Initialise the registered command array
@@ -76,9 +81,18 @@ func RegisterCommands(s *discordgo.Session) {
 
 	// Create a handler to map commands to their handlers
 	s.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		h, exists := commandHandlers[i.ApplicationCommandData().Name]
-		if exists {
-			h(s, i)
+		if i.Type == discordgo.InteractionApplicationCommand {
+			// Handlers for application commands
+			h, exists := commandHandlers[i.ApplicationCommandData().Name]
+			if exists {
+				h(s, i)
+			}
+		} else if i.Type == discordgo.InteractionMessageComponent {
+			// Handlers for buttons
+			h, exists := buttonHandlers[i.MessageComponentData().CustomID]
+			if exists {
+				h(s, i)
+			}
 		}
 	})
 }
