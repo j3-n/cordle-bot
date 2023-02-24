@@ -85,8 +85,9 @@ func (g *DuelGame) PlayerGameBoard(p *discordgo.User) *discordgo.MessageEmbed {
 			gho = game.Guesses
 		}
 	}
-	gb := displayGame(ghp, gho)
-	return renderGameBoard(gb, p)
+	gbp := displayGame(ghp, false)
+	gbo := displayGame(gho, true)
+	return renderGameBoard(gbp, gbo, p)
 }
 
 // GoalWord returns the goal word for this game
@@ -127,42 +128,46 @@ func (g *DuelGame) ShouldEndInDraw() bool {
 
 // displayGame returns a string displaying the given guess history.
 // If hide is true, returns the game board without the letters
-func displayGame(gsp []*wordle.Guess, gso []*wordle.Guess) string {
+func displayGame(gh []*wordle.Guess, hide bool) string {
 	// Iterate over the slice to build the guess board
 	var gb strings.Builder
 	for i := 0; i < wordle.MaxGuesses; i++ {
 		// Write the player's board
-		if i < len(gsp) {
-			gb.WriteString(displayGuess(gsp[i], false))
+		if i < len(gh) {
+			gb.WriteString(displayGuess(gh[i], hide))
 		} else {
 			// If not all guesses have been filled, add a blank line
 			gb.WriteString(blankLine())
 		}
-		// Write the opponents board
-		gb.WriteString(" ")
-		if i < len(gso) {
-			gb.WriteString(displayGuess(gso[i], true))
-		} else {
-			gb.WriteString(blankLine())
-		}
 		gb.WriteRune('\n')
 	}
-	// Return the board inside an embed
+	// Return the board as a string
 	return gb.String()
 }
 
-// Given a game board as a string, creates a MessageEmbed containing the board
-func renderGameBoard(gb string, p *discordgo.User) *discordgo.MessageEmbed {
+// Given 2 game boards as a string, creates a MessageEmbed containing the board
+func renderGameBoard(gbp string, gbo string, p *discordgo.User) *discordgo.MessageEmbed {
 	// Create a message embed with the game board inside
 	return &discordgo.MessageEmbed{
 		Type:  discordgo.EmbedTypeRich,
-		Title: "Cordle Game",
+		Title: "Cordle Game | Duel",
 		Color: 0x00b503,
 		Author: &discordgo.MessageEmbedAuthor{
 			Name:    p.Username,
 			IconURL: p.AvatarURL("64"),
 		},
-		Description: gb,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name: "You",
+				Value: gbp,
+				Inline: true,
+			},
+			{
+				Name: "Your opponent",
+				Value: gbo,
+				Inline: true,
+			},
+		},
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: "Your opponent is guessing at the same time as you, try to solve the puzzle before they do! Use /guess to guess again.",
 		},
