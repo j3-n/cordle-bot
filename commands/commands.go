@@ -63,7 +63,7 @@ var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.Interac
 
 // Map linking button CustomIDs to their handler functions
 var buttonHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-	"reset": resetMenu,
+	"surrender": surrender,
 }
 
 // RegisterCommands registers all command with Discord, this is necessary to allow users to run them
