@@ -60,14 +60,14 @@ func startNewDuelThread(s *discordgo.Session, i *discordgo.InteractionCreate, c 
 	}
 	// Send a message to begin the game with a reset button for the menu
 	s.ChannelMessageSendComplex(th.ID, &discordgo.MessageSend{
-		Content: "Use `/guess` to begin guessing. To bring back the menu if you accidentally delete it, use the button below.",
+		Content: "Use `/guess` to begin guessing. If you wish to leave the game, use `/surrender` or the red button below.",
 		Components: []discordgo.MessageComponent{
 			discordgo.ActionsRow{
 				Components: []discordgo.MessageComponent{
 					discordgo.Button{
-						Label:    "Reset Menu",
-						Style:    discordgo.PrimaryButton,
-						CustomID: "reset",
+						Label:    "Surrender",
+						Style:    discordgo.DangerButton,
+						CustomID: "surrender",
 					},
 				},
 			},
