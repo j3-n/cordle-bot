@@ -12,5 +12,8 @@ func main() {
 	fmt.Println(statistics.GetStats(4561123))
 
 	fmt.Println(statistics.GetLeaderboard())
+	userExists := database.CheckUser(4561123)
+	fmt.Println(userExists)
+
 	defer database.Disconnect()
 }
