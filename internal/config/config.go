@@ -6,31 +6,31 @@ import (
 	"os"
 )
 
-// ConfigData structs store configuration information after they are read
-type ConfigData struct {
-	Token  string
-	Status string
-	Game   GameConfig
-}
-
-// GameConfig stores game specific settings
-type GameConfig struct {
-	ChallengeDuration int
+// Config structs store configuration information after they are read
+type Config struct {
+	Discord DiscordConfig
+	Game    GameConfig
 }
 
 // The path to read the config from
-const configPath = "config/config.json"
+const (
+	discPath = "config/config.json"
+	sqlPath  = "configs/db-key.json"
+)
 
 // Globally available config data
-var Config ConfigData
+var Conf Config
 
 // When the module is first imported, load the config from a JSON file
 func init() {
 	// Open the configuration file
-	file, err := os.ReadFile(configPath)
+	file, err := os.ReadFile(discPath)
 	util.CheckErrMsg(err, "Failed to read config file")
 
 	// Decode JSON into the struct
-	err = json.Unmarshal(file, &Config)
+	var d DiscordConfig
+	err = json.Unmarshal(file, &d)
 	util.CheckErrMsg(err, "Failed to decode JSON from config file")
+
+	Conf.Discord = d
 }

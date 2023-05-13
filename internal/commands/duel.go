@@ -23,11 +23,11 @@ func duel(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				"%s, %s has challenged you to a duel! You have %d seconds to either `/accept` or `/decline` this duel.",
 				user.Mention(),
 				i.Interaction.Member.Mention(),
-				config.Config.Game.ChallengeDuration,
+				config.Conf.Game.ChallengeDuration,
 			)
 			respond(s, i, m, false)
 			// After the delay, delete the challenge notification and expire the challenge
-			time.AfterFunc(time.Duration(config.Config.Game.ChallengeDuration)*time.Second, func() {
+			time.AfterFunc(time.Duration(config.Conf.Game.ChallengeDuration)*time.Second, func() {
 				s.InteractionResponseDelete(i.Interaction)
 				game.CloseChallenge(c)
 			})
