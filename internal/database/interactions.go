@@ -1,8 +1,8 @@
 package database
 
 import (
-	"cordle/internal/users"
 	"cordle/internal/pkg/util"
+	"cordle/internal/users"
 	"fmt"
 )
 

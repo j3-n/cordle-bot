@@ -158,13 +158,13 @@ func renderGameBoard(gbp string, gbo string, p *discordgo.User) *discordgo.Messa
 		},
 		Fields: []*discordgo.MessageEmbedField{
 			{
-				Name: "You",
-				Value: gbp,
+				Name:   "You",
+				Value:  gbp,
 				Inline: true,
 			},
 			{
-				Name: "Your opponent",
-				Value: gbo,
+				Name:   "Your opponent",
+				Value:  gbo,
 				Inline: true,
 			},
 		},
