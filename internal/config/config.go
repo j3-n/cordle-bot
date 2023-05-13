@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Discord DiscordConfig
 	Game    GameConfig
+	Sql     SqlConfig
 }
 
 // The path to read the config from
