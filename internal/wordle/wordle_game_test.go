@@ -11,7 +11,8 @@ func TestValidateGuess(t *testing.T) {
 		guess   string
 		outcome error
 	}{
-		{"abcde", nil},
+		{"fruit", nil},
+		{"abcde", ErrInvalidWord},
 		{"abCde", ErrInvalidFormat},
 		{"ab.de", ErrInvalidFormat},
 		{"abcd", ErrInvalidLength},
