@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const conf = "../../configs/test-db-key.json"
+const conf = "../../config/test-db-key.json"
 
 var d *Db
 
