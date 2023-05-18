@@ -5,11 +5,19 @@ import (
 )
 
 func winCalc(attempts int, player *users.User) {
+	if attempts >= 7 {
+		attempts = 6
+	}
+
 	player.Wins += 1
 	player.Elo += 4 * (7 - attempts)
 }
 
 func loseCalc(attempts int, player *users.User) {
+	if attempts >= 7 {
+		attempts = 6
+	}
+
 	player.Losses += 1
 	player.Elo -= 4 * attempts
 
@@ -20,5 +28,5 @@ func loseCalc(attempts int, player *users.User) {
 
 func drawCalc(player *users.User) {
 	player.Draws += 1
-	player.Elo += 7
+	player.Elo += 3
 }
