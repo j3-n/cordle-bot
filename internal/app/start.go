@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	dbKey   = "configs/db-key.json"
-	discTok = "configs/discord-tok.json"
+	dbKey   = "config/db-key.json"
+	discTok = "config/discord-tok.json"
 )
 
 func Run() {
