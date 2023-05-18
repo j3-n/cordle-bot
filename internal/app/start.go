@@ -3,7 +3,6 @@ package app
 import (
 	"cordle/internal/commands"
 	"cordle/internal/config"
-	"cordle/internal/database"
 	"cordle/internal/pkg/util"
 	"log"
 	"os"
@@ -18,11 +17,11 @@ const (
 )
 
 func Run() {
-	db := database.NewDb(dbKey)
-	defer db.Close()
+	//db := database.NewDb(dbKey)
+	//defer db.Close()
 
 	// Create discord bot
-	session, err := discordgo.New("Bot " + config.Conf.Discord.Token)
+	session, err := discordgo.New("Bot " + config.Config.Discord.Token)
 	util.CheckErrMsg(err, "Failed to initialise discord session")
 
 	// Add a handler to print a happy message when the bot logs in successfully
@@ -41,7 +40,7 @@ func Run() {
 	log.Println("Done registering commands")
 
 	// Set the bot's status
-	err = session.UpdateGameStatus(0, config.Conf.Discord.Status)
+	err = session.UpdateGameStatus(0, config.Config.Discord.Status)
 	util.CheckErrMsg(err, "Failed to set status")
 
 	// Keep the program running until interrupted
