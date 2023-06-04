@@ -26,8 +26,8 @@ build:
 
 tdeploy:
 	docker build --tag cordle2 .
-	docker run -rm cordle2 &
+	docker run -it -rm cordle2
 
 deploy:
 	docker build --tag cordle2 .
-	docker run cordle2 &
+	docker run -it cordle2
