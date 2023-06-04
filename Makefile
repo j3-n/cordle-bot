@@ -19,7 +19,7 @@ test:
 
 ## deploy
 
-.PHONY: build tdeploy deplo
+.PHONY: build tdeploy deploy
 
 build: 
 	go build -o build/program/app cmd/cli/main.go 
