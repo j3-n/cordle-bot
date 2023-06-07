@@ -8,8 +8,9 @@ import (
 
 // Challenge stores information about an active challenge between two players
 type Challenge struct {
-	Source *discordgo.User
-	Target *discordgo.User
+	Source    *discordgo.User
+	Target    *discordgo.User
+	ChannelID string
 }
 
 // Stores all currently active challenges
@@ -19,11 +20,12 @@ var challenges struct {
 	mu sync.Mutex
 }
 
-// NewChallenge creates a new challenge between two players
-func NewChallenge(s *discordgo.User, t *discordgo.User) *Challenge {
+// NewChallenge creates a new challenge between two players in a given channel
+func NewChallenge(s *discordgo.User, t *discordgo.User, cid string) *Challenge {
 	c := &Challenge{
-		Source: s,
-		Target: t,
+		Source:    s,
+		Target:    t,
+		ChannelID: cid,
 	}
 	challenges.mu.Lock()
 	challenges.c = append(challenges.c, c)
@@ -33,13 +35,14 @@ func NewChallenge(s *discordgo.User, t *discordgo.User) *Challenge {
 }
 
 // Locates and returns a challenge between two players given the target user object
+// and the channel ID that the challenge originated in
 // Returns nil if one is not found
-func FindChallenge(t *discordgo.User) *Challenge {
+func FindChallenge(t *discordgo.User, cid string) *Challenge {
 	challenges.mu.Lock()
 	defer challenges.mu.Unlock()
 
 	for _, c := range challenges.c {
-		if c.Target.ID == t.ID {
+		if c.Target.ID == t.ID && c.ChannelID == cid {
 			return c
 		}
 	}

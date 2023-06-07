@@ -9,7 +9,7 @@ import (
 
 // duelDecline declines a challenge against a given user
 func duelDecline(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	c := game.FindChallenge(i.Interaction.Member.User)
+	c := game.FindChallenge(i.Interaction.Member.User, i.Interaction.ChannelID)
 	if c != nil {
 		// Decline the challenge
 		game.CloseChallenge(c)

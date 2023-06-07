@@ -12,7 +12,7 @@ import (
 // duelAccept attempts to accept a duel challenge
 func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	// Find the challenge
-	c := game.FindChallenge(i.Interaction.Member.User)
+	c := game.FindChallenge(i.Interaction.Member.User, i.Interaction.ChannelID)
 	if c != nil {
 		// Check that neither player is in a game already
 		if game.PlayerFree(c.Source) && game.PlayerFree(c.Target) {
@@ -42,7 +42,7 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		}
 	} else {
 		// No challenge was found against this user
-		respond(s, i, "You currently have no active challenges against you.", true)
+		respond(s, i, "You currently have no active challenges against you in this channel.", true)
 	}
 }
 

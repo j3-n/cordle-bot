@@ -15,9 +15,9 @@ func duel(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	user := i.ApplicationCommandData().Options[0].UserValue(s)
 	if !user.Bot && user.ID != i.Interaction.Member.User.ID {
 		// Check that the target does not already have a challenge against them
-		if game.FindChallenge(user) == nil {
+		if game.FindChallenge(user, i.Interaction.ChannelID) == nil {
 			// Create a new challenge
-			c := game.NewChallenge(i.Interaction.Member.User, user)
+			c := game.NewChallenge(i.Interaction.Member.User, user, i.Interaction.ChannelID)
 			// Respond to the interaction, notifying the other player of the duel
 			m := fmt.Sprintf(
 				"%s, %s has challenged you to a duel! You have %d seconds to either `/accept` or `/decline` this duel.",
