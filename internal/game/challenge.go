@@ -8,9 +8,10 @@ import (
 
 // Challenge stores information about an active challenge between two players
 type Challenge struct {
-	Source    *discordgo.User
-	Target    *discordgo.User
-	ChannelID string
+	Source      *discordgo.User
+	Target      *discordgo.User
+	ChannelID   string
+	Interaction *discordgo.Interaction
 }
 
 // Stores all currently active challenges
@@ -21,11 +22,12 @@ var challenges struct {
 }
 
 // NewChallenge creates a new challenge between two players in a given channel
-func NewChallenge(s *discordgo.User, t *discordgo.User, cid string) *Challenge {
+func NewChallenge(s *discordgo.User, t *discordgo.User, i *discordgo.Interaction) *Challenge {
 	c := &Challenge{
-		Source:    s,
-		Target:    t,
-		ChannelID: cid,
+		Source:      s,
+		Target:      t,
+		ChannelID:   i.ChannelID,
+		Interaction: i,
 	}
 	challenges.mu.Lock()
 	challenges.c = append(challenges.c, c)

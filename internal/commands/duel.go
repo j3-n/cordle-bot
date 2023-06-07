@@ -17,7 +17,7 @@ func duel(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		// Check that the target does not already have a challenge against them
 		if game.FindChallenge(user, i.Interaction.ChannelID) == nil {
 			// Create a new challenge
-			c := game.NewChallenge(i.Interaction.Member.User, user, i.Interaction.ChannelID)
+			c := game.NewChallenge(i.Interaction.Member.User, user, i.Interaction)
 			// Respond to the interaction, notifying the other player of the duel
 			m := fmt.Sprintf(
 				"%s, %s has challenged you to a duel! You have %d seconds to either `/accept` or `/decline` this duel.",
@@ -26,7 +26,7 @@ func duel(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				config.Config.Game.ChallengeDuration,
 			)
 			respond(s, i, m, false)
-			// After the delay, delete the challenge notification and expire the challenge
+			// After the delay, delete the challenge notification and expire the challenge if it hasn't been declined
 			time.AfterFunc(time.Duration(config.Config.Game.ChallengeDuration)*time.Second, func() {
 				s.InteractionResponseDelete(i.Interaction)
 				game.CloseChallenge(c)

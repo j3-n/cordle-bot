@@ -20,6 +20,8 @@ func duelDecline(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			i.Interaction.Member.Mention(),
 		)
 		respond(s, i, m, false)
+		// Delete the original response message
+		s.InteractionResponseDelete(c.Interaction)
 	} else {
 		respond(s, i, "You currently have no active challenges against you.", true)
 	}
