@@ -14,13 +14,13 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if exists {
 		p := i.Interaction.Member.User
 		if g.PlayerInGame(p) {
-			// Update the inactivity timer
-			g.ResetInactivityTimer()
 			// Retrive the guess
 			guess := strings.ToLower(i.ApplicationCommandData().Options[0].StringValue())
 			_, err := g.SubmitGuess(guess, p)
 			if err == nil {
-				// Guess was valid, display result
+				// Guess was valid, update the inactivity timer
+				g.ResetInactivityTimer()
+				// Display result
 				updateGameBoard(s, i, p, g)
 				// Update all game boards
 				for id, in := range g.Menus() {
