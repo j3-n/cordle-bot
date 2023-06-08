@@ -3,7 +3,6 @@ package commands
 import (
 	"cordle/internal/game"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -15,6 +14,8 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	if exists {
 		p := i.Interaction.Member.User
 		if g.PlayerInGame(p) {
+			// Update the inactivity timer
+			g.ResetInactivityTimer()
 			// Retrive the guess
 			guess := strings.ToLower(i.ApplicationCommandData().Options[0].StringValue())
 			_, err := g.SubmitGuess(guess, p)
@@ -32,7 +33,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				won, id := g.GameWon()
 				if won {
 					// Notify the players that the game has been won
-					s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("<@%s> has won the game! The word was `%s`.", id, g.GoalWord(p)))
+					s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("<@%s> has won the game! The word was `%s`.", id, g.GoalWord()))
 					// Close the game
 					closeGame(s, i.ChannelID)
 				} else if !g.PlayerHasGuesses(p) {
@@ -41,7 +42,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					// Check if both players have run out of guesses
 					if g.ShouldEndInDraw() {
 						// End the game in a draw
-						s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("All players are out of guesses! The word was `%s`.", g.GoalWord(p)))
+						s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("All players are out of guesses! The word was `%s`.", g.GoalWord()))
 						closeGame(s, i.ChannelID)
 					}
 				}
@@ -94,16 +95,8 @@ func gameBoardEdit(s *discordgo.Session, i *discordgo.InteractionCreate, emb *di
 
 // Close game closes the current game
 func closeGame(s *discordgo.Session, th string) {
-	// Remove the game internally
-	game.CloseGame(th)
-	// Archive and lock the thread from discord
-	archived := true
-	locked := true
-	_, err := s.ChannelEditComplex(th, &discordgo.ChannelEdit{
-		Archived: &archived,
-		Locked:   &locked,
-	})
-	if err != nil {
-		log.Println(err.Error())
+	g, exists := game.FindGame(th)
+	if exists {
+		g.EndGame()
 	}
 }

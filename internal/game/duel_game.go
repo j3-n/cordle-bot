@@ -1,23 +1,32 @@
 package game
 
 import (
+	"cordle/internal/config"
 	"cordle/internal/wordle"
 	"fmt"
+	"log"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 // DuelGame holds the information about a DuelGame
 type DuelGame struct {
+	// session stores the session that the DuelGame belongs to
+	session *discordgo.Session
+	// channel stores a string ChannelID that the game is taking place in
+	channel string
 	// games stores a map of user IDs to their game
 	games map[string]*wordle.WordleGame
 	// menus stores the interaction to edit to display games to each user
 	menus map[string]*discordgo.InteractionCreate
+	// timer stores a pointer to a Timer that tracks inactivity in the game
+	timer *time.Timer
 }
 
 // NewDuelGame creates a specialized Game struct representing a Cordle Duel Game
-func NewDuelGame(th string, p []*discordgo.User) {
+func NewDuelGame(th string, p []*discordgo.User, s *discordgo.Session) {
 	// Create the shared game
 	g0 := wordle.NewRandomGame()
 	// Manually create a second game with the same goal word
@@ -26,16 +35,21 @@ func NewDuelGame(th string, p []*discordgo.User) {
 		Guesses:  []*wordle.Guess{},
 		GoalWord: g0.GoalWord,
 	}
-
-	// Create the game struct and store it
-	games.mu.Lock()
-	games.g[th] = &DuelGame{
+	// Create the game struct
+	g := &DuelGame{
+		session: s,
+		channel: th,
 		games: map[string]*wordle.WordleGame{
 			p[0].ID: g0,
 			p[1].ID: g1,
 		},
 		menus: make(map[string]*discordgo.InteractionCreate),
 	}
+	// Create an inactivity timer that will warn players that the game is ending
+	g.ResetInactivityTimer()
+	// Store the game
+	games.mu.Lock()
+	games.g[th] = g
 	games.mu.Unlock()
 }
 
@@ -91,8 +105,8 @@ func (g *DuelGame) PlayerGameBoard(p *discordgo.User) *discordgo.MessageEmbed {
 }
 
 // GoalWord returns the goal word for this game
-func (g *DuelGame) GoalWord(p *discordgo.User) string {
-	return g.games[p.ID].GoalWord
+func (g *DuelGame) GoalWord() string {
+	return g.games[getPlayers(g)[0]].GoalWord
 }
 
 // PlayerSurrender allows a player to quit an ongoing game
@@ -124,6 +138,82 @@ func (g *DuelGame) ShouldEndInDraw() bool {
 		}
 	}
 	return true
+}
+
+// ResetInactivityTimer restarts the activity timer for the current game
+func (g *DuelGame) ResetInactivityTimer() {
+	// If the game has an inactivity timer, cancel it
+	if g.timer != nil {
+		g.timer.Stop()
+	}
+	// Start a new inactivity timer
+	g.timer = time.AfterFunc(time.Duration(config.Config.Game.InactivityTimeout - config.Config.Game.InactivityWarning) * time.Second, func() {
+		// Notify the players that the inactivity limit is near
+		g.SendInactivityWarning()
+		// Start a new timer that will close the whole game
+		g.timer = time.AfterFunc(time.Duration(config.Config.Game.InactivityWarning) * time.Second, func() {
+			// Close the game once the inactivity period is up
+			g.SendInactivityExpired()
+			g.EndGame()
+		})
+	})
+}
+
+// SendInactivityWarning sends a warning that the game is about to be closed for inactivity
+func (g *DuelGame) SendInactivityWarning() {
+	p := getPlayers(g)
+	m := fmt.Sprintf(
+		"<@%s>, <@%s>, your game will soon expire due to inactivity. Please submit a new guess within %d seconds.",
+		p[0],
+		p[1],
+		config.Config.Game.InactivityWarning,
+	)
+	_, err := g.session.ChannelMessageSend(g.channel, m)
+	if err != nil {
+		log.Printf("Failed to send inactivity warning. " + err.Error())
+	}
+}
+
+// SendInactivityExpired sends a message to notify players that the game has been closed due to inactivity
+func (g *DuelGame) SendInactivityExpired() {
+	p := getPlayers(g)
+	m := fmt.Sprintf(
+		"<@%s>, <@%s>, your game has ended in a draw due to inactivity. The word was `%s`.",
+		p[0],
+		p[1],
+		g.GoalWord(),
+	)
+	_, err := g.session.ChannelMessageSend(g.channel, m)
+	if err != nil {
+		log.Printf("Failed to send inactivity expiration notice. " + err.Error())
+	}
+}
+
+// EndGame is called to finish a game
+func (g *DuelGame) EndGame() {
+	// Remove the game internally
+	CloseGame(g.channel)
+	// Archive and lock the thread from discord
+	archived := true
+	locked := true
+	_, err := g.session.ChannelEditComplex(g.channel, &discordgo.ChannelEdit{
+		Archived: &archived,
+		Locked:   &locked,
+	})
+	if err != nil {
+		log.Println(err.Error())
+	}
+}
+
+// getPlayers returns a slice of the IDs of users currently playing in a game
+func getPlayers(g *DuelGame) []string {
+	p := make([]string, len(g.games))
+	i := 0
+	for k := range g.games {
+		p[i] = k
+		i ++
+	}
+	return p
 }
 
 // displayGame returns a string displaying the given guess history.

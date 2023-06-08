@@ -34,7 +34,7 @@ func duelAccept(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				log.Printf("Failed to create breakout thread for duel: %s", err)
 			} else {
 				// Create and store the game
-				game.NewDuelGame(th.ID, []*discordgo.User{c.Source, c.Target})
+				game.NewDuelGame(th.ID, []*discordgo.User{c.Source, c.Target}, s)
 			}
 		} else {
 			// One or both players is in another game

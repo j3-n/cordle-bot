@@ -16,10 +16,14 @@ type GameManager interface {
 	PlayerHasGuesses(p *discordgo.User) bool
 	GetPlayerInteractionMenu(p *discordgo.User) (*discordgo.InteractionCreate, bool)
 	SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.InteractionCreate)
-	GoalWord(p *discordgo.User) string
+	GoalWord() string
 	PlayerSurrender(p *discordgo.User)
 	GameWon() (bool, string)
 	ShouldEndInDraw() bool
+	ResetInactivityTimer()
+	SendInactivityWarning()
+	SendInactivityExpired()
+	EndGame()
 }
 
 // Thread safe map of channel IDs to the games in them
