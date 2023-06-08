@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func LogWin(d *database.Db, attempts int, id int) {
+func LogWin(d *database.Db, attempts int, id string) {
 	user := d.ReadUser(id)
 	winCalc(attempts, &user)
 	fmt.Println(user.ToStr())
@@ -13,7 +13,7 @@ func LogWin(d *database.Db, attempts int, id int) {
 	d.UpdateUser(&user)
 }
 
-func LogLoss(d *database.Db, attempts int, id int) {
+func LogLoss(d *database.Db, attempts int, id string) {
 	user := d.ReadUser(id)
 	loseCalc(attempts, &user)
 	fmt.Println(user.ToStr())
@@ -21,7 +21,7 @@ func LogLoss(d *database.Db, attempts int, id int) {
 	d.UpdateUser(&user)
 }
 
-func LogDraw(d *database.Db, id int) {
+func LogDraw(d *database.Db, id string) {
 	user := d.ReadUser(id)
 	drawCalc(&user)
 	fmt.Println(user.ToStr())

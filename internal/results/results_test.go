@@ -9,7 +9,7 @@ import (
 
 func TestWinCalc(t *testing.T) {
 	uB := users.User{
-		Id:     123,
+		Id:     "123",
 		Wins:   10,
 		Losses: 2,
 		Draws:  5,
@@ -39,7 +39,7 @@ func TestWinCalc(t *testing.T) {
 
 func TestLoseCalc(t *testing.T) {
 	uB := users.User{
-		Id:     123,
+		Id:     "123",
 		Wins:   10,
 		Losses: 2,
 		Draws:  5,
@@ -69,7 +69,7 @@ func TestLoseCalc(t *testing.T) {
 
 func TestDrawCalc(t *testing.T) {
 	uB := users.User{
-		Id:     123,
+		Id:     "123",
 		Wins:   10,
 		Losses: 2,
 		Draws:  5,

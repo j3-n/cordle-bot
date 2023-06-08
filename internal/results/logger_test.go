@@ -19,7 +19,7 @@ func TestLogWin(t *testing.T) {
 	assert.NotNil(t, d)
 
 	ub := users.User{
-		Id:     123987,
+		Id:     "123987",
 		Wins:   4,
 		Losses: 3,
 		Draws:  2,
@@ -62,7 +62,7 @@ func TestLogLoss(t *testing.T) {
 	assert.NotNil(t, d)
 
 	ub := users.User{
-		Id:     123987,
+		Id:     "123987",
 		Wins:   4,
 		Losses: 3,
 		Draws:  2,
@@ -105,7 +105,7 @@ func TestLogDraw(t *testing.T) {
 	assert.NotNil(t, d)
 
 	ub := users.User{
-		Id:     123987,
+		Id:     "123987",
 		Wins:   4,
 		Losses: 3,
 		Draws:  2,

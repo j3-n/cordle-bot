@@ -34,7 +34,7 @@ func (d *Db) UpdateUser(user *users.User) {
 
 	updates := user.ToSqlUpdate()
 	query := fmt.Sprintf(
-		"id=%d",
+		"id='%s'",
 		user.Id,
 	)
 
@@ -56,13 +56,13 @@ func (d *Db) UpdateUsers(users *[]users.User) {
 	}
 }
 
-func (d *Db) ReadUser(id int) users.User {
+func (d *Db) ReadUser(id string) users.User {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
 	db := d.Client.Db
 
 	result, err := db.Queryx(fmt.Sprintf(
-		"select * from users where id=%d;",
+		"select * from users where id='%s';",
 		id,
 	))
 
@@ -119,13 +119,13 @@ func (d *Db) ReadTop() []users.User {
 	return tt
 }
 
-func (d *Db) ReadStats(id int) Stats {
+func (d *Db) ReadStats(id string) Stats {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
 	db := d.Client.Db
 
 	result, err := db.Queryx(fmt.Sprintf(
-		"select wins, losses, draws, games, elo, level from users where id=%d;",
+		"select wins, losses, draws, games, elo, level from users where id='%s';",
 		id))
 
 	util.CheckErr(err)
@@ -139,13 +139,13 @@ func (d *Db) ReadStats(id int) Stats {
 	return stats
 }
 
-func (d *Db) CheckUser(id int) bool {
+func (d *Db) CheckUser(id string) bool {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
 	db := d.Client.Db
 
 	err := db.QueryRow(fmt.Sprintf(
-		"select id from users where id=%d",
+		"select id from users where id='%s'",
 		id)).Scan(&id)
 
 	exists, err := util.CheckRow(err)
@@ -154,13 +154,13 @@ func (d *Db) CheckUser(id int) bool {
 	return exists
 }
 
-func (d *Db) DeleteUser(id int) {
+func (d *Db) DeleteUser(id string) {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
 	db := d.Client.Db
 
 	query := fmt.Sprintf(
-		"id='%d'",
+		"id='%s'",
 		id,
 	)
 
@@ -173,7 +173,7 @@ func (d *Db) DeleteUser(id int) {
 	defer delete.Close()
 }
 
-func (d *Db) DeleteUsers(ids []int) {
+func (d *Db) DeleteUsers(ids []string) {
 	for _, id := range ids {
 		d.DeleteUser(id)
 	}

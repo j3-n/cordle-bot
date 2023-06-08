@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func GetStats(d *database.Db, id int) string {
+func GetStats(d *database.Db, id string) string {
 	user := d.ReadUser(id)
 
 	return fmt.Sprintf(

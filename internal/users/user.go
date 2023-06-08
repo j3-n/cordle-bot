@@ -3,7 +3,7 @@ package users
 import "fmt"
 
 type User struct {
-	Id     int
+	Id     string
 	Wins   int
 	Losses int
 	Draws  int
@@ -12,7 +12,7 @@ type User struct {
 
 func (u User) ToStr() string {
 	return fmt.Sprintf(
-		"Id: %d\nLosses: %d\nLosses: %d\nDraws: %d\nGames Played: %d\nElo: %d",
+		"Id: %s\nLosses: %d\nLosses: %d\nDraws: %d\nGames Played: %d\nElo: %d",
 		u.Id,
 		u.Wins,
 		u.Losses,
@@ -24,7 +24,7 @@ func (u User) ToStr() string {
 
 func (u User) ToSqlAdd() string {
 	return fmt.Sprintf(
-		"%d, %d, %d, %d, %d",
+		"%s, %d, %d, %d, %d",
 		u.Id,
 		u.Wins,
 		u.Losses,

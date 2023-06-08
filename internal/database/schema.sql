@@ -1,5 +1,5 @@
 create table cordle_test.users (
-	id     bigint          not null		primary key,
+	id     varchar(50)     not null		primary key,
 	wins   int default 0   not null,
 	losses int default 0   not null,
 	draws  int default 0   not null,
