@@ -32,9 +32,13 @@ deploy:
 	$(DOCKER) build --tag cordle2 .
 	$(DOCKER) run -it cordle2
 
+mysql:
+	$(DOCKER) build --tag mysql .
+	$(DOCKER) run -it -p 3306:3306 mysql
+
 # fmt
 
 fmt:
 	$(GOFMT) -w $(GOFILES)
 
-.PHONY: dev clean test build tdeploy deploy fmt
+.PHONY: dev clean test build tdeploy deploy fmt mysql
