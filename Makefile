@@ -32,10 +32,6 @@ deploy:
 	$(DOCKER) build --tag cordle2 .
 	$(DOCKER) run -it cordle2
 
-mysql:
-	$(DOCKER) build --tag mysql -f deployment/mysql/Dockerfile .
-	$(DOCKER) run -it -p 3306:3306 mysql
-
 # fmt
 
 fmt:
