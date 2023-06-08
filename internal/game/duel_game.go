@@ -147,11 +147,11 @@ func (g *DuelGame) ResetInactivityTimer() {
 		g.timer.Stop()
 	}
 	// Start a new inactivity timer
-	g.timer = time.AfterFunc(time.Duration(config.Config.Game.InactivityTimeout - config.Config.Game.InactivityWarning) * time.Second, func() {
+	g.timer = time.AfterFunc(time.Duration(config.Config.Game.InactivityTimeout-config.Config.Game.InactivityWarning)*time.Second, func() {
 		// Notify the players that the inactivity limit is near
 		g.SendInactivityWarning()
 		// Start a new timer that will close the whole game
-		g.timer = time.AfterFunc(time.Duration(config.Config.Game.InactivityWarning) * time.Second, func() {
+		g.timer = time.AfterFunc(time.Duration(config.Config.Game.InactivityWarning)*time.Second, func() {
 			// Close the game once the inactivity period is up
 			g.SendInactivityExpired()
 			g.EndGame()
@@ -211,7 +211,7 @@ func getPlayers(g *DuelGame) []string {
 	i := 0
 	for k := range g.games {
 		p[i] = k
-		i ++
+		i++
 	}
 	return p
 }

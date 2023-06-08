@@ -17,19 +17,19 @@ type Updater interface {
 }
 
 type Reader interface {
-	ReadUser(id int) User
+	ReadUser(id string) User
 	ReadUsers() []User
 	ReadTop() []User
-	ReadStats(id int) Stats
+	ReadStats(id string) Stats
 }
 
 type Checker interface {
-	CheckUser(id int) bool
+	CheckUser(id string) bool
 }
 
 type Deleter interface {
-	DeleteUser(id int)
-	DeleteUsers(ids []int)
+	DeleteUser(id string)
+	DeleteUsers(ids []string)
 }
 
 type Manager interface {

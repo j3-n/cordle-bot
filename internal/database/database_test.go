@@ -192,3 +192,19 @@ func TestDeleteUser(t *testing.T) {
 func TestDeleteUsers(t *testing.T) {
 
 }
+
+func TestCreateTable(t *testing.T) {
+
+}
+
+func TestUpdateTable(t *testing.T) {
+
+}
+
+func TestDeleteTable(t *testing.T) {
+
+}
+
+func TestCheckTable(t *testing.T) {
+
+}
