@@ -1,6 +1,10 @@
-## general
+GO ?= go
+GOFMT ?= gofmt "-s"
+GOFILES := $(shell find . -name "*.go")
 
-.PHONY: dev clean
+DOCKER ?= docker
+
+# clean & dev
 
 clean:
 	@rm -r build
@@ -10,24 +14,27 @@ dev:
 
 ## testing
 
-.PHONY: test
-
 test:
-	go clean -testcache 
-	go mod tidy
-	go test -cover ./...
+	$(GO) clean -testcache 
+	$(GO) mod tidy
+	$(GO) test -cover ./...
 
-## deploy
-
-.PHONY: build tdeploy deploy
+## deploy & build
 
 build: 
-	go build -o build/program/app cmd/cli/main.go 
+	$(GO) build -o build/program/app cmd/cli/main.go 
 
 tdeploy:
-	docker build --tag cordle2 .
-	docker run -it -rm cordle2
+	$(DOCKER) build --tag cordle2 .
+	$(DOCKER) run -it -rm cordle2
 
 deploy:
-	docker build --tag cordle2 .
-	docker run -it cordle2
+	$(DOCKER) build --tag cordle2 .
+	$(DOCKER) run -it cordle2
+
+# fmt
+
+fmt:
+	$(GOFMT) -w $(GOFILES)
+
+.PHONY: dev clean test build tdeploy deploy fmt
