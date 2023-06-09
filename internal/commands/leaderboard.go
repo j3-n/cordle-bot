@@ -14,11 +14,11 @@ func leaderboard(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}
 
 	u := users.User{
-		Id: "123",
-		Wins: 123,
+		Id:     "123",
+		Wins:   123,
 		Losses: 123,
-		Draws: 123,
-		Elo: 567,
+		Draws:  123,
+		Elo:    567,
 	}
 
 	respond(s, i, u.ToLeaderboard(), false)
