@@ -3,6 +3,7 @@ package util
 import (
 	"database/sql"
 	"log"
+	"strings"
 )
 
 // CheckError logs a fatal error if err != nil
@@ -20,10 +21,20 @@ func CheckErrMsg(err error, msg string) {
 
 func CheckRow(err error) (bool, error) {
 	if err != nil {
-		if err != sql.ErrNoRows {
-			log.Fatalln(err)
+		if err == sql.ErrNoRows {
+			return false, nil
 		}
-		return false, nil
+		return false, err
+	}
+	return true, nil
+}
+
+func CheckTable(err error) (bool, error) {
+	if err != nil {
+		if strings.HasSuffix(err.Error(), "doesn't exist") {
+			return false, nil
+		}
+		return false, err
 	}
 	return true, nil
 }

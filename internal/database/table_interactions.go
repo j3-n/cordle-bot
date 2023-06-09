@@ -8,9 +8,8 @@ import (
 func (d *Db) CreateTable(s string) {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	q, err := db.Query(s)
+	q, err := d.Client.Db.Query(s)
 	util.CheckErr(err)
 	defer q.Close()
 }
@@ -18,9 +17,8 @@ func (d *Db) CreateTable(s string) {
 func (d *Db) UpdateTable(u string) {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	q, err := db.Query(u)
+	q, err := d.Client.Db.Query(u)
 	util.CheckErr(err)
 	defer q.Close()
 }
@@ -28,10 +26,9 @@ func (d *Db) UpdateTable(u string) {
 func (d *Db) DeleteTable(t string) {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	q, err := db.Query(fmt.Sprintf(
-		"drop table %s", 
+	q, err := d.Client.Db.Query(fmt.Sprintf(
+		"drop table %s;",
 		t,
 	))
 	util.CheckErr(err)
@@ -41,15 +38,13 @@ func (d *Db) DeleteTable(t string) {
 func (d *Db) CheckTable(t string) bool {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	q, err := db.Query(fmt.Sprintf(
-		"drop table %s", 
+	_, err := d.Client.Db.Query(fmt.Sprintf(
+		"select * from %s limit 0,1;",
 		t,
 	))
-	e, err := util.CheckRow(err)
+	e, err := util.CheckTable(err)
 	util.CheckErr(err)
-	defer q.Close()
 
 	return e
 }

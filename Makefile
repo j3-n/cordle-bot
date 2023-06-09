@@ -17,7 +17,7 @@ dev:
 test:
 	$(GO) clean -testcache 
 	$(GO) mod tidy
-	$(GO) test -cover ./...
+	$(GO) test -cover -v ./...
 
 ## deploy & build
 

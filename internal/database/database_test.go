@@ -91,14 +91,26 @@ func TestUpdateUser(t *testing.T) {
 	d = NewDb(conf)
 	defer d.Close()
 
-	u := d.ReadUser("7123")
+	d.AddUser(&users.User{
+		Id:     "123",
+		Wins:   2,
+		Losses: 1,
+		Draws:  3,
+		Elo:    521,
+	})
+	e := d.CheckUser("123")
+	assert.True(t, e)
+
+	u := d.ReadUser("123")
 	draws := u.Draws
 	u.Draws += 1
 	d.UpdateUser(&u)
-	u = d.ReadUser("7123")
+	u = d.ReadUser("123")
 	if u.Draws != draws+1 {
 		log.Fatalln(errors.New("error updating draw count"))
 	}
+
+	d.DeleteUser("123")
 }
 
 func TestUpdateUsers(t *testing.T) {
@@ -109,8 +121,8 @@ func TestReadUser(t *testing.T) {
 	d = NewDb(conf)
 	defer d.Close()
 
-	u := d.ReadUser("7123")
-	if u.Id != "7123" {
+	u := d.ReadUser("388395158397517824")
+	if u.Id != "388395158397517824" {
 		log.Fatalln(errors.New("read nil user error"))
 	}
 	assert.NotNil(t, u)
@@ -151,7 +163,7 @@ func TestCheckUser(t *testing.T) {
 	d = NewDb(conf)
 	defer d.Close()
 
-	e := d.CheckUser("7123")
+	e := d.CheckUser("388395158397517824")
 	if !e {
 		log.Fatalln(fmt.Errorf(
 			"wrong existing value returned %t", e),
@@ -194,7 +206,21 @@ func TestDeleteUsers(t *testing.T) {
 }
 
 func TestCreateTable(t *testing.T) {
+	d = NewDb(conf)
+	defer d.Close()
 
+	c := `
+		create table test_table(
+			id int not null primary key,
+			name varchar(10)
+		);
+	`
+
+	d.CreateTable(c)
+	e := d.CheckTable("test_table")
+	assert.True(t, e)
+
+	d.DeleteTable("test_table")
 }
 
 func TestUpdateTable(t *testing.T) {
@@ -202,9 +228,43 @@ func TestUpdateTable(t *testing.T) {
 }
 
 func TestDeleteTable(t *testing.T) {
+	d = NewDb(conf)
+	defer d.Close()
 
+	c := `
+		create table test_table(
+			id int not null primary key,
+			name varchar(10)
+		);
+	`
+
+	d.CreateTable(c)
+	e := d.CheckTable("test_table")
+	assert.True(t, e)
+
+	d.DeleteTable("test_table")
+	e = d.CheckTable("test_table")
+	assert.False(t, e)
 }
 
 func TestCheckTable(t *testing.T) {
+	d = NewDb(conf)
+	defer d.Close()
 
+	e := d.CheckTable("check_table")
+	assert.False(t, e)
+
+	c := `
+		create table check_table(
+			id int not null primary key
+		);
+	`
+
+	d.CreateTable(c)
+	e = d.CheckTable("check_table")
+	assert.True(t, e)
+
+	d.DeleteTable("check_table")
+	e = d.CheckTable("check_table")
+	assert.False(t, e)
 }

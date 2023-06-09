@@ -9,9 +9,8 @@ import (
 func (d *Db) AddUser(user *users.User) {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	insert, err := db.Query(fmt.Sprintf(
+	insert, err := d.Client.Db.Query(fmt.Sprintf(
 		`insert into users(id, wins, losses, draws, elo) 
 		values(%s);`,
 		user.ToSqlAdd(),
@@ -30,20 +29,18 @@ func (d *Db) AddUsers(users *[]users.User) {
 func (d *Db) UpdateUser(user *users.User) {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	updates := user.ToSqlUpdate()
-	query := fmt.Sprintf(
+	q := fmt.Sprintf(
 		"id='%s'",
 		user.Id,
 	)
 
-	update, err := db.Query(fmt.Sprintf(
+	update, err := d.Client.Db.Query(fmt.Sprintf(
 		`update users
-		set %s
-		where %s;`,
-		updates,
-		query,
+		 set %s
+		 where %s;`,
+		user.ToSqlUpdate(),
+		q,
 	))
 
 	util.CheckErr(err)
@@ -59,9 +56,8 @@ func (d *Db) UpdateUsers(users *[]users.User) {
 func (d *Db) ReadUser(id string) users.User {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	result, err := db.Queryx(fmt.Sprintf(
+	result, err := d.Client.Db.Queryx(fmt.Sprintf(
 		"select * from users where id='%s';",
 		id,
 	))
@@ -80,9 +76,8 @@ func (d *Db) ReadUser(id string) users.User {
 func (d *Db) ReadAllUsers() []users.User {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	result, err := db.Queryx("select * from users;")
+	result, err := d.Client.Db.Queryx("select * from users;")
 	util.CheckErr(err)
 	defer result.Close()
 
@@ -102,9 +97,8 @@ func (d *Db) ReadAllUsers() []users.User {
 func (d *Db) ReadTop() []users.User {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	results, err := db.Queryx("select * from users order by elo, id asc limit 0,10;")
+	results, err := d.Client.Db.Queryx("select * from users order by elo, id asc limit 0,10;")
 	util.CheckErr(err)
 	defer results.Close()
 
@@ -122,9 +116,8 @@ func (d *Db) ReadTop() []users.User {
 func (d *Db) ReadStats(id string) Stats {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	result, err := db.Queryx(fmt.Sprintf(
+	result, err := d.Client.Db.Queryx(fmt.Sprintf(
 		"select wins, losses, draws, games, elo, level from users where id='%s';",
 		id))
 
@@ -142,9 +135,8 @@ func (d *Db) ReadStats(id string) Stats {
 func (d *Db) CheckUser(id string) bool {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
-	err := db.QueryRow(fmt.Sprintf(
+	err := d.Client.Db.QueryRow(fmt.Sprintf(
 		"select id from users where id='%s'",
 		id)).Scan(&id)
 
@@ -157,14 +149,13 @@ func (d *Db) CheckUser(id string) bool {
 func (d *Db) DeleteUser(id string) {
 	d.ClientMu.Lock()
 	defer d.ClientMu.Unlock()
-	db := d.Client.Db
 
 	query := fmt.Sprintf(
 		"id='%s'",
 		id,
 	)
 
-	delete, err := db.Query(fmt.Sprintf(
+	delete, err := d.Client.Db.Query(fmt.Sprintf(
 		"delete from users where %s;",
 		query,
 	))

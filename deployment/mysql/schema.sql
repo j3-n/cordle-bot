@@ -1,3 +1,6 @@
+create database cordle_test
+use cordle_test
+
 create table users (
 	id     varchar(50)     not null primary key,
 	wins   int default 0   not null,
