@@ -1,10 +1,14 @@
 package results
 
 import (
+	"cordle/internal/config"
 	db "cordle/internal/database"
+	"cordle/internal/pkg/util"
 	"cordle/internal/users"
+	"encoding/json"
 	"errors"
 	"log"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,8 +16,29 @@ import (
 
 const conf = "../../config/test-db-key.json"
 
+var c config.ConfigData = config.ConfigData{
+	Sql: loadSql(),
+}
+
+func loadFile(p string) []byte {
+	// Open the configuration file
+	file, err := os.ReadFile(p)
+	util.CheckErrMsg(err, "Failed to read config file")
+	return file
+}
+
+func loadSql() config.SqlConfig {
+	file := loadFile(conf)
+	// Decode JSON
+	var d config.SqlConfig
+	err := json.Unmarshal(file, &d)
+	util.CheckErrMsg(err, "Failed to decode JSON from database config file")
+
+	return d
+}
+
 func TestLogWin(t *testing.T) {
-	d := db.NewDb(conf)
+	d := db.NewDb(c.Sql)
 	defer d.Close()
 
 	assert.NotNil(t, d)
@@ -56,7 +81,7 @@ func TestLogWin(t *testing.T) {
 }
 
 func TestLogLoss(t *testing.T) {
-	d := db.NewDb(conf)
+	d := db.NewDb(c.Sql)
 	defer d.Close()
 
 	assert.NotNil(t, d)
@@ -99,7 +124,7 @@ func TestLogLoss(t *testing.T) {
 }
 
 func TestLogDraw(t *testing.T) {
-	d := db.NewDb(conf)
+	d := db.NewDb(c.Sql)
 	defer d.Close()
 
 	assert.NotNil(t, d)

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"cordle/internal/config"
 	"cordle/internal/pkg/sql"
 	"cordle/internal/pkg/util"
 	"sync"
@@ -45,9 +46,9 @@ type Db struct {
 	Client   sql.Clientx
 }
 
-func NewDb(connStr string) *Db {
+func NewDb(c config.SqlConfig) *Db {
 	return &Db{
-		Client: *sql.NewClientx(connStr),
+		Client: *sql.NewClientx(c),
 	}
 }
 

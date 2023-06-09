@@ -17,7 +17,7 @@ type ConfigData struct {
 const (
 	discPath = "config/discord-config.json"
 	gamePath = "config/game-config.json"
-	sqlPath  = "config/db-config.json"
+	sqlPath  = "config/db-key.json"
 )
 
 // Globally available config data

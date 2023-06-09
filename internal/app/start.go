@@ -14,7 +14,7 @@ import (
 )
 
 func Run() {
-	db := database.NewDb(getConnStr())
+	db := database.NewDb(config.Config.Sql)
 	defer db.Close()
 
 	// Create discord bot
