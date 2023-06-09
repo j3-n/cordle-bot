@@ -47,6 +47,22 @@ var commands = []*discordgo.ApplicationCommand{
 			},
 		},
 	},
+	{
+		Name:        "stats",
+		Description: "Get the statistics of another player",
+		Options: []*discordgo.ApplicationCommandOption{
+			{
+				Type:        discordgo.ApplicationCommandOptionUser,
+				Name:        "player",
+				Description: "Player you want the statistics of",
+				Required:    true,
+			},
+		},
+	},
+	{
+		Name:        "leaderboard",
+		Description: "Get the top 10 players.",
+	},
 }
 
 var regCommands []*discordgo.ApplicationCommand
@@ -54,11 +70,13 @@ var regCommands []*discordgo.ApplicationCommand
 // Big map linking command names to their handling functions
 // Handler functions are stored in separate go files
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-	"duel":      duel,
-	"accept":    duelAccept,
-	"decline":   duelDecline,
-	"surrender": surrender,
-	"guess":     guess,
+	"duel":        duel,
+	"accept":      duelAccept,
+	"decline":     duelDecline,
+	"surrender":   surrender,
+	"guess":       guess,
+	"stats":       stats,
+	"leaderboard": leaderboard,
 }
 
 // Map linking button CustomIDs to their handler functions
