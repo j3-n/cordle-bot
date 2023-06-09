@@ -17,7 +17,7 @@ import (
 const conf = "../../config/test-db-key.json"
 
 var d *Db
-var c config.SqlConfig = loadSql()
+var c config.DatabaseConfig = loadSql()
 
 func loadFile(p string) []byte {
 	// Open the configuration file
@@ -26,10 +26,10 @@ func loadFile(p string) []byte {
 	return file
 }
 
-func loadSql() config.SqlConfig {
+func loadSql() config.DatabaseConfig {
 	file := loadFile(conf)
 	// Decode JSON
-	var d config.SqlConfig
+	var d config.DatabaseConfig
 	err := json.Unmarshal(file, &d)
 	util.CheckErrMsg(err, "Failed to decode JSON from database config file")
 

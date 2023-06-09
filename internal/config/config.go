@@ -8,57 +8,36 @@ import (
 
 // ConfigData structs store configuration information after they are read
 type ConfigData struct {
-	Discord DiscordConfig
-	Game    GameConfig
-	Sql     SqlConfig
+	Discord 	DiscordConfig
+	Game    	GameConfig
+	Database    DatabaseConfig
 }
 
-// The path to read the config from
-const (
-	discPath = "config/discord-config.json"
-	gamePath = "config/game-config.json"
-	sqlPath  = "config/db-key.json"
-)
+// Default config path
+const DEFAULT_CONFIG string = "config/config.json"
 
-// Globally available config data
+// Globally available ConfigData instance
 var Config ConfigData
 
-// When the module is first imported, load the config from a JSON file
+// Called when the module is imported and automatically loads the config
 func init() {
-	loadDiscordConfig()
-	loadGameConfig()
-	loadDatabaseConfig()
+	LoadConfig(DEFAULT_CONFIG)
 }
 
-func loadDiscordConfig() {
-	file := loadFile(discPath)
-
-	// Decode JSON into the struct
-	var d DiscordConfig
-	err := json.Unmarshal(file, &d)
-	util.CheckErrMsg(err, "Failed to decode JSON from discord config file")
-
-	Config.Discord = d
+// Loads the global config, needs to be called when the program starts
+func LoadConfig(path string) {
+	Config = loadConfigFromFile(path)
 }
 
-func loadGameConfig() {
-	file := loadFile(gamePath)
-	// Decode JSON into the struct
-	var g GameConfig
-	err := json.Unmarshal(file, &g)
-	util.CheckErrMsg(err, "Failed to decode JSON from game config file")
+// loadConfigFromFile loads a ConfigData struct from a given JSON file
+func loadConfigFromFile(path string) ConfigData {
+	f := loadFile(path)
+	// Decode JSON into a new strut
+	var c ConfigData
+	err := json.Unmarshal(f, &c)
+	util.CheckErrMsg(err, "Failed to decode JSON from config file")
 
-	Config.Game = g
-}
-
-func loadDatabaseConfig() {
-	file := loadFile(sqlPath)
-	// Decode JSON
-	var d SqlConfig
-	err := json.Unmarshal(file, &d)
-	util.CheckErrMsg(err, "Failed to decode JSON from database config file")
-
-	Config.Sql = d
+	return c
 }
 
 func loadFile(p string) []byte {

@@ -1,6 +1,6 @@
 package config
 
-type SqlConfig struct {
+type DatabaseConfig struct {
 	Username string
 	Password string
 	Address  string

@@ -14,7 +14,7 @@ import (
 )
 
 func Run() {
-	db := database.NewDb(config.Config.Sql)
+	db := database.NewDb(config.Config.Database)
 	defer db.Close()
 
 	// Create discord bot
@@ -55,9 +55,9 @@ func Run() {
 func getConnStr() string {
 	return fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s",
-		config.Config.Sql.Username,
-		config.Config.Sql.Password,
-		config.Config.Sql.Address,
-		config.Config.Sql.Port,
-		config.Config.Sql.Database)
+		config.Config.Database.Username,
+		config.Config.Database.Password,
+		config.Config.Database.Address,
+		config.Config.Database.Port,
+		config.Config.Database.Database)
 }

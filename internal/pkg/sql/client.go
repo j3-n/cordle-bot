@@ -18,7 +18,7 @@ type Client struct {
 	Db *sql.DB
 }
 
-func NewClientx(c config.SqlConfig) *Clientx {
+func NewClientx(c config.DatabaseConfig) *Clientx {
 	d, err := sqlx.Open("mysql", connStr(c))
 	util.CheckErr(err)
 
@@ -27,7 +27,7 @@ func NewClientx(c config.SqlConfig) *Clientx {
 	}
 }
 
-func NewClient(c config.SqlConfig) *Client {
+func NewClient(c config.DatabaseConfig) *Client {
 	d, err := sql.Open("mysql", connStr(c))
 	util.CheckErr(err)
 
@@ -41,7 +41,7 @@ func (c *Clientx) Close() error {
 	return err
 }
 
-func connStr(c config.SqlConfig) string {
+func connStr(c config.DatabaseConfig) string {
 	return fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s",
 		c.Username,

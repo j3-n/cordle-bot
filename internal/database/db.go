@@ -46,7 +46,7 @@ type Db struct {
 	Client   sql.Clientx
 }
 
-func NewDb(c config.SqlConfig) *Db {
+func NewDb(c config.DatabaseConfig) *Db {
 	return &Db{
 		Client: *sql.NewClientx(c),
 	}

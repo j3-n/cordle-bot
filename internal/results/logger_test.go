@@ -17,7 +17,7 @@ import (
 const conf = "../../config/test-db-key.json"
 
 var c config.ConfigData = config.ConfigData{
-	Sql: loadSql(),
+	Database: loadSql(),
 }
 
 func loadFile(p string) []byte {
@@ -27,10 +27,10 @@ func loadFile(p string) []byte {
 	return file
 }
 
-func loadSql() config.SqlConfig {
+func loadSql() config.DatabaseConfig {
 	file := loadFile(conf)
 	// Decode JSON
-	var d config.SqlConfig
+	var d config.DatabaseConfig
 	err := json.Unmarshal(file, &d)
 	util.CheckErrMsg(err, "Failed to decode JSON from database config file")
 
@@ -38,7 +38,7 @@ func loadSql() config.SqlConfig {
 }
 
 func TestLogWin(t *testing.T) {
-	d := db.NewDb(c.Sql)
+	d := db.NewDb(c.Database)
 	defer d.Close()
 
 	assert.NotNil(t, d)
@@ -81,7 +81,7 @@ func TestLogWin(t *testing.T) {
 }
 
 func TestLogLoss(t *testing.T) {
-	d := db.NewDb(c.Sql)
+	d := db.NewDb(c.Database)
 	defer d.Close()
 
 	assert.NotNil(t, d)
@@ -124,7 +124,7 @@ func TestLogLoss(t *testing.T) {
 }
 
 func TestLogDraw(t *testing.T) {
-	d := db.NewDb(c.Sql)
+	d := db.NewDb(c.Database)
 	defer d.Close()
 
 	assert.NotNil(t, d)
