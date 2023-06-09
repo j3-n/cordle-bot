@@ -2,17 +2,31 @@ package sql
 
 import (
 	"cordle/internal/pkg/util"
+	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
 
-type Client struct {
+type Clientx struct {
 	Db sqlx.DB
 }
 
-func NewClient(connStr string) *Client {
+type Client struct {
+	Db sql.DB
+}
+
+func NewClientx(connStr string) *Clientx {
 	d, err := sqlx.Open("mysql", connStr)
+	util.CheckErr(err)
+
+	return &Clientx{
+		Db: *d,
+	}
+}
+
+func NewClient(connStr string) *Client {
+	d, err := sql.Open("mysql", connStr)
 	util.CheckErr(err)
 
 	return &Client{
@@ -20,7 +34,7 @@ func NewClient(connStr string) *Client {
 	}
 }
 
-func (c *Client) Close() error {
+func (c *Clientx) Close() error {
 	err := c.Db.Close()
 	return err
 }

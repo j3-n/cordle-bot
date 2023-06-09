@@ -42,12 +42,12 @@ type Manager interface {
 
 type Db struct {
 	ClientMu sync.Mutex
-	Client   sql.Client
+	Client   sql.Clientx
 }
 
 func NewDb(connStr string) *Db {
 	return &Db{
-		Client: *sql.NewClient(connStr),
+		Client: *sql.NewClientx(connStr),
 	}
 }
 
