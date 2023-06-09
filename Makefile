@@ -26,11 +26,11 @@ build:
 
 tdeploy:
 	$(DOCKER) build --tag cordle2 .
-	$(DOCKER) run -it -rm cordle2
+	$(DOCKER) run -rm cordle2
 
 deploy:
 	$(DOCKER) build --tag cordle2 .
-	$(DOCKER) run -it cordle2
+	$(DOCKER) run -d cordle2
 
 # fmt
 
