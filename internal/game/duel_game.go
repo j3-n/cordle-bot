@@ -193,6 +193,10 @@ func (g *DuelGame) SendInactivityExpired() {
 func (g *DuelGame) EndGame() {
 	// Remove the game internally
 	CloseGame(g.channel)
+	// Stop the inactivity timer
+	if g.timer != nil {
+		g.timer.Stop()
+	}
 	// Archive and lock the thread from discord
 	archived := true
 	locked := true
