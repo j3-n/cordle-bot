@@ -3,7 +3,9 @@ package app
 import (
 	"cordle/internal/commands"
 	"cordle/internal/config"
+	"cordle/internal/database"
 	"cordle/internal/pkg/util"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -11,14 +13,9 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-const (
-	dbKey   = "config/db-key.json"
-	discTok = "config/discord-tok.json"
-)
-
 func Run() {
-	//db := database.NewDb(dbKey)
-	//defer db.Close()
+	db := database.NewDb(getConnStr())
+	defer db.Close()
 
 	// Create discord bot
 	session, err := discordgo.New("Bot " + config.Config.Discord.Token)
@@ -52,4 +49,15 @@ func Run() {
 	log.Println("Clearing slash commands:")
 	commands.ClearCommands(session)
 	log.Println("Done clearing commands")
+}
+
+// getConnStr creates a connection string for the database from the loaded config
+func getConnStr() string {
+	return fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s",
+		config.Config.Sql.Username,
+		config.Config.Sql.Password,
+		config.Config.Sql.Address,
+		config.Config.Sql.Port,
+		config.Config.Sql.Database)
 }

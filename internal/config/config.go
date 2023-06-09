@@ -17,7 +17,7 @@ type ConfigData struct {
 const (
 	discPath = "config/discord-config.json"
 	gamePath = "config/game-config.json"
-	sqlPath  = "configs/db-key.json"
+	sqlPath  = "config/db-config.json"
 )
 
 // Globally available config data
@@ -27,6 +27,7 @@ var Config ConfigData
 func init() {
 	loadDiscordConfig()
 	loadGameConfig()
+	loadDatabaseConfig()
 }
 
 func loadDiscordConfig() {
@@ -48,6 +49,16 @@ func loadGameConfig() {
 	util.CheckErrMsg(err, "Failed to decode JSON from game config file")
 
 	Config.Game = g
+}
+
+func loadDatabaseConfig() {
+	file := loadFile(sqlPath)
+	// Decode JSON
+	var d SqlConfig
+	err := json.Unmarshal(file, &d)
+	util.CheckErrMsg(err, "Failed to decode JSON from database config file")
+
+	Config.Sql = d
 }
 
 func loadFile(p string) []byte {

@@ -45,9 +45,9 @@ type Db struct {
 	Client   sql.Client
 }
 
-func NewDb(path string) *Db {
+func NewDb(connStr string) *Db {
 	return &Db{
-		Client: *sql.NewClient(path),
+		Client: *sql.NewClient(connStr),
 	}
 }
 

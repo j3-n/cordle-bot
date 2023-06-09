@@ -11,8 +11,8 @@ type Client struct {
 	Db sqlx.DB
 }
 
-func NewClient(path string) *Client {
-	d, err := sqlx.Open("mysql", connStr(path))
+func NewClient(connStr string) *Client {
+	d, err := sqlx.Open("mysql", connStr)
 	util.CheckErr(err)
 
 	return &Client{
