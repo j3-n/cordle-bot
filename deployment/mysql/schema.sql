@@ -1,4 +1,4 @@
-create database cordle_test
+create database cordle_test;
 use cordle_test
 
 create table users (
