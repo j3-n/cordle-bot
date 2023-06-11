@@ -21,12 +21,7 @@ var Config ConfigData
 
 // Called when the module is imported and automatically loads the config
 func init() {
-	LoadConfig(DEFAULT_CONFIG)
-}
-
-// Loads the global config, needs to be called when the program starts
-func LoadConfig(path string) {
-	Config = loadConfigFromFile(path)
+	Config = loadConfigFromFile(DEFAULT_CONFIG)
 }
 
 // loadConfigFromFile loads a ConfigData struct from a given JSON file
