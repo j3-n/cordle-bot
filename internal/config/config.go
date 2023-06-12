@@ -19,9 +19,9 @@ const DEFAULT_CONFIG string = "config/config.json"
 // Globally available ConfigData instance
 var Config ConfigData
 
-// Called when the module is imported and automatically loads the config
-func init() {
-	Config = loadConfigFromFile(DEFAULT_CONFIG)
+// LoadConfig initialises the global Config instance. This MUST be called at the start of the program
+func LoadConfig(path string) {
+	Config = loadConfigFromFile(path)
 }
 
 // loadConfigFromFile loads a ConfigData struct from a given JSON file

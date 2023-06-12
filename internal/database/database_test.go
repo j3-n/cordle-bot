@@ -2,9 +2,7 @@ package database
 
 import (
 	"cordle/internal/config"
-	"cordle/internal/pkg/util"
 	"cordle/internal/users"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -14,37 +12,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const conf = "../../config/test-db-key.json"
-
 var d *Db
-var c config.DatabaseConfig = loadSql()
 
-func loadFile(p string) []byte {
-	// Open the configuration file
-	file, err := os.ReadFile(p)
-	util.CheckErrMsg(err, "Failed to read config file")
-	return file
-}
-
-func loadSql() config.DatabaseConfig {
-	file := loadFile(conf)
-	// Decode JSON
-	var d config.DatabaseConfig
-	err := json.Unmarshal(file, &d)
-	util.CheckErrMsg(err, "Failed to decode JSON from database config file")
-
-	return d
-}
-
-func TestConfigExists(t *testing.T) {
-	_, err := os.Stat(conf)
-	if err != nil {
-		log.Fatalln(err)
-	}
+func TestMain(m *testing.M) {
+	config.LoadConfig("../../config/config.json")
+	os.Exit(m.Run())
 }
 
 func TestDb(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	assert.NotNil(t, d)
@@ -59,7 +35,7 @@ func TestAddUser(t *testing.T) {
 		Elo:    341,
 	}
 
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	d.AddUser(&u)
@@ -87,7 +63,7 @@ func TestAddUsers(t *testing.T) {
 		Elo:    541,
 	}
 
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	u := make([]users.User, 2)
@@ -109,7 +85,7 @@ func TestAddUsers(t *testing.T) {
 }
 
 func TestUpdateUser(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	d.AddUser(&users.User{
@@ -139,7 +115,7 @@ func TestUpdateUsers(t *testing.T) {
 }
 
 func TestReadUser(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	u := d.ReadUser("388395158397517824")
@@ -150,7 +126,7 @@ func TestReadUser(t *testing.T) {
 }
 
 func TestReadAllUsers(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	u := d.ReadAllUsers()
@@ -164,7 +140,7 @@ func TestReadAllUsers(t *testing.T) {
 }
 
 func TestReadTop(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	tt := d.ReadTop()
@@ -181,7 +157,7 @@ func TestReadTop(t *testing.T) {
 }
 
 func TestCheckUser(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	e := d.CheckUser("388395158397517824")
@@ -210,7 +186,7 @@ func TestDeleteUser(t *testing.T) {
 		Elo:    371,
 	}
 
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	d.AddUser(&u)
@@ -227,7 +203,7 @@ func TestDeleteUsers(t *testing.T) {
 }
 
 func TestCreateTable(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	c := `
@@ -249,7 +225,7 @@ func TestUpdateTable(t *testing.T) {
 }
 
 func TestDeleteTable(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	c := `
@@ -269,7 +245,7 @@ func TestDeleteTable(t *testing.T) {
 }
 
 func TestCheckTable(t *testing.T) {
-	d = NewDb(c)
+	d = NewDb(config.Config.Database)
 	defer d.Close()
 
 	e := d.CheckTable("check_table")

@@ -1,10 +1,17 @@
 package wordle
 
 import (
+	"cordle/internal/config"
 	"fmt"
+	"os"
 	"reflect"
 	"testing"
 )
+
+func TestMain(m *testing.M) {
+	config.LoadConfig("../../config/config.json")
+	os.Exit(m.Run())
+}
 
 func TestValidateGuess(t *testing.T) {
 	var tests = []struct {

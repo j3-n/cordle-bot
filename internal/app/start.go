@@ -14,7 +14,12 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+const CONFIG_PATH = "config/config.json"
+
 func Run() {
+	// Load config file
+	config.LoadConfig(CONFIG_PATH)
+
 	db := database.NewDb(config.Config.Database)
 	defer db.Close()
 
