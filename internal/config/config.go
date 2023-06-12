@@ -8,9 +8,9 @@ import (
 
 // ConfigData structs store configuration information after they are read
 type ConfigData struct {
-	Discord  DiscordConfig
-	Game     GameConfig
-	Database DatabaseConfig
+	Discord  DiscordConfig  `json:"discord"`
+	Game     GameConfig     `json:"game"`
+	Database DatabaseConfig `json:"database"`
 }
 
 // Default config path

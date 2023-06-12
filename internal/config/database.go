@@ -1,9 +1,9 @@
 package config
 
 type DatabaseConfig struct {
-	Username string
-	Password string
-	Address  string
-	Port     string
-	Database string
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Address  string `json:"address"`
+	Port     string `json:"port"`
+	Database string `json:"database"`
 }
