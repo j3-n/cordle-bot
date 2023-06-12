@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -40,9 +41,9 @@ func Run() {
 	err = session.UpdateGameStatus(0, config.Config.Discord.Status)
 	util.CheckErrMsg(err, "Failed to set status")
 
-	// Keep the program running until interrupted
+	// Keep the program running until SIGTERM or SIGINT is received
 	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt)
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 	<-stop
 
 	// Unregister commands
