@@ -1,18 +1,11 @@
 package results
 
 import (
-	"cordle/internal/config"
 	"cordle/internal/users"
 	"fmt"
 	"log"
-	"os"
 	"testing"
 )
-
-func TestMain(m *testing.M) {
-	config.LoadConfig("../../config/config.json")
-	os.Exit(m.Run())
-}
 
 func TestWinCalc(t *testing.T) {
 	uB := users.User{

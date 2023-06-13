@@ -15,9 +15,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Path to the main JSON config file
-const CONFIG_PATH = "config/config.json"
-
 // Path to the JSON file containing possible answers
 const ANSWERS_PATH = "assets/answers.json"
 
@@ -25,9 +22,6 @@ const ANSWERS_PATH = "assets/answers.json"
 const GUESSES_PATH = "assets/guesses.json"
 
 func Run() {
-	// Load config file
-	config.LoadConfig(CONFIG_PATH)
-
 	// Load wordle config files
 	wordle.LoadWords(ANSWERS_PATH, GUESSES_PATH)
 

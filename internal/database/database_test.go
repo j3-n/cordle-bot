@@ -6,18 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 var d *Db
-
-func TestMain(m *testing.M) {
-	config.LoadConfig("../../config/config.json")
-	os.Exit(m.Run())
-}
 
 func TestDb(t *testing.T) {
 	d = NewDb(config.Config.Database)

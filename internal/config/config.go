@@ -3,6 +3,7 @@ package config
 import (
 	"cordle/internal/pkg/util"
 	"encoding/json"
+	"flag"
 	"os"
 )
 
@@ -14,13 +15,21 @@ type ConfigData struct {
 }
 
 // Default config path
-const DEFAULT_CONFIG string = "config/config.json"
+const DEFAULT_CONFIG_PATH string = "config/config.json"
 
 // Globally available ConfigData instance
 var Config ConfigData
 
+var configPath = flag.String("config", DEFAULT_CONFIG_PATH, "path to a JSON config file to use")
+
+func init() {
+	flag.Parse()
+	// Load config from the determined path
+	loadConfig(*configPath)
+}
+
 // LoadConfig initialises the global Config instance. This MUST be called at the start of the program
-func LoadConfig(path string) {
+func loadConfig(path string) {
 	Config = loadConfigFromFile(path)
 }
 
