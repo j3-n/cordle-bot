@@ -1,6 +1,7 @@
 GO ?= go
 GOFMT ?= gofmt "-s"
 GOFILES := $(shell find . -name "*.go")
+GOMODULES := $(shell go list ./...)
 
 DOCKER ?= docker
 
@@ -17,7 +18,7 @@ dev:
 test:
 	$(GO) clean -testcache 
 	$(GO) mod tidy
-	$(GO) test -cover -v ./...
+	$(GO) test -cover -v $(GOMODULES)
 
 ## deploy & build
 
