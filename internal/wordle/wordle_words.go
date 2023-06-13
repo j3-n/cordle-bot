@@ -7,11 +7,11 @@ import (
 	"cordle/internal/pkg/util"
 )
 
-// LoadWords reads the json files containing allowed words and answers and returns them (answers, guesses)
-func LoadWords() ([]string, []string) {
-	afile, err := os.ReadFile("assets/answers.json")
+// LoadWords reads the given json files containing allowed words and answers and returns them (answers, guesses)
+func LoadWords(aPath string, gPath string) ([]string, []string) {
+	afile, err := os.ReadFile(aPath)
 	util.CheckErrMsg(err, "Failed to load answers")
-	gfile, err := os.ReadFile("assets/guesses.json")
+	gfile, err := os.ReadFile(gPath)
 	util.CheckErrMsg(err, "Failed to load guesses")
 
 	// Decode JSON

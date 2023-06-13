@@ -15,6 +15,12 @@ const MaxGuesses int = 6
 // The length of a guess
 const GuessLength int = 5
 
+// Path to the JSON file containing possible answers
+const ANSWERS_PATH = "assets/answers.json"
+
+// Path to the JSON file containing valid guesses
+const GUESSES_PATH = "assets/guesses.json"
+
 // Possible states a character in a guess could be
 type GuessState int
 
@@ -54,7 +60,7 @@ type Guess struct {
 // Runs when the wordle module is imported
 func init() {
 	// Load the possible guesses and answers
-	answers, guesses = LoadWords()
+	answers, guesses = LoadWords(ANSWERS_PATH, GUESSES_PATH)
 }
 
 // NewRandomGame creates a new wordle game with a random solution and returns it
