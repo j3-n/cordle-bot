@@ -3,7 +3,7 @@ package config
 import (
 	"cordle/internal/pkg/util"
 	"encoding/json"
-	"flag"
+	"log"
 	"os"
 )
 
@@ -20,12 +20,17 @@ const DEFAULT_CONFIG_PATH string = "config/config.json"
 // Globally available ConfigData instance
 var Config ConfigData
 
-var configPath = flag.String("config", DEFAULT_CONFIG_PATH, "path to a JSON config file to use")
-
 func init() {
-	flag.Parse()
+	// Check if the config path has been overwritten
+	p := os.Getenv("CORDLE_CONFIG_PATH")
+	if p == "" {
+		p = DEFAULT_CONFIG_PATH
+	} else {
+		// Use debug logs to indicate that an alternative config is being used
+		log.Printf("Using alternate config (%s)", p)
+	}
 	// Load config from the determined path
-	loadConfig(*configPath)
+	loadConfig(p)
 }
 
 // LoadConfig initialises the global Config instance. This MUST be called at the start of the program
