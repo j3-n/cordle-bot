@@ -2,7 +2,8 @@ DOCKER ?= docker
 GO ?= go
 GOFMT ?= gofmt "-s"
 GOFILES := $(shell find . -name "*.go")
-GOMODULES := $(shell go list ./...)
+
+test: export CORDLE_CONFIG_PATH=test_config.json
 
 # clean & dev
 
@@ -17,7 +18,7 @@ dev:
 test:
 	$(GO) clean -testcache 
 	$(GO) mod tidy
-	$(GO) test -cover $(GOMODULES)
+	$(GO) test -cover -v ./...
 
 # deploy & build
 
