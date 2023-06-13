@@ -38,4 +38,7 @@ deploy:
 fmt:
 	$(GOFMT) -w $(GOFILES)
 
+mysql:
+	cd deployment/mysql; make deploy
+
 .PHONY: dev clean test build tdeploy deploy fmt mysql

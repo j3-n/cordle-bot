@@ -2,6 +2,6 @@ DOCKER ?= docker
 
 deploy:
 	$(DOCKER) build --tag mysql_db .
-	$(DOCKER) run mysql_db
+	$(DOCKER) run -p 3306:9876 -d mysql_db
 
 .PHONY: deploy
