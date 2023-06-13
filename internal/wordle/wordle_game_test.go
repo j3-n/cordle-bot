@@ -10,6 +10,7 @@ import (
 
 func TestMain(m *testing.M) {
 	config.LoadConfig("../../config/config.json")
+	LoadWords("../../assets/answers.json", "../../assets/guesses.json")
 	os.Exit(m.Run())
 }
 
