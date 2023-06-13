@@ -2,7 +2,9 @@ package config
 
 // GameConfig stores game specific settings
 type GameConfig struct {
-	ChallengeDuration int `json:"challengeDuration"`
-	InactivityTimeout int `json:"inactivityTimeout"`
-	InactivityWarning int `json:"inactivityWarning"`
+	AnswersPath       string `json:"answersPath"`
+	GuessesPath       string `json:"guessesPath"`
+	ChallengeDuration int    `json:"challengeDuration"`
+	InactivityTimeout int    `json:"inactivityTimeout"`
+	InactivityWarning int    `json:"inactivityWarning"`
 }

@@ -2,15 +2,9 @@ package wordle
 
 import (
 	"fmt"
-	"os"
 	"reflect"
 	"testing"
 )
-
-func TestMain(m *testing.M) {
-	LoadWords("../../assets/answers.json", "../../assets/guesses.json")
-	os.Exit(m.Run())
-}
 
 func TestValidateGuess(t *testing.T) {
 	var tests = []struct {

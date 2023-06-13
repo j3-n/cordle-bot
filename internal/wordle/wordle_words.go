@@ -4,8 +4,14 @@ import (
 	"encoding/json"
 	"os"
 
+	"cordle/internal/config"
 	"cordle/internal/pkg/util"
 )
+
+// Calls LoadWords when the module is imported
+func init() {
+	LoadWords(config.Config.Game.AnswersPath, config.Config.Game.GuessesPath)
+}
 
 // loadWordsFromFile reads the given json files containing allowed words and answers and returns them (answers, guesses)
 func loadWordsFromFile(aPath string, gPath string) ([]string, []string) {
