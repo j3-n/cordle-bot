@@ -10,10 +10,3 @@ create table users (
 	constraint id
 	    unique (id)
 );
-
--- create user 'database'@'localhost' identified by 'password';
--- grant privilege on cordle_test to 'database'@'localhost';
--- flush privileges;
-
--- create user 'root'@'%' identified by 'db-tool-password'
--- flush privileges;

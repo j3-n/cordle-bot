@@ -13,10 +13,11 @@ import (
 
 var d *Db
 
-func TestDb(t *testing.T) {
+func TestMain(m *testing.M) {
 	d = NewDb(config.Config.Database)
-	defer d.Close()
+}
 
+func TestDb(t *testing.T) {
 	assert.NotNil(t, d)
 }
 
@@ -28,9 +29,6 @@ func TestAddUser(t *testing.T) {
 		Draws:  151,
 		Elo:    341,
 	}
-
-	d = NewDb(config.Config.Database)
-	defer d.Close()
 
 	d.AddUser(&u)
 
@@ -57,9 +55,6 @@ func TestAddUsers(t *testing.T) {
 		Elo:    541,
 	}
 
-	d = NewDb(config.Config.Database)
-	defer d.Close()
-
 	u := make([]users.User, 2)
 	u[0] = u1
 	u[1] = u2
@@ -79,9 +74,6 @@ func TestAddUsers(t *testing.T) {
 }
 
 func TestUpdateUser(t *testing.T) {
-	d = NewDb(config.Config.Database)
-	defer d.Close()
-
 	d.AddUser(&users.User{
 		Id:     "123",
 		Wins:   2,
@@ -109,19 +101,36 @@ func TestUpdateUsers(t *testing.T) {
 }
 
 func TestReadUser(t *testing.T) {
-	d = NewDb(config.Config.Database)
-	defer d.Close()
+	d.AddUser(&users.User{
+		Id:     "123",
+		Wins:   2,
+		Losses: 1,
+		Draws:  3,
+		Elo:    521,
+	})
 
-	u := d.ReadUser("388395158397517824")
-	if u.Id != "388395158397517824" {
+	u := d.ReadUser("123")
+	if u.Id != "123" {
 		log.Fatalln(errors.New("read nil user error"))
 	}
 	assert.NotNil(t, u)
 }
 
 func TestReadAllUsers(t *testing.T) {
-	d = NewDb(config.Config.Database)
-	defer d.Close()
+	d.AddUser(&users.User{
+		Id:     "123",
+		Wins:   2,
+		Losses: 1,
+		Draws:  3,
+		Elo:    521,
+	})
+	d.AddUser(&users.User{
+		Id:     "456",
+		Wins:   2,
+		Losses: 1,
+		Draws:  3,
+		Elo:    521,
+	})
 
 	u := d.ReadAllUsers()
 	assert.NotNil(t, u)
@@ -131,12 +140,12 @@ func TestReadAllUsers(t *testing.T) {
 			"incorrect array length for all users %d", len(u)),
 		)
 	}
+	d.DeleteUsers([]string{"123", "456"})
+	u = d.ReadAllUsers()
+	assert.Zero(t, len(u))
 }
 
 func TestReadTop(t *testing.T) {
-	d = NewDb(config.Config.Database)
-	defer d.Close()
-
 	tt := d.ReadTop()
 	assert.NotNil(t, tt)
 
