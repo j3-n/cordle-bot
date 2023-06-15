@@ -17,6 +17,11 @@ func TestMain(m *testing.M) {
 	d = NewDb(config.Config.Database)
 }
 
+func TestPing(t *testing.T) {
+	err := d.Ping()
+	assert.NoError(t, err)
+}
+
 func TestDb(t *testing.T) {
 	assert.NotNil(t, d)
 }

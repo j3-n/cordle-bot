@@ -33,6 +33,10 @@ type Deleter interface {
 	DeleteUsers(ids []string)
 }
 
+type Pinger interface {
+	Ping() error
+}
+
 type Manager interface {
 	Adder
 	Updater

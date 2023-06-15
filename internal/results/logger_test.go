@@ -11,10 +11,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLogWin(t *testing.T) {
-	d := db.NewDb(config.Config.Database)
-	defer d.Close()
+var d *db.Db
 
+func TestMain(m *testing.M) {
+	d = db.NewDb(config.Config.Database)
+}
+
+func TestPing(t *testing.T) {
+	err := d.Ping()
+	assert.NoError(t, err)
+}
+
+func TestLogWin(t *testing.T) {
 	assert.NotNil(t, d)
 
 	ub := users.User{

@@ -169,3 +169,10 @@ func (d *Db) DeleteUsers(ids []string) {
 		d.DeleteUser(id)
 	}
 }
+
+func (d *Db) Ping() error {
+	d.ClientMu.Lock()
+	defer d.ClientMu.Unlock()
+
+	return d.Client.Db.Ping()
+}
