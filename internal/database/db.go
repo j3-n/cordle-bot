@@ -43,6 +43,7 @@ type Manager interface {
 	Reader
 	Checker
 	Deleter
+	Pinger
 }
 
 type Db struct {
