@@ -1,0 +1,7 @@
+services:
+  bot:
+    build: .
+  db:
+    build: deployment/mysql
+    ports:
+      - "8080:8080"
