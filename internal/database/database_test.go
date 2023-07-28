@@ -15,6 +15,7 @@ var d *Db
 
 func TestMain(m *testing.M) {
 	d = NewDb(config.Config.Database)
+	m.Run()
 }
 
 func TestPing(t *testing.T) {
