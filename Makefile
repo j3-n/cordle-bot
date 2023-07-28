@@ -19,7 +19,7 @@ test:
 	export CORDLE_CONFIG_PATH=test_config.json
 	$(GO) clean -testcache 
 	$(GO) mod tidy
-	$(GO) test -cover ./...
+	$(GO) test -cover ./... -tags=unit
 
 # deploy & build
 
