@@ -8,20 +8,20 @@ import (
 )
 
 type Adder interface {
-	AddUser(user User)
-	AddUsers(users []User)
+	AddUser(user User) error
+	AddUsers(users []User) error
 }
 
 type Updater interface {
-	UpdateUser(user *User)
-	UpdateUsers(users *[]User)
+	UpdateUser(user *User) error
+	UpdateUsers(users *[]User) error
 }
 
 type Reader interface {
-	ReadUser(id string) User
-	ReadUsers() []User
-	ReadTop() []User
-	ReadStats(id string) Stats
+	ReadUser(id string) (User, error)
+	ReadUsers() ([]User, error)
+	ReadTop() ([]User, error)
+	ReadStats(id string) (Stats, error)
 }
 
 type Checker interface {
@@ -29,12 +29,12 @@ type Checker interface {
 }
 
 type Deleter interface {
-	DeleteUser(id string)
-	DeleteUsers(ids []string)
+	DeleteUser(id string) error
+	DeleteUsers(ids []string) error
 }
 
 type Pinger interface {
-	Ping() error
+	Ping() (bool, error)
 }
 
 type Manager interface {
@@ -47,17 +47,17 @@ type Manager interface {
 }
 
 type Db struct {
-	ClientMu sync.Mutex
-	Client   sql.Clientx
+	clientMu sync.Mutex
+	client   sql.Clientx
 }
 
 func NewDb(c config.DatabaseConfig) *Db {
 	return &Db{
-		Client: *sql.NewClientx(c),
+		client: *sql.NewClientx(c),
 	}
 }
 
 func (d *Db) Close() {
-	err := d.Client.Close()
+	err := d.client.Close()
 	util.CheckErr(err)
 }

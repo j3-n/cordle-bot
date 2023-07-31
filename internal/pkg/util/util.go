@@ -38,3 +38,15 @@ func CheckTable(err error) (bool, error) {
 	}
 	return true, nil
 }
+
+func PrintErr(err error) {
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func PrintErrMsg(err error, msg string) {
+	if err != nil {
+		log.Println(err, msg)
+	}
+}

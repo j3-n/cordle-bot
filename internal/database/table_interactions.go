@@ -6,28 +6,28 @@ import (
 )
 
 func (d *Db) CreateTable(s string) {
-	d.ClientMu.Lock()
-	defer d.ClientMu.Unlock()
+	d.clientMu.Lock()
+	defer d.clientMu.Unlock()
 
-	q, err := d.Client.Db.Query(s)
+	q, err := d.client.Db.Query(s)
 	util.CheckErr(err)
 	defer q.Close()
 }
 
 func (d *Db) UpdateTable(u string) {
-	d.ClientMu.Lock()
-	defer d.ClientMu.Unlock()
+	d.clientMu.Lock()
+	defer d.clientMu.Unlock()
 
-	q, err := d.Client.Db.Query(u)
+	q, err := d.client.Db.Query(u)
 	util.CheckErr(err)
 	defer q.Close()
 }
 
 func (d *Db) DeleteTable(t string) {
-	d.ClientMu.Lock()
-	defer d.ClientMu.Unlock()
+	d.clientMu.Lock()
+	defer d.clientMu.Unlock()
 
-	q, err := d.Client.Db.Query(fmt.Sprintf(
+	q, err := d.client.Db.Query(fmt.Sprintf(
 		"drop table %s;",
 		t,
 	))
@@ -36,10 +36,10 @@ func (d *Db) DeleteTable(t string) {
 }
 
 func (d *Db) CheckTable(t string) bool {
-	d.ClientMu.Lock()
-	defer d.ClientMu.Unlock()
+	d.clientMu.Lock()
+	defer d.clientMu.Unlock()
 
-	_, err := d.Client.Db.Query(fmt.Sprintf(
+	_, err := d.client.Db.Query(fmt.Sprintf(
 		"select * from %s limit 0,1;",
 		t,
 	))

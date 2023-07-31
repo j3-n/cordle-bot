@@ -38,13 +38,16 @@ func TestAddUser(t *testing.T) {
 		Elo:    341,
 	}
 
-	d.AddUser(&u)
+	err := d.AddUser(&u)
+	assert.NoError(t, err)
 
-	e := d.CheckUser(u.Id)
+	e, err := d.CheckUser(u.Id)
+	assert.NoError(t, err)
 	if !e {
 		log.Fatalln(errors.New("failed to add user"))
 	}
-	d.DeleteUser(u.Id)
+	err = d.DeleteUser(u.Id)
+	assert.NoError(t, err)
 }
 
 func TestAddUsers(t *testing.T) {
@@ -68,13 +71,15 @@ func TestAddUsers(t *testing.T) {
 	u[1] = u2
 	d.AddUsers(&u)
 
-	e := d.CheckUser(u1.Id)
+	e, err := d.CheckUser(u1.Id)
+	assert.NoError(t, err)
 	if !e {
 		log.Fatalln(errors.New("failed to add user"))
 	}
 	d.DeleteUser(u1.Id)
 
-	e = d.CheckUser(u2.Id)
+	e, err = d.CheckUser(u2.Id)
+	assert.NoError(t, err)
 	if !e {
 		log.Fatalln(errors.New("failed to add user"))
 	}
@@ -89,19 +94,23 @@ func TestUpdateUser(t *testing.T) {
 		Draws:  3,
 		Elo:    521,
 	})
-	e := d.CheckUser("123")
+	e, err := d.CheckUser("123")
+	assert.NoError(t, err)
 	assert.True(t, e)
 
-	u := d.ReadUser("123")
+	u, err := d.ReadUser("123")
+	assert.NoError(t, err)
 	draws := u.Draws
 	u.Draws += 1
 	d.UpdateUser(&u)
-	u = d.ReadUser("123")
+	u, err = d.ReadUser("123")
+	assert.NoError(t, err)
 	if u.Draws != draws+1 {
 		log.Fatalln(errors.New("error updating draw count"))
 	}
 
-	d.DeleteUser("123")
+	err = d.DeleteUser("123")
+	assert.NoError(t, err)
 }
 
 func TestUpdateUsers(t *testing.T) {
@@ -117,7 +126,8 @@ func TestReadUser(t *testing.T) {
 		Elo:    521,
 	})
 
-	u := d.ReadUser("123")
+	u, err := d.ReadUser("123")
+	assert.NoError(t, err)
 	if u.Id != "123" {
 		log.Fatalln(errors.New("read nil user error"))
 	}
@@ -140,7 +150,8 @@ func TestReadAllUsers(t *testing.T) {
 		Elo:    521,
 	})
 
-	u := d.ReadAllUsers()
+	u, err := d.ReadAllUsers()
+	assert.NoError(t, err)
 	assert.NotNil(t, u)
 
 	if len(u) == 0 {
@@ -148,13 +159,17 @@ func TestReadAllUsers(t *testing.T) {
 			"incorrect array length for all users %d", len(u)),
 		)
 	}
-	d.DeleteUsers([]string{"123", "456"})
-	u = d.ReadAllUsers()
+	err = d.DeleteUsers([]string{"123", "456"})
+	assert.NoError(t, err)
+
+	u, err = d.ReadAllUsers()
+	assert.NoError(t, err)
 	assert.Zero(t, len(u))
 }
 
 func TestReadTop(t *testing.T) {
-	tt := d.ReadTop()
+	tt, err := d.ReadTop()
+	assert.NoError(t, err)
 	assert.NotNil(t, tt)
 
 	for i := 0; i < len(tt)-2; i++ {
@@ -171,7 +186,8 @@ func TestCheckUser(t *testing.T) {
 	d = NewDb(config.Config.Database)
 	defer d.Close()
 
-	e := d.CheckUser("388395158397517824")
+	e, err := d.CheckUser("388395158397517824")
+	assert.NoError(t, err)
 	if !e {
 		log.Fatalln(fmt.Errorf(
 			"wrong existing value returned %t", e),
@@ -179,7 +195,8 @@ func TestCheckUser(t *testing.T) {
 	}
 	assert.True(t, e)
 
-	e = d.CheckUser("517123")
+	e, err = d.CheckUser("517123")
+	assert.NoError(t, err)
 	if e {
 		log.Fatalln(fmt.Errorf(
 			"wrong existing value returned %t", e),
@@ -200,10 +217,14 @@ func TestDeleteUser(t *testing.T) {
 	d = NewDb(config.Config.Database)
 	defer d.Close()
 
-	d.AddUser(&u)
+	err := d.AddUser(&u)
+	assert.NoError(t, err)
 
-	d.DeleteUser(u.Id)
-	e := d.CheckUser(u.Id)
+	err = d.DeleteUser(u.Id)
+	assert.NoError(t, err)
+
+	e, err := d.CheckUser(u.Id)
+	assert.NoError(t, err)
 	if e {
 		log.Fatalln(errors.New("failed to delete user"))
 	}
