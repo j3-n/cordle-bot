@@ -186,23 +186,26 @@ func TestCheckUser(t *testing.T) {
 	d = NewDb(config.Config.Database)
 	defer d.Close()
 
-	e, err := d.CheckUser("388395158397517824")
+	e, err := d.CheckUser("69")
 	assert.NoError(t, err)
-	if !e {
-		log.Fatalln(fmt.Errorf(
-			"wrong existing value returned %t", e),
-		)
-	}
+	assert.False(t, e)
+
+	// Temporary until new API, create a user for this test
+	err = d.AddUser(&users.User{
+		Id:     "123",
+		Wins:   2,
+		Losses: 1,
+		Draws:  3,
+		Elo:    521,
+	})
+	assert.NoError(t, err)
+	e, err = d.CheckUser("123")
+	assert.NoError(t, err)
 	assert.True(t, e)
 
-	e, err = d.CheckUser("517123")
+	// Delete the temporary user
+	err = d.DeleteUser("123")
 	assert.NoError(t, err)
-	if e {
-		log.Fatalln(fmt.Errorf(
-			"wrong existing value returned %t", e),
-		)
-	}
-	assert.False(t, e)
 }
 
 func TestDeleteUser(t *testing.T) {
