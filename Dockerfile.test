@@ -1,0 +1,10 @@
+FROM golang:1.20-alpine
+
+WORKDIR /app
+
+ADD . ./
+RUN go mod download
+
+ENV CORDLE_CONFIG_PATH=test_config.json
+
+CMD ["go", "test", "./...", "-tags=integration"]

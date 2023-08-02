@@ -3,8 +3,6 @@ GO ?= go
 GOFMT ?= gofmt "-s"
 GOFILES := $(shell find . -name "*.go")
 
-test: export CORDLE_CONFIG_PATH=test_config.json
-
 # clean & dev
 
 clean:
@@ -20,6 +18,10 @@ test:
 	$(GO) clean -testcache 
 	$(GO) mod tidy
 	$(GO) test -cover ./... -tags=unit
+
+testint:
+	$(DOCKER) compose -f docker-compose.test.yml build
+	$(DOCKER) compose -f docker-compose.test.yml up --abort-on-container-exit
 
 # deploy & build
 

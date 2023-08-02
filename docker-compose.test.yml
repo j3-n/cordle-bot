@@ -1,0 +1,11 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - db
+  db:
+    build: deployment/mysql
+    expose:
+      - "3306"
