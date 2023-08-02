@@ -36,7 +36,8 @@ func TestLogWin(t *testing.T) {
 	}
 
 	d.AddUser(&ub)
-	e := d.CheckUser(ub.Id)
+	e, err := d.CheckUser(ub.Id)
+	assert.NoError(t, err)
 
 	if !e {
 		log.Fatalln(errors.New("Failed to add user"))
@@ -44,7 +45,8 @@ func TestLogWin(t *testing.T) {
 
 	LogWin(d, 5, ub.Id)
 
-	ua := d.ReadUser(ub.Id)
+	ua, err := d.ReadUser(ub.Id)
+	assert.NoError(t, err)
 
 	if ua.Draws != ub.Draws {
 		d.DeleteUser(ub.Id)
@@ -79,7 +81,8 @@ func TestLogLoss(t *testing.T) {
 	}
 
 	d.AddUser(&ub)
-	e := d.CheckUser(ub.Id)
+	e, err := d.CheckUser(ub.Id)
+	assert.NoError(t, err)
 
 	if !e {
 		log.Fatalln(errors.New("Failed to add user"))
@@ -87,7 +90,8 @@ func TestLogLoss(t *testing.T) {
 
 	LogLoss(d, 5, ub.Id)
 
-	ua := d.ReadUser(ub.Id)
+	ua, err := d.ReadUser(ub.Id)
+	assert.NoError(t, err)
 
 	if ua.Draws != ub.Draws {
 		d.DeleteUser(ub.Id)
@@ -122,7 +126,8 @@ func TestLogDraw(t *testing.T) {
 	}
 
 	d.AddUser(&ub)
-	e := d.CheckUser(ub.Id)
+	e, err := d.CheckUser(ub.Id)
+	assert.NoError(t, err)
 
 	if !e {
 		log.Fatalln(errors.New("Failed to add user"))
@@ -130,7 +135,8 @@ func TestLogDraw(t *testing.T) {
 
 	LogDraw(d, ub.Id)
 
-	ua := d.ReadUser(ub.Id)
+	ua, err := d.ReadUser(ub.Id)
+	assert.NoError(t, err)
 
 	if ua.Draws != ub.Draws+1 {
 		d.DeleteUser(ub.Id)
