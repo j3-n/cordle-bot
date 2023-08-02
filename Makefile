@@ -22,6 +22,7 @@ test:
 testint:
 	$(DOCKER) compose -f docker-compose.test.yml build
 	$(DOCKER) compose -f docker-compose.test.yml up --abort-on-container-exit
+	$(DOCKER) compose rm -f
 
 # deploy & build
 

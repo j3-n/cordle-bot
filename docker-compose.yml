@@ -1,9 +1,11 @@
 services:
   bot:
     build: .
+    container_name: cordle_bot
     depends_on:
       - db
   db:
     build: deployment/mysql
+    container_name: cordle_db
     expose:
       - "3306"
