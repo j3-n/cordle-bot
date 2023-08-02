@@ -3,9 +3,16 @@ services:
     build: .
     container_name: cordle_bot
     depends_on:
-      - db
+      db:
+        condition: service_healthy
   db:
     build: deployment/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=pass
+      start_period: 1s
+      interval: 1s
+      timeout: 1s
+      retries: 60
     container_name: cordle_db
     expose:
       - "3306"
