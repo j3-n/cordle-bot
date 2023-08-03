@@ -3,11 +3,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.test
+    container_name: cordle_bot_test
     depends_on:
       db:
         condition: service_healthy
   db:
     build: deployment/mysql
+    container_name: cordle_db_test
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u root --password=pass
       start_period: 20s
