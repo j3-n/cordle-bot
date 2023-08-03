@@ -10,9 +10,10 @@ services:
     build: deployment/mysql
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u root --password=pass
-      start_period: 1s
-      interval: 1s
-      timeout: 1s
-      retries: 60
+      start_period: 20s
+      start_interval: 10s
+      interval: 5s
+      timeout: 5s
+      retries: 3
     expose:
       - "3306"
