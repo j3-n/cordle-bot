@@ -14,5 +14,9 @@ services:
       timeout: 5s
       retries: 3
     container_name: cordle_db
+    volumes:
+      - mysql:/var/lib/mysql
     expose:
       - "3306"
+volumes:
+  mysql:
