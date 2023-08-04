@@ -3,7 +3,7 @@ package app
 import (
 	"cordle/internal/commands"
 	"cordle/internal/config"
-	"cordle/internal/database"
+	"cordle/internal/game"
 	"cordle/internal/pkg/util"
 	"fmt"
 	"log"
@@ -16,8 +16,7 @@ import (
 
 func Run() {
 	// Start the database connection
-	db := database.NewDb(config.Config.Database)
-	defer db.Close()
+	game.OpenDb()
 
 	// Create discord bot
 	session, err := discordgo.New("Bot " + config.Config.Discord.Token)
@@ -46,6 +45,9 @@ func Run() {
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 	<-stop
+
+	// Close database connection
+	game.CloseDb()
 
 	// Unregister commands
 	log.Println("Clearing slash commands:")
