@@ -38,7 +38,7 @@ func TestAddUser(t *testing.T) {
 		Elo:    341,
 	}
 
-	err := d.AddUser(&u)
+	err := d.AddUser(u.Id)
 	assert.NoError(t, err)
 
 	e, err := d.CheckUser(u.Id)
@@ -87,13 +87,7 @@ func TestAddUsers(t *testing.T) {
 }
 
 func TestUpdateUser(t *testing.T) {
-	d.AddUser(&users.User{
-		Id:     "123",
-		Wins:   2,
-		Losses: 1,
-		Draws:  3,
-		Elo:    521,
-	})
+	d.AddUser("123")
 	e, err := d.CheckUser("123")
 	assert.NoError(t, err)
 	assert.True(t, e)
@@ -102,7 +96,7 @@ func TestUpdateUser(t *testing.T) {
 	assert.NoError(t, err)
 	draws := u.Draws
 	u.Draws += 1
-	d.UpdateUser(&u)
+	d.UpdateUser(u)
 	u, err = d.ReadUser("123")
 	assert.NoError(t, err)
 	if u.Draws != draws+1 {
@@ -118,13 +112,7 @@ func TestUpdateUsers(t *testing.T) {
 }
 
 func TestReadUser(t *testing.T) {
-	d.AddUser(&users.User{
-		Id:     "123",
-		Wins:   2,
-		Losses: 1,
-		Draws:  3,
-		Elo:    521,
-	})
+	d.AddUser("123")
 
 	u, err := d.ReadUser("123")
 	assert.NoError(t, err)
@@ -135,20 +123,8 @@ func TestReadUser(t *testing.T) {
 }
 
 func TestReadAllUsers(t *testing.T) {
-	d.AddUser(&users.User{
-		Id:     "123",
-		Wins:   2,
-		Losses: 1,
-		Draws:  3,
-		Elo:    521,
-	})
-	d.AddUser(&users.User{
-		Id:     "456",
-		Wins:   2,
-		Losses: 1,
-		Draws:  3,
-		Elo:    521,
-	})
+	d.AddUser("123")
+	d.AddUser("456")
 
 	u, err := d.ReadAllUsers()
 	assert.NoError(t, err)
@@ -191,13 +167,7 @@ func TestCheckUser(t *testing.T) {
 	assert.False(t, e)
 
 	// Temporary until new API, create a user for this test
-	err = d.AddUser(&users.User{
-		Id:     "123",
-		Wins:   2,
-		Losses: 1,
-		Draws:  3,
-		Elo:    521,
-	})
+	err = d.AddUser("123")
 	assert.NoError(t, err)
 	e, err = d.CheckUser("123")
 	assert.NoError(t, err)
@@ -220,7 +190,7 @@ func TestDeleteUser(t *testing.T) {
 	d = NewDb(config.Config.Database)
 	defer d.Close()
 
-	err := d.AddUser(&u)
+	err := d.AddUser(u.Id)
 	assert.NoError(t, err)
 
 	err = d.DeleteUser(u.Id)
