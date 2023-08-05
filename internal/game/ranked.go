@@ -52,11 +52,11 @@ func calculateExpectedScore(ra int, rb int) float64 {
 }
 
 // findOrCreateUser attempts to retrieve a user from the database. If the user does not exist, they are created
-func findOrCreateUser(id string) *users.User {
+func findOrCreateUser(id string) users.User {
 	exists, _ := db.CheckUser(id)
 	// Create the user if they don't exist
 	if !exists {
-		db.AddUser(id)
+		db.AddUserDefault(id)
 	}
 	// Read and return the user
 	user, _ := db.ReadUser(id)

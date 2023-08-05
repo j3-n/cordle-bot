@@ -4,24 +4,23 @@ import (
 	"cordle/internal/config"
 	"cordle/internal/pkg/sql"
 	"cordle/internal/pkg/util"
+	"cordle/internal/users"
 	"sync"
 )
 
 type Adder interface {
-	AddUser(user User) error
-	AddUsers(users []User) error
+	AddUserDefault(id string) error
+	AddUser(user users.User) error
 }
 
 type Updater interface {
-	UpdateUser(user *User) error
-	UpdateUsers(users *[]User) error
+	UpdateUser(user users.User) error
 }
 
 type Reader interface {
-	ReadUser(id string) (User, error)
-	ReadUsers() ([]User, error)
-	ReadTop() ([]User, error)
-	ReadStats(id string) (Stats, error)
+	ReadUser(id string) (users.User, error)
+	ListUsers() ([]users.User, error)
+	ReadTop() ([]users.User, error)
 }
 
 type Checker interface {
@@ -30,7 +29,6 @@ type Checker interface {
 
 type Deleter interface {
 	DeleteUser(id string) error
-	DeleteUsers(ids []string) error
 }
 
 type Pinger interface {

@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func (d *Db) AddUser(id string) error {
+func (d *Db) AddUserDefault(id string) error {
 	d.clientMu.Lock()
 	defer d.clientMu.Unlock()
 
@@ -24,18 +24,25 @@ func (d *Db) AddUser(id string) error {
 	return nil
 }
 
-func (d *Db) AddUsers(users *[]users.User) error {
-	for _, user := range *users {
-		err := d.AddUser(user.Id)
-		if err != nil {
-			return err
-		}
+func (d *Db) AddUser(user users.User) error {
+	d.clientMu.Lock()
+	defer d.clientMu.Unlock()
+
+	insert, err := d.client.Db.Query(fmt.Sprintf(
+		`insert into users(id, wins, losses, draws, elo)
+		values(%s);`,
+		user.ToSqlAdd(),
+	))
+
+	if err != nil {
+		return err
 	}
 
+	defer insert.Close()
 	return nil
 }
 
-func (d *Db) UpdateUser(user *users.User) error {
+func (d *Db) UpdateUser(user users.User) error {
 	d.clientMu.Lock()
 	defer d.clientMu.Unlock()
 
@@ -60,18 +67,7 @@ func (d *Db) UpdateUser(user *users.User) error {
 	return nil
 }
 
-func (d *Db) UpdateUsers(users *[]users.User) error {
-	for _, user := range *users {
-		err := d.UpdateUser(&user)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (d *Db) ReadUser(id string) (*users.User, error) {
+func (d *Db) ReadUser(id string) (users.User, error) {
 	d.clientMu.Lock()
 	defer d.clientMu.Unlock()
 
@@ -81,7 +77,7 @@ func (d *Db) ReadUser(id string) (*users.User, error) {
 	))
 
 	if err != nil {
-		return &users.User{}, err
+		return users.User{}, err
 	}
 	defer result.Close()
 
@@ -90,13 +86,13 @@ func (d *Db) ReadUser(id string) (*users.User, error) {
 	err = result.StructScan(&user)
 
 	if err != nil {
-		return &users.User{}, err
+		return users.User{}, err
 	}
 
-	return &user, nil
+	return user, nil
 }
 
-func (d *Db) ReadAllUsers() ([]*users.User, error) {
+func (d *Db) ListUsers() ([]users.User, error) {
 	d.clientMu.Lock()
 	defer d.clientMu.Unlock()
 
@@ -106,20 +102,20 @@ func (d *Db) ReadAllUsers() ([]*users.User, error) {
 	}
 	defer result.Close()
 
-	us := make([]*users.User, 0)
+	us := make([]users.User, 0)
 	var u users.User
 	for i := 0; result.Next(); i++ {
 		err := result.StructScan(&u)
 		if err != nil {
 			return nil, err
 		}
-		us = append(us, &u)
+		us = append(us, u)
 	}
 
 	return us, nil
 }
 
-func (d *Db) ReadTop() ([]*users.User, error) {
+func (d *Db) ReadTop() ([]users.User, error) {
 	d.clientMu.Lock()
 	defer d.clientMu.Unlock()
 
@@ -129,40 +125,17 @@ func (d *Db) ReadTop() ([]*users.User, error) {
 	}
 	defer results.Close()
 
-	tt := make([]*users.User, 0)
+	tt := make([]users.User, 0)
 	var u users.User
 	for i := 0; results.Next(); i++ {
 		err := results.StructScan(&u)
 		if err != nil {
 			return nil, err
 		}
-		tt = append(tt, &u)
+		tt = append(tt, u)
 	}
 
 	return tt, nil
-}
-
-func (d *Db) ReadStats(id string) (*Stats, error) {
-	d.clientMu.Lock()
-	defer d.clientMu.Unlock()
-
-	result, err := d.client.Db.Queryx(fmt.Sprintf(
-		"select wins, losses, draws, games, elo, level from users where id='%s';",
-		id))
-
-	if err != nil {
-		return &Stats{}, err
-	}
-	defer result.Close()
-
-	var stats Stats
-	result.Next()
-	err = result.StructScan(&stats)
-	if err != nil {
-		return &Stats{}, err
-	}
-
-	return &stats, nil
 }
 
 func (d *Db) CheckUser(id string) (bool, error) {
@@ -200,17 +173,6 @@ func (d *Db) DeleteUser(id string) error {
 	}
 
 	defer delete.Close()
-	return nil
-}
-
-func (d *Db) DeleteUsers(ids []string) error {
-	for _, id := range ids {
-		err := d.DeleteUser(id)
-		if err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 
