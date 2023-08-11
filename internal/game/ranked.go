@@ -22,9 +22,9 @@ func CloseDb() {
 	db.Close()
 }
 
-// getNewScores is called after a ranked duel ends and is used to update the scores of both players
+// updateScores is called after a ranked duel ends and is used to update the scores of both players
 // Returns the newly updated scores of the users after elo calculations are complete
-func getNewScores(w *discordgo.User, l *discordgo.User) (int, int) {
+func updateScores(w *discordgo.User, l *discordgo.User) (int, int) {
 	// Retrieve the users from the database
 	wu := findOrCreateUser(w.ID)
 	lu := findOrCreateUser(l.ID)
