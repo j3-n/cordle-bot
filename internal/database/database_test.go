@@ -1,4 +1,4 @@
-//go:build intergration
+//go:build integration
 
 package database
 
