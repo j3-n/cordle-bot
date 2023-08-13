@@ -14,11 +14,11 @@ func TestElo(t *testing.T) {
 	ra := 1000
 	rb := 1050
 	// Test a win
-	eloa := calculateElo(ra, rb, SCORE_WIN)
-	elob := calculateElo(rb, ra, SCORE_LOSS)
+	eloa := calculateElo(ra, rb, ScoreWin)
+	elob := calculateElo(rb, ra, ScoreLoss)
 	assert.Equal(t, eloa+elob, ra+rb)
 	// Test a draw
-	eloa = calculateElo(ra, rb, SCORE_DRAW)
-	elob = calculateElo(rb, ra, SCORE_DRAW)
+	eloa = calculateElo(ra, rb, ScoreDraw)
+	elob = calculateElo(rb, ra, ScoreDraw)
 	assert.Equal(t, eloa+elob, ra+rb)
 }
