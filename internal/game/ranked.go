@@ -21,15 +21,18 @@ func CloseDb() {
 }
 
 // updateScores is called after a ranked duel ends and is used to update the scores of both players
-// Returns the newly updated scores of the users after elo calculations are complete
+// Returns the newly updated scores of the users after elo calculations are complete and the difference from their last score
 // s is the score of the first player
-func updateScores(w string, l string, s float64) (int, int) {
+func updateScores(w string, l string, s float64) (int, int, int, int) {
 	// Retrieve the users from the database
 	wu := findOrCreateUser(w)
 	lu := findOrCreateUser(l)
-	// Calculate the new rating scores
+	// Calculate the new rating scores and diffs
 	ws := calculateElo(wu.Elo, lu.Elo, s)
 	ls := calculateElo(lu.Elo, wu.Elo, 1-s)
+	// Calculate score diffs
+	wd := ws - wu.Elo
+	ld := ls - lu.Elo
 	// Update the score in the database
 	wu.Elo = ws
 	lu.Elo = ls
@@ -44,7 +47,7 @@ func updateScores(w string, l string, s float64) (int, int) {
 	db.UpdateUser(wu)
 	db.UpdateUser(lu)
 	// Return the new scores
-	return ws, ls
+	return ws, wd, ls, ld
 }
 
 // calculateElo takes a player A and B's score, and returns A's adjusted score based on the outcome score given

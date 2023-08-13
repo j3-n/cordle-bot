@@ -202,10 +202,19 @@ func (g *DuelGame) RegisterResult(r *Result) {
 		r.Loser = ps[1]
 	}
 	// Update the elo scores and return them
-	ws, ls := updateScores(r.Winner, r.Loser, r.Score)
+	ws, wd, ls, ld := updateScores(r.Winner, r.Loser, r.Score)
+	// Add signs to diffs if needed
+	var wsign string
+	var lsign string
+	if wd > 0 {
+		wsign = "+"
+	}
+	if ld > 0 {
+		lsign = "+"
+	}
 	// Send scores to users
-	ma := fmt.Sprintf("<@%s>, your new score is %d", r.Winner, ws)
-	mb := fmt.Sprintf("<@%s>, your new score is %d", r.Loser, ls)
+	ma := fmt.Sprintf("<@%s>, your new score is %d (%s%d)", r.Winner, ws, wsign, wd)
+	mb := fmt.Sprintf("<@%s>, your new score is %d (%s%d)", r.Loser, ls, lsign, ld)
 	_, err := g.session.ChannelMessageSend(g.channel, ma)
 	if err != nil {
 		log.Printf("Failed to send elo score message. [%s]", err.Error())
