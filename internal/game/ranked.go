@@ -5,8 +5,6 @@ import (
 	"cordle/internal/database"
 	"cordle/internal/users"
 	"math"
-
-	"github.com/bwmarrin/discordgo"
 )
 
 // Database instance to be used for ranking information
@@ -24,11 +22,11 @@ func CloseDb() {
 
 // updateScores is called after a ranked duel ends and is used to update the scores of both players
 // Returns the newly updated scores of the users after elo calculations are complete
-// If s is 1, the first user won, if s is 0.5 the game was a draw
-func updateScores(w *discordgo.User, l *discordgo.User, s float64) (int, int) {
+// s is the score of the first player
+func updateScores(w string, l string, s float64) (int, int) {
 	// Retrieve the users from the database
-	wu := findOrCreateUser(w.ID)
-	lu := findOrCreateUser(l.ID)
+	wu := findOrCreateUser(w)
+	lu := findOrCreateUser(l)
 	// Calculate the new rating scores
 	ws := calculateElo(wu.Elo, lu.Elo, s)
 	ls := calculateElo(lu.Elo, wu.Elo, 1-s)

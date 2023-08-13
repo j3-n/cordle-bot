@@ -32,8 +32,11 @@ tdeploy:
 	$(DOCKER) run -rm cordle2
 
 deploy:
-	$(DOCKER) build --tag cordle2 .
-	$(DOCKER) run -d cordle2
+	$(DOCKER) compose build
+	$(DOCKER) compose up -d
+
+shutdown:
+	$(DOCKER) compose down
 
 # fmt
 

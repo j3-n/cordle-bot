@@ -17,7 +17,7 @@ type DuelGame struct {
 	session *discordgo.Session
 	// channel stores a string ChannelID that the game is taking place in
 	channel string
-	// games stores a map of user IDs to their game
+	// games stores a map of users to their game
 	games map[string]*wordle.WordleGame
 	// menus stores the interaction to edit to display games to each user
 	menus map[string]*discordgo.InteractionCreate
@@ -120,14 +120,18 @@ func (g *DuelGame) PlayerSurrender(p *discordgo.User) {
 	}
 }
 
-// GameWon returns true if the game has been won, as well as the ID of the winner
-func (g *DuelGame) GameWon() (bool, string) {
+// GameWon returns true if the game has been won, as well as the ID of the winner and loser
+func (g *DuelGame) GameWon() (bool, string, string) {
+	var w string
+	var l string
 	for id, g := range g.games {
 		if g.Won {
-			return true, id
+			w = id
+		} else {
+			l = id
 		}
 	}
-	return false, ""
+	return w != "", w, l
 }
 
 // ShouldEndInDraw returns true if the current game has reached a stalemate and should end in a draw
@@ -170,7 +174,7 @@ func (g *DuelGame) SendInactivityWarning() {
 	)
 	_, err := g.session.ChannelMessageSend(g.channel, m)
 	if err != nil {
-		log.Printf("Failed to send inactivity warning. " + err.Error())
+		log.Printf("Failed to send inactivity warning. [%s]", err.Error())
 	}
 }
 
@@ -185,7 +189,30 @@ func (g *DuelGame) SendInactivityExpired() {
 	)
 	_, err := g.session.ChannelMessageSend(g.channel, m)
 	if err != nil {
-		log.Printf("Failed to send inactivity expiration notice. " + err.Error())
+		log.Printf("Failed to send inactivity expiration notice. [%s]", err.Error())
+	}
+}
+
+// RegisterResult is called to store the result of the game and update elo scores
+func (g *DuelGame) RegisterResult(r *Result) {
+	// If the game was a draw, infer the participants
+	ps := getPlayers(g)
+	if r.Score == SCORE_DRAW {
+		r.Winner = ps[0]
+		r.Loser = ps[1]
+	}
+	// Update the elo scores and return them
+	ws, ls := updateScores(r.Winner, r.Loser, r.Score)
+	// Send scores to users
+	ma := fmt.Sprintf("<@%s>, your new score is %d", r.Winner, ws)
+	mb := fmt.Sprintf("<@%s>, your new score is %d", r.Loser, ls)
+	_, err := g.session.ChannelMessageSend(g.channel, ma)
+	if err != nil {
+		log.Printf("Failed to send elo score message. [%s]", err.Error())
+	}
+	_, err = g.session.ChannelMessageSend(g.channel, mb)
+	if err != nil {
+		log.Printf("Failed to send elo score message. [%s]", err.Error())
 	}
 }
 
@@ -197,8 +224,6 @@ func (g *DuelGame) EndGame() {
 	if g.timer != nil {
 		g.timer.Stop()
 	}
-
-	// Calculate new scores for participants
 
 	// Archive and lock the thread from discord
 	archived := true

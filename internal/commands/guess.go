@@ -30,10 +30,16 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					}
 				}
 				// Check if a player has won the game
-				won, id := g.GameWon()
+				won, id, opp := g.GameWon()
 				if won {
 					// Notify the players that the game has been won
 					s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("<@%s> has won the game! The word was `%s`.", id, g.GoalWord()))
+					// Log result
+					g.RegisterResult(&game.Result{
+						Winner: id,
+						Loser:  opp,
+						Score:  game.SCORE_WIN,
+					})
 					// Close the game
 					closeGame(s, i.ChannelID)
 				} else if !g.PlayerHasGuesses(p) {
@@ -43,6 +49,10 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					if g.ShouldEndInDraw() {
 						// End the game in a draw
 						s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("All players are out of guesses! The word was `%s`.", g.GoalWord()))
+						// Log the result of the game, ranked will infer the players
+						g.RegisterResult(&game.Result{
+							Score: game.SCORE_DRAW,
+						})
 						closeGame(s, i.ChannelID)
 					}
 				}

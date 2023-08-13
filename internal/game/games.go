@@ -18,11 +18,12 @@ type GameManager interface {
 	SetPlayerInteractionMenu(p *discordgo.User, m *discordgo.InteractionCreate)
 	GoalWord() string
 	PlayerSurrender(p *discordgo.User)
-	GameWon() (bool, string)
+	GameWon() (bool, string, string)
 	ShouldEndInDraw() bool
 	ResetInactivityTimer()
 	SendInactivityWarning()
 	SendInactivityExpired()
+	RegisterResult(r *Result)
 	EndGame()
 }
 

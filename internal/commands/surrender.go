@@ -20,10 +20,15 @@ func surrender(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			m := fmt.Sprintf("%s has surrendered!", p.Mention())
 			respond(s, i, m, false)
 			// Check if the game should now end
-			won, id := g.GameWon()
+			won, id, opp := g.GameWon()
 			if won {
 				m = fmt.Sprintf("<@%s> wins! The word was `%s`", id, g.GoalWord())
 				s.ChannelMessageSend(i.ChannelID, m)
+				g.RegisterResult(&game.Result{
+					Winner: id,
+					Loser:  opp,
+					Score:  game.SCORE_WIN,
+				})
 				closeGame(s, i.ChannelID)
 			}
 		} else {
