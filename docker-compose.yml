@@ -2,6 +2,7 @@ services:
   bot:
     build: .
     container_name: cordle_bot
+    stop_grace_period: 40s
     depends_on:
       db:
         condition: service_healthy
