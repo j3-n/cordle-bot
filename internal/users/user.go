@@ -43,13 +43,6 @@ func (u User) ToSqlUpdate() string {
 	)
 }
 
-func (u User) ToLeaderboard() string {
-	return fmt.Sprintf(
-		" : %d",
-		u.Elo,
-	)
-}
-
 func (u User) ToStat() string {
 	return fmt.Sprintf(
 		"Wins: %d\nLosses: %d\nDraws: %d\nGames: %d\nElo: %d",

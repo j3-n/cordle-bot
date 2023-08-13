@@ -18,10 +18,10 @@ func GetLeaderboard(s *discordgo.Session) string {
 		i := u.Username
 
 		o += fmt.Sprintf(
-			"%d : %s (%s)\n",
+			"%d : %s (%d)\n",
 			index+1,
 			i,
-			user.ToLeaderboard(),
+			user.Elo,
 		)
 	}
 	return o + "``"
