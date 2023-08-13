@@ -203,26 +203,15 @@ func (g *DuelGame) RegisterResult(r *Result) {
 	}
 	// Update the elo scores and return them
 	ws, wd, ls, ld := updateScores(r.Winner, r.Loser, r.Score)
-	// Add signs to diffs if needed
-	var wsign string
-	var lsign string
-	if wd > 0 {
-		wsign = "+"
-	}
-	if ld > 0 {
-		lsign = "+"
-	}
 	// Send scores to users
-	ma := fmt.Sprintf("<@%s>, your new score is %d (%s%d)", r.Winner, ws, wsign, wd)
-	mb := fmt.Sprintf("<@%s>, your new score is %d (%s%d)", r.Loser, ls, lsign, ld)
-	_, err := g.session.ChannelMessageSend(g.channel, ma)
-	if err != nil {
-		log.Printf("Failed to send elo score message. [%s]", err.Error())
-	}
-	_, err = g.session.ChannelMessageSend(g.channel, mb)
-	if err != nil {
-		log.Printf("Failed to send elo score message. [%s]", err.Error())
-	}
+	ma := fmt.Sprintf("<@%s>", r.Winner)
+	mb := fmt.Sprintf("<@%s>", r.Loser)
+	// Render embeds
+	ea := renderScore(ws, wd)
+	eb := renderScore(ls, ld)
+	// Send the messages
+	sendScoreEmbed(g, ma, ea)
+	sendScoreEmbed(g, mb, eb)
 }
 
 // EndGame is called to finish a game
@@ -255,6 +244,41 @@ func getPlayers(g *DuelGame) []string {
 		i++
 	}
 	return p
+}
+
+// sendScoreEmbed sends a message containing a score embed to the given game channel
+func sendScoreEmbed(g *DuelGame, msg string, emb *discordgo.MessageEmbed) {
+	_, err := g.session.ChannelMessageSendComplex(g.channel, &discordgo.MessageSend{
+		Content: msg,
+		Embeds:  []*discordgo.MessageEmbed{emb},
+	})
+	if err != nil {
+		log.Printf("Failed to send elo score message. [%s]", err.Error())
+	}
+}
+
+// renderScore returns an embed containing an update on a player's score after a game
+func renderScore(s int, d int) *discordgo.MessageEmbed {
+	// Get the appropriate emoji and colour to use
+	var emoji string
+	var color int
+	if d >= 0 {
+		emoji = "eloup"
+		color = 0x0f9100
+	} else {
+		emoji = "elodown"
+		color = 0x8a0e00
+	}
+	return &discordgo.MessageEmbed{
+		Color: color,
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Name:   "Your Score",
+				Value:  fmt.Sprintf("%d (%s **%d**)", s, Emojis[emoji], d),
+				Inline: false,
+			},
+		},
+	}
 }
 
 // displayGame returns a string displaying the given guess history.
