@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"cordle/internal/users"
+	"cordle/internal/game"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -13,13 +13,7 @@ func stats(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	u := users.User{
-		Id:     "123",
-		Wins:   123,
-		Losses: 123,
-		Draws:  123,
-		Elo:    567,
-	}
+	r := game.GetStats(user.Username ,user.ID)
 
-	respond(s, i, u.ToStat(), false)
+	respond(s, i, r, false)
 }
