@@ -13,8 +13,9 @@ func GetLeaderboard(s *discordgo.Session) string {
 
 	o := "``\n"
 	for index, user := range t {
-		i, err := s.User(user.Id)
+		u, err := s.User(user.Id)
 		util.PrintErr(err)
+		i := u.Username
 
 		o += fmt.Sprintf(
 			"%d : %s (%s)\n",

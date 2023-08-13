@@ -119,7 +119,7 @@ func (d *Db) ReadTop() ([]users.User, error) {
 	d.clientMu.Lock()
 	defer d.clientMu.Unlock()
 
-	results, err := d.client.Db.Queryx("select * from users order by elo, id asc limit 0,10;")
+	results, err := d.client.Db.Queryx("select * from users order by elo asc limit 0,10;")
 	if err != nil {
 		return nil, err
 	}
