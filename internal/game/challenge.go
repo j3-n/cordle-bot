@@ -52,6 +52,20 @@ func FindChallenge(t *discordgo.User, cid string) *Challenge {
 	return nil
 }
 
+// UserCanChallenge returns true if the given user does not currently have any open challenged they created
+func UserCanChallenge(u *discordgo.User, cid string) bool {
+	challenges.mu.Lock()
+	defer challenges.mu.Unlock()
+
+	for _, c := range challenges.c {
+		if c.Source.ID == u.ID && c.ChannelID == cid {
+			return false
+		}
+	}
+
+	return true
+}
+
 // CloseChallenge removes a challenge from the active list
 func CloseChallenge(c *Challenge) {
 	challenges.mu.Lock()
