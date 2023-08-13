@@ -197,6 +197,9 @@ func (g *DuelGame) EndGame() {
 	if g.timer != nil {
 		g.timer.Stop()
 	}
+
+	// Calculate new scores for participants
+
 	// Archive and lock the thread from discord
 	archived := true
 	locked := true

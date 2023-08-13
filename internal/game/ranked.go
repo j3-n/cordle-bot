@@ -24,13 +24,14 @@ func CloseDb() {
 
 // updateScores is called after a ranked duel ends and is used to update the scores of both players
 // Returns the newly updated scores of the users after elo calculations are complete
-func updateScores(w *discordgo.User, l *discordgo.User) (int, int) {
+// If s is 1, the first user won, if s is 0.5 the game was a draw
+func updateScores(w *discordgo.User, l *discordgo.User, s float64) (int, int) {
 	// Retrieve the users from the database
 	wu := findOrCreateUser(w.ID)
 	lu := findOrCreateUser(l.ID)
 	// Calculate the new rating scores
-	ws := calculateElo(wu.Elo, lu.Elo, 1)
-	ls := calculateElo(lu.Elo, wu.Elo, 0)
+	ws := calculateElo(wu.Elo, lu.Elo, s)
+	ls := calculateElo(lu.Elo, wu.Elo, 1-s)
 	// Update the score in the database
 	wu.Elo = ws
 	lu.Elo = ls
@@ -41,8 +42,8 @@ func updateScores(w *discordgo.User, l *discordgo.User) (int, int) {
 }
 
 // calculateElo takes a player A and B's score, and returns A's adjusted score based on the outcome score given
-func calculateElo(ra int, rb int, score int) int {
-	return ra + int(32*(float64(score)-calculateExpectedScore(ra, rb)))
+func calculateElo(ra int, rb int, score float64) int {
+	return ra + int(32*(score-calculateExpectedScore(ra, rb)))
 }
 
 // calculateExpectedScore calculates the expected score of player a given Ra and Rb as in the Elo formulae
