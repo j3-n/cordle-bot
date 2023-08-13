@@ -9,5 +9,5 @@ import (
 func leaderboard(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	r := game.GetLeaderboard(s)
 
-	respond(s, i, r, false)
+	embedRespond(s, i, r)
 }

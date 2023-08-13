@@ -79,12 +79,12 @@ func updateGameBoard(s *discordgo.Session, i *discordgo.InteractionCreate, p *di
 		s.InteractionResponseDelete(prev.Interaction)
 	}
 	// Send the new board and store it
-	gameBoardRespond(s, i, g.PlayerGameBoard(p))
+	embedRespond(s, i, g.PlayerGameBoard(p))
 	g.SetPlayerInteractionMenu(p, i)
 }
 
-// Helper function to send a game board as an embed response to an interaction
-func gameBoardRespond(s *discordgo.Session, i *discordgo.InteractionCreate, emb *discordgo.MessageEmbed) {
+// Helper function to send an embed response to an interaction
+func embedRespond(s *discordgo.Session, i *discordgo.InteractionCreate, emb *discordgo.MessageEmbed) {
 	// Send the response
 	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
