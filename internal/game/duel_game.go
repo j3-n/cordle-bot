@@ -274,7 +274,7 @@ func renderScore(s int, d int) *discordgo.MessageEmbed {
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name:   "Your Score",
-				Value:  fmt.Sprintf("%d (%s **%d**)", s, Emojis[emoji], d),
+				Value:  fmt.Sprintf("**%d** [ %s %d ]", s, Emojis[emoji], d),
 				Inline: false,
 			},
 		},
