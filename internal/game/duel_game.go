@@ -197,7 +197,7 @@ func (g *DuelGame) SendInactivityExpired() {
 func (g *DuelGame) RegisterResult(r *Result) {
 	// If the game was a draw, infer the participants
 	ps := getPlayers(g)
-	if r.Score == SCORE_DRAW {
+	if r.Score == ScoreDraw {
 		r.Winner = ps[0]
 		r.Loser = ps[1]
 	}

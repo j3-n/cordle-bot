@@ -2,9 +2,9 @@ package game
 
 // Scoring constants
 const (
-	SCORE_WIN  = 1
-	SCORE_LOSS = 0
-	SCORE_DRAW = 0.5
+	ScoreWin  = 1
+	ScoreLoss = 0
+	ScoreDraw = 0.5
 )
 
 type Result struct {

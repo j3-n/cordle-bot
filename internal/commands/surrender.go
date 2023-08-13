@@ -27,7 +27,7 @@ func surrender(s *discordgo.Session, i *discordgo.InteractionCreate) {
 				g.RegisterResult(&game.Result{
 					Winner: id,
 					Loser:  opp,
-					Score:  game.SCORE_WIN,
+					Score:  game.ScoreWin,
 				})
 				closeGame(s, i.ChannelID)
 			}

@@ -37,7 +37,7 @@ func updateScores(w string, l string, s float64) (int, int, int, int) {
 	wu.Elo = ws
 	lu.Elo = ls
 	// Update wins and losses
-	if s != SCORE_DRAW {
+	if s != ScoreDraw {
 		wu.Wins += 1
 		lu.Losses += 1
 	} else {

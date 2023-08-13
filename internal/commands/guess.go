@@ -38,7 +38,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					g.RegisterResult(&game.Result{
 						Winner: id,
 						Loser:  opp,
-						Score:  game.SCORE_WIN,
+						Score:  game.ScoreWin,
 					})
 					// Close the game
 					closeGame(s, i.ChannelID)
@@ -51,7 +51,7 @@ func guess(s *discordgo.Session, i *discordgo.InteractionCreate) {
 						s.ChannelMessageSend(i.ChannelID, fmt.Sprintf("All players are out of guesses! The word was `%s`.", g.GoalWord()))
 						// Log the result of the game, ranked will infer the players
 						g.RegisterResult(&game.Result{
-							Score: game.SCORE_DRAW,
+							Score: game.ScoreDraw,
 						})
 						closeGame(s, i.ChannelID)
 					}
