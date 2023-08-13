@@ -12,6 +12,10 @@ import (
 // Big list of available commands
 var commands = []*discordgo.ApplicationCommand{
 	{
+		Name:        "help",
+		Description: "get help with Cordle Bot's commands",
+	},
+	{
 		Name:        "duel",
 		Description: "Send a duel challenge to another player",
 		Options: []*discordgo.ApplicationCommandOption{
@@ -70,6 +74,7 @@ var regCommands []*discordgo.ApplicationCommand
 // Big map linking command names to their handling functions
 // Handler functions are stored in separate go files
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+	"help":        help,
 	"duel":        duel,
 	"accept":      duelAccept,
 	"decline":     duelDecline,
