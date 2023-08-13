@@ -33,6 +33,14 @@ func updateScores(w string, l string, s float64) (int, int) {
 	// Update the score in the database
 	wu.Elo = ws
 	lu.Elo = ls
+	// Update wins and losses
+	if s != SCORE_DRAW {
+		wu.Wins += 1
+		lu.Losses += 1
+	} else {
+		wu.Draws += 1
+		lu.Draws += 1
+	}
 	db.UpdateUser(wu)
 	db.UpdateUser(lu)
 	// Return the new scores
