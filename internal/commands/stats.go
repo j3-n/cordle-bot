@@ -13,7 +13,7 @@ func stats(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		return
 	}
 
-	r := game.GetStats(user.Username ,user.ID)
+	r := game.GetStats(user)
 
-	respond(s, i, r, false)
+	embedRespond(s, i, r)
 }
