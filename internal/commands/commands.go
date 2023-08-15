@@ -13,7 +13,7 @@ import (
 var commands = []*discordgo.ApplicationCommand{
 	{
 		Name:        "help",
-		Description: "get help with Cordle Bot's commands",
+		Description: "Get help with Cordle",
 	},
 	{
 		Name:        "duel",
