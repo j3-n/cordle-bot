@@ -8,4 +8,5 @@ type GameConfig struct {
 	ChallengeDuration int    `json:"challengeDuration"`
 	InactivityTimeout int    `json:"inactivityTimeout"`
 	InactivityWarning int    `json:"inactivityWarning"`
+	PostGameDelay     int    `json:"postGameDelay"`
 }

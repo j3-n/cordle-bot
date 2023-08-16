@@ -223,16 +223,18 @@ func (g *DuelGame) EndGame() {
 		g.timer.Stop()
 	}
 
-	// Archive and lock the thread from discord
-	archived := true
-	locked := true
-	_, err := g.session.ChannelEditComplex(g.channel, &discordgo.ChannelEdit{
-		Archived: &archived,
-		Locked:   &locked,
+	// Archive and lock the thread from discord after delay
+	time.AfterFunc(time.Duration(config.Config.Game.PostGameDelay)*time.Second, func() {
+		archived := true
+		locked := true
+		_, err := g.session.ChannelEditComplex(g.channel, &discordgo.ChannelEdit{
+			Archived: &archived,
+			Locked:   &locked,
+		})
+		if err != nil {
+			log.Println(err.Error())
+		}
 	})
-	if err != nil {
-		log.Println(err.Error())
-	}
 }
 
 // getPlayers returns a slice of the IDs of users currently playing in a game
